@@ -9,7 +9,7 @@ namespace Screen {
         const Chart& chart;
     public:
         explicit Gameplay(const Chart& selected_chart);
-        Score display(sf::Window& window) const;
+        Score play_chart(sf::Window& window) const;
     };
 };
 
