@@ -22,8 +22,8 @@ int main(int argc, char const *argv[]) {
         Screen::Gameplay gameplay(selected_chart);
         Score score = gameplay.play_chart(window);
         
-        Screen::Result result(score);
-        result.display(window);
+        Screen::Result result_screen(score);
+        result_screen.display(window);
     
     }
     

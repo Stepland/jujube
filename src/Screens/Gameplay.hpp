@@ -1,14 +1,14 @@
 #pragma once
 
 #include <SFML/Window.hpp>
-#include "../Model/Chart.hpp"
-#include "../Model/Score.hpp"
+#include "../Data/Chart.hpp"
+#include "../Data/Score.hpp"
 
 namespace Screen {
     class Gameplay {
-        const Chart& chart;
+        const Data::Chart& chart;
     public:
-        explicit Gameplay(const Chart& selected_chart);
+        explicit Gameplay(const Data::Chart& selected_chart);
         Score play_chart(sf::Window& window) const;
     };
 };
