@@ -42,3 +42,32 @@ MusicSelect::Ribbon MusicSelect::Ribbon::title_sort(const Data::SongList& song_l
     }
     return ribbon;
 }
+
+MusicSelect::Ribbon MusicSelect::Ribbon::test_sort() {
+    Ribbon ribbon;
+    ribbon.layout.push_back(
+        {
+            std::make_unique<EmptyPanel>(),
+            std::make_unique<CategoryPanel>("A"),
+            std::make_unique<CategoryPanel>("truc")
+        }
+    );
+    for (size_t i = 0; i < 3; i++) {
+        ribbon.layout.push_back(
+            {
+                std::make_unique<EmptyPanel>(),
+                std::make_unique<EmptyPanel>(),
+                std::make_unique<EmptyPanel>()
+            }
+        );
+    }
+    return ribbon;
+}
+
+const std::unique_ptr<MusicSelect::Panel>& MusicSelect::Ribbon::at(unsigned int button_index) const {
+    return (
+        layout
+        .at((position + (button_index % 4)) % layout.size())
+        .at(button_index / 4)
+    );
+}

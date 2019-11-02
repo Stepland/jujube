@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <iterator>
+#include <list>
 #include <optional>
 #include <string>
 #include <unordered_map>

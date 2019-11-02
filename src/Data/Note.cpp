@@ -16,11 +16,11 @@ Data::Note::Note(
         throw std::out_of_range("Tried creating a note with invalid position : "+std::to_string(t_position));
     }
 
-    if (t_length.asMicroseconds < 0) {
+    if (t_length.asMicroseconds() < 0) {
         throw std::out_of_range("Tried creating a long note with negative length : "+std::to_string(t_length.asSeconds)+ "s");
 
     }
-    if (t_length.asMicroseconds > 0) {
+    if (t_length.asMicroseconds() > 0) {
         if (t_tail_position > 5) {
             throw std::out_of_range("Tried creating a long note with invalid tail position : "+std::to_string(t_tail_position));
         }

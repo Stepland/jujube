@@ -2,12 +2,11 @@
 
 #include <iostream>
 
-#include "../../Data/KeyMaping.hpp"
+#include "../../Data/KeyMapping.hpp"
 
 MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
     song_list(t_song_list),
-    resources(),
-    state(t_song_list)
+    ribbon(MusicSelect::Ribbon::test_sort())
 {
     for (const auto& song : song_list.songs) {
         if (song.cover) {
@@ -20,7 +19,9 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
     }
 }
 
-Chart& MusicSelect::Screen::select_chart(sf::Window& window) {
+void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
+    
+    window.create(sf::VideoMode(600,600), "jujube", sf::Style::None);
     bool chart_selected = false;
     while (not chart_selected) {
         sf::Event event;
@@ -33,21 +34,23 @@ Chart& MusicSelect::Screen::select_chart(sf::Window& window) {
                 break;
             }
         }
+        // drawing the ribbon
+        for (size_t panel = 0; panel < 12; panel++) {
+            ribbon.at(panel)->draw(
+                *this,
+                window,
+                sf::FloatRect((panel%4)*150.f, (panel/4)*150.f, 150.f, 150.f)
+            );
+        }
+        window.display();
     }
 }
 
 void MusicSelect::Screen::handle_key(const sf::Event::KeyEvent& key_event) {
-    auto panel = key_mapping.key_to_panel(key_event.code);
+    auto panel = key_mapping.key_to_button(key_event.code);
     if (panel) {
-        if (PanelEnum::P2 <= *panel and *panel <= PanelEnum::P12) {
-            auto coord = toCoord(*panel);
-            auto ribbon_size = state.ribbon.get_layout().size();
-            state
-                .ribbon
-                .get_layout()
-                .at((state.ribbon_position + coord.x) % ribbon_size)
-                .at(coord.y)
-                ->click(state);
+        if (Button::B2 <= *panel and *panel <= Button::B12) {
+            ribbon.at()
         }
     }
 }

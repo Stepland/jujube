@@ -6,8 +6,8 @@
 
 #include "../../Data/SongList.hpp"
 #include "../../Data/Chart.hpp"
-#include "../../Data/KeyMaping.hpp"
-#include "State.hpp"
+#include "../../Data/KeyMapping.hpp"
+#include "Ribbon.hpp"
 #include "Resources.hpp"
 
 namespace MusicSelect {
@@ -17,12 +17,20 @@ namespace MusicSelect {
     class Screen {
     public:
         Screen(const Data::SongList& t_song_list);
-        Chart& select_chart(sf::Window& window);
+        void select_chart(sf::RenderWindow& window);
+
     private:
+        // Data
         const Data::SongList& song_list;
+
+        // Resources
         Resources resources;
-        State state;
-        KeyMaping key_mapping;
+
+        // State
+        Ribbon ribbon;
+        std::optional<std::reference_wrapper<SongPanel>> selected_panel;
+    
+        KeyMapping key_mapping;
         void handle_key(const sf::Event::KeyEvent& key_event);
     };
 };
