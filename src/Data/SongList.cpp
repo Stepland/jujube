@@ -1,8 +1,11 @@
 #include "SongList.hpp"
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <list>
+
+#include <memon.hpp>
 
 namespace fs = std::filesystem;
 
@@ -12,25 +15,12 @@ Data::SongList::SongList::SongList() {
     for (const auto& folder : getSongFolders()) {
         try {
             songs.emplace_back(folder);
-        } catch (const std::invalid_argument& e) {
+        } catch (const std::exception& e) {
             std::cerr << "Exception while parsing song folder "
             << folder.string() << " : " << e.what() << '\n';
             continue;
         }
     }
-
-    // Loading all cover previews
-    for (const auto& song : songs) {
-        if (song.cover) {
-            try {
-                cover_previews.emplace_back(*song.cover);
-            } catch (const std::invalid_argument& e) {
-                std::cerr << "Exception while loading song cover "
-                << song.cover->string() << " : " << e.what() << '\n';
-            }
-        }
-    }
-    
 }
 
 
@@ -82,13 +72,26 @@ Data::Song::Song(fs::path song_folder) {
         if (memon_files.size() > 1) {
             throw std::invalid_argument("Multiple .memon files");
         } else {
-            
+            stepland::memon m;
+            std::ifstream file(memon_files.back());
+            file >> m;
+            this->title = m.song_title;
+            this->artist = m.artist;
+            if (not m.album_cover_path.empty()) {
+                this->cover.emplace(m.album_cover_path);
+            }
+            if (not m.music_path.empty()) {
+                this->audio.emplace(m.music_path);
+            }
+            for (const auto& [difficulty, chart] : m.charts) {
+                this->chart_levels[difficulty] = chart.level;
+            }
         }
     } else {
         // .memo ?
         auto memo_files = getMemoFiles(song_folder);
         if (not memo_files.empty()) {
-
+            throw std::exception("jujube does not support .memo files for now ...");
         } else {
             throw std::invalid_argument("No valid file found in song folder");
         }

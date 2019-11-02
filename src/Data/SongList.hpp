@@ -1,12 +1,13 @@
 #pragma once
 
 #include <filesystem>
+#include <iterator>
 #include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "../Textures/CoverPack.hpp"
+#include "../Resources/CoverAtlas.hpp"
 
 namespace fs = std::filesystem;
 
@@ -26,15 +27,17 @@ namespace Data {
         // the level is stored multiplied by 10 and displayed divided by 10
         // to allow for decimal levels (introduced in jubeat ... festo ?)
         std::unordered_map<std::string, unsigned int> chart_levels;
+
+        static bool sort_by_title(const Data::Song& a, const Data::Song& b) {
+            return a.title < b.title;
+        }
     };
 
-    // Class holding all the necessary data to run the Music Select screen
+    // Class holding all the necessary song data to run the Music Select screen
     class SongList {
     public:
         SongList();
-    private:
-        Textures::CoverPack cover_previews;
-        std::vector<const Song> songs;
+        std::vector<Song> songs;
     };
 
     // Returns the folders conscidered to contain a valid song

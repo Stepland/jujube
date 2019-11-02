@@ -15,20 +15,23 @@ filesystem = cpp.find_library('stdc++fs')
 
 sources = [
     'src/Main.cpp',
+    'src/Data/Chart.hpp',
     'src/Data/Note.hpp',
     'src/Data/Note.cpp',
     'srx/Data/Score.hpp',
     'src/Data/SongList.hpp',
     'src/Data/SongList.cpp',
     'src/Screens/Gameplay.hpp',
-    'src/Screens/MusicSelect.hpp',
+    'src/Screens/MusicSelect/MusicSelect.hpp',
+    'src/Screens/MusicSelect/MusicSelect.cpp',
     'src/Screens/Result.hpp',
+    'src/Resources/CoverAtlas.hpp',
+    'src/Resources/CoverAtlas.cpp',
 ]
 
 executable(
     'jujube',
-    'src/Test.cpp',
-    'src/Textures/CoverPack.hpp',
-    'src/Textures/CoverPack.cpp',
-    dependencies: [sfml, filesystem]
+    sources,
+    dependencies: [sfml, filesystem],
+    include_directories : include_directories('include')
 )
