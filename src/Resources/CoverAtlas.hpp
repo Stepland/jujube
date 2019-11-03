@@ -18,7 +18,7 @@ namespace std {
             return std::hash<std::string>()(p.string());
         }
     };
-};
+}
 
 namespace Textures {
     
@@ -50,4 +50,4 @@ namespace Textures {
     };
 
     DetailedLocation get_detailed_location(unsigned int location);
-};
+}

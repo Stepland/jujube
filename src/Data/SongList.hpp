@@ -46,6 +46,6 @@ namespace Data {
     // .memon files also accepted
     const std::vector<fs::path> getSongFolders();
     std::list<fs::path> recursiveSongSearch(fs::path song_or_pack);
-    const std::vector<fs::path>& getMemoFiles(fs::path song_folder);
-    const std::vector<fs::path>& getMemonFiles(fs::path song_folder);
+    const std::vector<fs::path> getMemoFiles(fs::path song_folder);
+    const std::vector<fs::path> getMemonFiles(fs::path song_folder);
 }

@@ -49,7 +49,7 @@ namespace Data {
                 fs::begin(folder),
                 fs::end(folder),
                 [](const fs::directory_entry& de) {
-                    de.path().extension() == ".memo" or
+                    return de.path().extension() == ".memo" or
                     de.path().extension() == ".memon";
                 }
             )
@@ -93,14 +93,14 @@ namespace Data {
             // .memo ?
             auto memo_files = getMemoFiles(song_folder);
             if (not memo_files.empty()) {
-                throw std::exception("jujube does not support .memo files for now ...");
+                throw std::invalid_argument("jujube does not support .memo files for now ...");
             } else {
                 throw std::invalid_argument("No valid file found in song folder");
             }
         }
     }
 
-    const std::vector<fs::path>& getMemoFiles(fs::path song_folder) {
+    const std::vector<fs::path> getMemoFiles(fs::path song_folder) {
         std::vector<fs::path> res;
         for (const auto& p : fs::directory_iterator(song_folder)) {
             if (p.path().extension() == ".memo") {
@@ -110,7 +110,7 @@ namespace Data {
         return res;
     }
 
-    const std::vector<fs::path>& getMemonFiles(fs::path song_folder) {
+    const std::vector<fs::path> getMemonFiles(fs::path song_folder) {
         std::vector<fs::path> res;
         for (const auto& p : fs::directory_iterator(song_folder)) {
             if (p.path().extension() == ".memon") {

@@ -14,10 +14,10 @@ namespace Data {
         bool operator<=(const Note &rhs) const;
         bool operator>=(const Note &rhs) const;
 
-        const unsigned int getPosition() const;
+        unsigned int getPosition() const;
         const sf::Time& getTiming() const;
         const sf::Time& getLength() const;
-        const unsigned int getTailPosition() const;
+        unsigned int getTailPosition() const;
 
     private:
 
@@ -27,4 +27,4 @@ namespace Data {
         const unsigned int tail_position = 0;
 
     };
-};
+}

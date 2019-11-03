@@ -4,6 +4,10 @@
 
 #include "MusicSelect.hpp"
 
+void MusicSelect::CategoryPanel::click(Screen& screen) {
+    
+}
+
 void MusicSelect::CategoryPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
     sf::RectangleShape frame{{area.width*0.9f, area.height*0.9f}};
     frame.setFillColor(sf::Color::Black);
@@ -27,12 +31,22 @@ void MusicSelect::CategoryPanel::draw(Resources& resources, sf::RenderTarget& ta
     label_text.setString(this->label);
     label_text.setCharacterSize(24U);
     label_text.setFillColor(sf::Color::White);
-    auto bounds = label_text.getLocalBounds();
-    label_text.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-    if (bounds.height > bounds.width) {
-        label_text.setScale(area.height*0.8f / bounds.height, area.height*0.8f / bounds.height);
+    auto text_bounds = label_text.getLocalBounds();
+    label_text.setOrigin(text_bounds.width / 2.f, text_bounds.height / 2.f);
+    if (text_bounds.height > text_bounds.width) {
+        label_text.setScale(area.height*0.8f / text_bounds.height, area.height*0.8f / text_bounds.height);
     } else {
-        label_text.setScale(area.width*0.8f / bounds.width, area.width*0.8f / bounds.width);
+        label_text.setScale(area.width*0.8f / text_bounds.width, area.width*0.8f / text_bounds.width);
     }
     label_text.setPosition(area.left + area.width / 2.f, area.top + area.height / 2.f);
+}
+
+
+
+void MusicSelect::SongPanel::click(Screen& screen) {
+    
+}
+
+void MusicSelect::SongPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
+    
 }

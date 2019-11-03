@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+#include "../../Data/SongList.hpp"
 #include "Resources.hpp"
 
 namespace MusicSelect {
@@ -28,7 +29,7 @@ namespace MusicSelect {
 
     class CategoryPanel final : public Panel {
     public:
-        CategoryPanel(const std::string& t_label) : label(t_label) {};
+        explicit CategoryPanel(const std::string& t_label) : label(t_label) {};
         void click(Screen& screen) override;
         void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
     private:
@@ -37,7 +38,7 @@ namespace MusicSelect {
 
     class SongPanel final : public Panel {
     public:
-        SongPanel(const Data::Song& t_song) : song(t_song) {};
+        explicit SongPanel(const Data::Song& t_song) : song(t_song) {};
         void click(Screen& screen) override;
         void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
     private:

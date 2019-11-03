@@ -37,9 +37,14 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         // drawing the ribbon
         for (size_t panel = 0; panel < 12; panel++) {
             ribbon.at(panel)->draw(
-                *this,
+                resources,
                 window,
-                sf::FloatRect((panel%4)*150.f, (panel/4)*150.f, 150.f, 150.f)
+                sf::FloatRect(
+                    (panel%4)*150.f,
+                    (panel/4)*150.f,
+                    150.f,
+                    150.f
+                )
             );
         }
         window.display();
@@ -47,10 +52,4 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
 }
 
 void MusicSelect::Screen::handle_key(const sf::Event::KeyEvent& key_event) {
-    auto panel = key_mapping.key_to_button(key_event.code);
-    if (panel) {
-        if (Button::B2 <= *panel and *panel <= Button::B12) {
-            ribbon.at()
-        }
-    }
 }

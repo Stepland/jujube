@@ -23,7 +23,7 @@ sf::Sprite Textures::CoverAltas::at(const fs::path& path) const {
         index = 0;
     }
 
-    auto location = get_detailed_location(path_to_index.at(path));
+    auto location = get_detailed_location(index);
     sf::IntRect rect(location.column*256, location.row*256, 256, 256);
     sf::Sprite cover;
     cover.setTexture(textures.at(location.texture_index)->getTexture());

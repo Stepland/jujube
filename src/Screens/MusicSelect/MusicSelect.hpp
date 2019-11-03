@@ -33,4 +33,4 @@ namespace MusicSelect {
         KeyMapping key_mapping;
         void handle_key(const sf::Event::KeyEvent& key_event);
     };
-};
+}

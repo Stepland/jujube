@@ -8,7 +8,7 @@ namespace MusicSelect {
     // It can be sorted in a number of ways
     class Ribbon {
     public:
-        Ribbon();
+        Ribbon() = default;
         static Ribbon title_sort(const Data::SongList& song_list);
         static Ribbon test_sort();
         const auto& get_layout() {return layout;};

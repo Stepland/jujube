@@ -41,5 +41,12 @@ executable(
     'jujube',
     sources,
     dependencies: [sfml, filesystem],
-    include_directories : include_directories('include')
+    include_directories : include_directories('include'),
+    cpp_args : [
+        '-Wall',
+        '-Wextra',
+        '-Wshadow',
+        '-Wnon-virtual-dtor',
+        '-pedantic'
+    ]
 )
