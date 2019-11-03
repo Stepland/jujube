@@ -50,3 +50,6 @@ executable(
         '-pedantic'
     ]
 )
+
+install_subdir('assets', install_dir : 'assets', strip_directory : true)
+install_subdir('songs', install_dir: 'songs', strip_directory : true)

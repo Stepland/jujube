@@ -22,6 +22,7 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
 void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
     
     window.create(sf::VideoMode(600,600), "jujube", sf::Style::None);
+    window.setFramerateLimit(60);
     bool chart_selected = false;
     while (not chart_selected) {
         sf::Event event;
@@ -48,6 +49,7 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
             );
         }
         window.display();
+        window.clear(sf::Color::Black);
     }
 }
 

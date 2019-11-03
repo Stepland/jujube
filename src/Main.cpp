@@ -11,7 +11,7 @@
 int main(int argc, char const *argv[]) {
     
     sf::RenderWindow window(sf::VideoMode(800,600), "jujube");
-    window.setVerticalSyncEnabled(true);
+    window.setFramerateLimit(60);
     
     Data::SongList song_list;
     MusicSelect::Screen music_select{song_list};

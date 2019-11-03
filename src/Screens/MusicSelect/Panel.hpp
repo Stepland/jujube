@@ -44,4 +44,6 @@ namespace MusicSelect {
     private:
         const Data::Song& song;
     };
+
+    void set_to_global_bounds(sf::RectangleShape& rect, const sf::Text& text);
 }
