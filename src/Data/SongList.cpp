@@ -28,17 +28,20 @@ namespace Data {
 
     const std::vector<fs::path> getSongFolders() {
 
-        std::vector<fs::path> song_folders;
+        std::vector<fs::path> potential_song_folders;
+        fs::path song_folder = "songs/";
 
-        for (const auto& dir_item : fs::directory_iterator("songs/")) {
-            if (dir_item.is_directory()) {
-                for (auto& path : recursiveSongSearch(dir_item.path())) {
-                    song_folders.push_back(path);
+        if (fs::exists(song_folder) and fs::is_directory(song_folder)) {
+            for (const auto& dir_item : fs::directory_iterator("songs/")) {
+                if (dir_item.is_directory()) {
+                    for (auto& path : recursiveSongSearch(dir_item.path())) {
+                        potential_song_folders.push_back(path);
+                    }
                 }
             }
         }
 
-        return song_folders;
+        return potential_song_folders;
     }
 
     std::list<fs::path> recursiveSongSearch(fs::path song_or_pack) {

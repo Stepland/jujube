@@ -10,8 +10,7 @@ foreach module : ['system', 'window', 'graphics', 'audio']
     sfml += [dependency('sfml-'+module, version : '>=2.5.1')]
 endforeach
 
-cpp = meson.get_compiler('cpp')
-filesystem = cpp.find_library('stdc++fs')
+add_project_link_arguments(['-lstdc++', '-lstdc++fs'], language : 'cpp')
 
 sources = [
     'src/Main.cpp',
@@ -40,7 +39,7 @@ sources = [
 executable(
     'jujube',
     sources,
-    dependencies: [sfml, filesystem],
+    dependencies: [sfml],
     include_directories : include_directories('include'),
     cpp_args : [
         '-Wall',
