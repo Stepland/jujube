@@ -4,6 +4,14 @@
 
 #include "MusicSelect.hpp"
 
+void MusicSelect::ColorPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
+    sf::RectangleShape panel{{area.width*0.9f, area.height*0.9f}};
+    panel.setFillColor(this->color);
+    panel.setOrigin(panel.getSize().x / 2.f, panel.getSize().y / 2.f);
+    panel.setPosition(area.left+area.width/2.f, area.top+area.height/2.f);
+    target.draw(panel);
+}
+
 void MusicSelect::CategoryPanel::click(Screen& screen) {
     
 }

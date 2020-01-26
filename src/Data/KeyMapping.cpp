@@ -1,8 +1,33 @@
 #include "KeyMapping.hpp"
 
-ButtonCoords toCoord(Button panel) {
-    auto num = static_cast<int>(panel);
+ButtonCoords toCoords(Button button) {
+    auto num = static_cast<unsigned int>(button);
     return {num % 4, num / 4};
+}
+
+unsigned int toIndex(Button button) {
+    return static_cast<unsigned int>(button);
+}
+
+std::optional<Button> fromCoords(ButtonCoords button_coords) {
+    if (
+        button_coords.x >= 0 and
+        button_coords.x < 4 and
+        button_coords.y >= 0 and
+        button_coords.y < 4
+    ) {
+        return static_cast<Button>(button_coords.x + 4*button_coords.y);
+    } else {
+        return {};
+    }
+}
+
+std::optional<Button> fromIndex(unsigned int index) {
+    if (index >= 0 and index < 16) {
+        return static_cast<Button>(index);
+    } else {
+        return {};
+    }
 }
 
 KeyMapping::KeyMapping() {
@@ -28,27 +53,27 @@ KeyMapping::KeyMapping() {
     }
 }
 
-void KeyMapping::setPanelToKey(const Button& panel, const sf::Keyboard::Key& key) {
+void KeyMapping::setPanelToKey(const Button& button, const sf::Keyboard::Key& key) {
     if (m_key_to_button.find(key) != m_key_to_button.end()) {
         m_button_to_key.erase(m_key_to_button[key]);
         m_key_to_button.erase(key);
     }
-    m_button_to_key[panel] = key;
-    m_key_to_button[key] = panel;
+    m_button_to_key[button] = key;
+    m_key_to_button[key] = button;
 }
 
 std::optional<Button> KeyMapping::key_to_button(const sf::Keyboard::Key& key) {
-    try {
-        return m_key_to_button.at(key);
-    } catch(const std::exception& e) {
+    if (m_key_to_button.find(key) == m_key_to_button.end()) {
         return {};
+    } else {
+        return m_key_to_button.at(key);
     }
 }
 
-std::optional<sf::Keyboard::Key> KeyMapping::button_to_key(const Button& panel) {
-    try {
-        return m_button_to_key.at(panel);
-    } catch(const std::exception& e) {
+std::optional<sf::Keyboard::Key> KeyMapping::button_to_key(const Button& button) {
+    if (m_button_to_key.find(button) == m_button_to_key.end()) {
         return {};
+    } else {
+        return m_button_to_key.at(button);
     }
 }

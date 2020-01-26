@@ -11,7 +11,7 @@ namespace MusicSelect {
     class Screen;
 
     // A Panel holds anything that can go under a button on the moving part
-    // of the music select screen, be it nothing, a sort indicator, or a song
+    // of the music select screen, be it nothing, a category indicator, or a song
     class Panel {
     public:
         // What happens when you click on the panel
@@ -25,6 +25,15 @@ namespace MusicSelect {
     public:
         void click(Screen& screen) override {return;};
         void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override {return;};
+    };
+
+    class ColorPanel final : public Panel {
+    public:
+        explicit ColorPanel(const sf::Color& t_color) : color(t_color) {};
+        void click(Screen& screen) override {return;};
+        void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
+    private:
+        const sf::Color color;
     };
 
     class CategoryPanel final : public Panel {

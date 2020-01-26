@@ -1,7 +1,7 @@
 project(
     'jujube',
     'cpp',
-    default_options : ['cpp_std=c++17'],
+    default_options : ['cpp_std=c++20'],
     version : '0.1.0-alpha',
 )
 
@@ -23,6 +23,8 @@ sources = [
     'src/Data/SongList.hpp',
     'src/Data/SongList.cpp',
     # 'src/Screens/Gameplay.hpp',
+    'src/Screens/MusicSelect/ButtonHighlight.hpp',
+    'src/Screens/MusicSelect/ButtonHighlight.cpp',
     'src/Screens/MusicSelect/MusicSelect.hpp',
     'src/Screens/MusicSelect/MusicSelect.cpp',
     'src/Screens/MusicSelect/Panel.hpp',
@@ -34,6 +36,9 @@ sources = [
     # 'src/Screens/Result.hpp',
     'src/Resources/CoverAtlas.hpp',
     'src/Resources/CoverAtlas.cpp',
+    'src/Toolkit/QuickRNG.hpp',
+    'src/Toolkit/QuickRNG.cpp',
+    'src/Toolkit/AffineTransform.hpp',
 ]
 
 executable(

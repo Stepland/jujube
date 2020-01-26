@@ -29,7 +29,10 @@ struct ButtonCoords {
     unsigned int y;
 };
 
-ButtonCoords toCoord(Button button);
+ButtonCoords toCoords(Button button);
+unsigned int toIndex(Button button);
+std::optional<Button> fromCoords(ButtonCoords button_coords);
+std::optional<Button> fromIndex(unsigned int index);
 
 class KeyMapping {
 public:
