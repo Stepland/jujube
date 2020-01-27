@@ -40,6 +40,7 @@ namespace MusicSelect {
         const std::shared_ptr<MusicSelect::Panel>& at(std::size_t button_index) const;
         void move_right();
         void move_left();
+        void move_to_next_category();
         void draw_debug() override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
