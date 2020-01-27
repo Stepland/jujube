@@ -10,7 +10,7 @@ foreach module : ['system', 'window', 'graphics', 'audio']
     sfml += [dependency('sfml-'+module, version : '>=2.5.1')]
 endforeach
 
-add_project_link_arguments(['-lstdc++', '-lstdc++fs'], language : 'cpp')
+add_project_link_arguments(['-lstdc++', '-lstdc++fs', '-lm'], language : 'cpp')
 
 sources = [
     'src/Main.cpp',
@@ -36,9 +36,11 @@ sources = [
     # 'src/Screens/Result.hpp',
     'src/Resources/CoverAtlas.hpp',
     'src/Resources/CoverAtlas.cpp',
+    'src/Toolkit/AffineTransform.hpp',
+    'src/Toolkit/EasingFunctions.hpp',
+    'src/Toolkit/EasingFunctions.cpp',
     'src/Toolkit/QuickRNG.hpp',
     'src/Toolkit/QuickRNG.cpp',
-    'src/Toolkit/AffineTransform.hpp',
 ]
 
 executable(

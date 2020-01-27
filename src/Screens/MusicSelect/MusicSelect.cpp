@@ -6,8 +6,8 @@
 
 MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
     song_list(t_song_list),
-    ribbon(MusicSelect::Ribbon::test2_sort()),
-    button_highlight(panel_size)
+    button_highlight(panel_size),
+    ribbon(resources)
 {
     for (const auto& song : song_list.songs) {
         if (song.cover) {
@@ -18,6 +18,7 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
             }
         }
     }
+    ribbon.test2_sort();
 }
 
 void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
@@ -38,20 +39,7 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                 break;
             }
         }
-
-        // draw the ribbon
-        for (size_t panel = 0; panel < 12; panel++) {
-            ribbon.at(panel)->draw(
-                resources,
-                window,
-                sf::FloatRect(
-                    (panel%4)*150.f,
-                    (panel/4)*150.f,
-                    150.f,
-                    150.f
-                )
-            );
-        }
+        window.draw(ribbon);
         window.draw(button_highlight);
         window.display();
         window.clear(sf::Color::Black);

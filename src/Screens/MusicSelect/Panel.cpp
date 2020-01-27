@@ -4,7 +4,7 @@
 
 #include "MusicSelect.hpp"
 
-void MusicSelect::ColorPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
+void MusicSelect::ColorPanel::draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
     sf::RectangleShape panel{{area.width*0.9f, area.height*0.9f}};
     panel.setFillColor(this->color);
     panel.setOrigin(panel.getSize().x / 2.f, panel.getSize().y / 2.f);
@@ -16,7 +16,7 @@ void MusicSelect::CategoryPanel::click(Screen& screen) {
     
 }
 
-void MusicSelect::CategoryPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
+void MusicSelect::CategoryPanel::draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
     sf::RectangleShape red_rectangle;
     red_rectangle.setFillColor(sf::Color::Transparent);
     red_rectangle.setOutlineColor(sf::Color::Red);
@@ -68,7 +68,7 @@ void MusicSelect::SongPanel::click(Screen& screen) {
     
 }
 
-void MusicSelect::SongPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
+void MusicSelect::SongPanel::draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
     
 }
 

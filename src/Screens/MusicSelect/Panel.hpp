@@ -17,21 +17,21 @@ namespace MusicSelect {
         // What happens when you click on the panel
         virtual void click(Screen& screen) = 0;
         // How the panel should be displayed
-        virtual void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) = 0;
+        virtual void draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) = 0;
         virtual ~Panel() = default;
     };
 
     class EmptyPanel final : public Panel {
     public:
         void click(Screen& screen) override {return;};
-        void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override {return;};
+        void draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override {return;};
     };
 
     class ColorPanel final : public Panel {
     public:
         explicit ColorPanel(const sf::Color& t_color) : color(t_color) {};
         void click(Screen& screen) override {return;};
-        void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
+        void draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
     private:
         const sf::Color color;
     };
@@ -40,7 +40,7 @@ namespace MusicSelect {
     public:
         explicit CategoryPanel(const std::string& t_label) : label(t_label) {};
         void click(Screen& screen) override;
-        void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
+        void draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
     private:
         std::string label;
     };
@@ -49,7 +49,7 @@ namespace MusicSelect {
     public:
         explicit SongPanel(const Data::Song& t_song) : song(t_song) {};
         void click(Screen& screen) override;
-        void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
+        void draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
     private:
         const Data::Song& song;
     };
