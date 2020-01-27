@@ -16,7 +16,7 @@ Textures::CoverAltas::CoverAltas() :
 
 sf::Sprite Textures::CoverAltas::at(const fs::path& path) const {
     
-    unsigned int index;
+    std::size_t index;
     if (path_to_index.find(path) != path_to_index.end()) {
         index = path_to_index.at(path);
     } else {
@@ -41,7 +41,7 @@ void Textures::CoverAltas::emplace_back(const fs::path& cover) {
     if (!cover_texture.loadFromFile(cover)) {
         throw std::invalid_argument("Unable to load cover image : "+cover.string());
     }
-    unsigned int next_index = next_available_index();
+    std::size_t next_index = next_available_index();
     auto size = cover_texture.getSize();
     auto location = get_detailed_location(next_index);
     sf::Sprite new_cover;
@@ -80,12 +80,12 @@ void Textures::CoverAltas::efficient_reload(const std::vector<fs::path>& covers)
     }
 }
 
-Textures::DetailedLocation Textures::get_detailed_location(unsigned int location) {
+Textures::DetailedLocation Textures::get_detailed_location(std::size_t location) {
     return {location / 16, (location % 16) / 4, location % 4};
 }
 
-unsigned int Textures::CoverAltas::next_available_index() {
-    unsigned int index = 0;
+std::size_t Textures::CoverAltas::next_available_index() {
+    std::size_t index = 0;
     while (index_to_path.find(index) != index_to_path.end()) {
         ++index;
     }

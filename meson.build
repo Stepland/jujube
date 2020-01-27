@@ -10,9 +10,13 @@ foreach module : ['system', 'window', 'graphics', 'audio']
     sfml += [dependency('sfml-'+module, version : '>=2.5.1')]
 endforeach
 
-add_project_link_arguments(['-lstdc++', '-lstdc++fs', '-lm'], language : 'cpp')
+add_project_link_arguments(['-lstdc++', '-lstdc++fs', '-lm', '-lGL'], language : 'cpp')
 
 sources = [
+    'include/imgui/imgui.cpp',
+    'include/imgui/imgui_draw.cpp',
+    'include/imgui/imgui_widgets.cpp',
+    'include/imgui-sfml/imgui-SFML.cpp',
     'src/Main.cpp',
     'src/Data/Chart.hpp',
     'src/Data/KeyMapping.hpp',
@@ -37,6 +41,7 @@ sources = [
     'src/Resources/CoverAtlas.hpp',
     'src/Resources/CoverAtlas.cpp',
     'src/Toolkit/AffineTransform.hpp',
+    'src/Toolkit/Debuggable.hpp',
     'src/Toolkit/EasingFunctions.hpp',
     'src/Toolkit/EasingFunctions.cpp',
     'src/Toolkit/QuickRNG.hpp',
@@ -47,7 +52,7 @@ executable(
     'jujube',
     sources,
     dependencies: [sfml],
-    include_directories : include_directories('include'),
+    include_directories : include_directories('include', 'include/imgui', 'include/imgui-sfml'), 
     cpp_args : [
         '-Wall',
         '-Wextra',

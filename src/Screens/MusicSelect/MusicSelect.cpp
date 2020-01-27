@@ -1,5 +1,8 @@
 #include "MusicSelect.hpp"
 
+#include "imgui/imgui.h"
+#include "imgui-sfml/imgui-SFML.h"
+
 #include <iostream>
 
 #include "../../Data/KeyMapping.hpp"
@@ -25,10 +28,13 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
     
     window.create(sf::VideoMode(panel_size*4, panel_size*4), "jujube", sf::Style::Titlebar);
     window.setFramerateLimit(60);
+    ImGui::SFML::Init(window);
     bool chart_selected = false;
+    sf::Clock imguiClock;
     while (not chart_selected) {
         sf::Event event;
         while (window.pollEvent(event)) {
+            ImGui::SFML::ProcessEvent(event);
             switch (event.type) {
             case sf::Event::KeyPressed:
                 handle_key_press(event.key);
@@ -39,17 +45,30 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                 break;
             }
         }
+
+        ImGui::SFML::Update(window, imguiClock.restart());
+        window.clear(sf::Color::Black);
+        ribbon.draw_debug();
         window.draw(ribbon);
         window.draw(button_highlight);
+        ImGui::SFML::Render(window);
         window.display();
-        window.clear(sf::Color::Black);
     }
+    ImGui::SFML::Shutdown();
 }
 
 void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event) {
     auto button = key_mapping.key_to_button(key_event.code);
     if (button) {
         press_button(*button);
+    } else {
+        switch (key_event.code){
+        case sf::Keyboard::F12:
+            ribbon.debug = not ribbon.debug;
+            break;
+        default:
+            break;
+        }
     }
 }
 

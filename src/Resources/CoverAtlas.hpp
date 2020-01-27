@@ -37,17 +37,17 @@ namespace Textures {
         void efficient_reload(const std::vector<fs::path>& covers);
     
     private:
-        std::unordered_map<fs::path, unsigned int> path_to_index;
-        std::unordered_map<unsigned int, fs::path> index_to_path;
+        std::unordered_map<fs::path, std::size_t> path_to_index;
+        std::unordered_map<std::size_t, fs::path> index_to_path;
         std::vector<std::shared_ptr<sf::RenderTexture>> textures;
-        unsigned int next_available_index();
+        std::size_t next_available_index();
     };
 
     struct DetailedLocation {
-        unsigned int texture_index;
-        unsigned int row;
-        unsigned int column;
+        std::size_t texture_index;
+        std::size_t row;
+        std::size_t column;
     };
 
-    DetailedLocation get_detailed_location(unsigned int location);
+    DetailedLocation get_detailed_location(std::size_t location);
 }
