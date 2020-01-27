@@ -64,7 +64,9 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
     } else {
         switch (key_event.code){
         case sf::Keyboard::F12:
-            ribbon.debug = not ribbon.debug;
+            {
+                ribbon.debug = not ribbon.debug;
+            }
             break;
         default:
             break;
