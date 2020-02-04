@@ -12,8 +12,8 @@ void MusicSelect::ColorPanel::draw(const Resources& resources, sf::RenderTarget&
     target.draw(panel);
 }
 
-void MusicSelect::CategoryPanel::click(Ribbon& ribbon) {
-    ribbon.move_to_next_category();
+void MusicSelect::CategoryPanel::click(Ribbon& ribbon, std::size_t from_button_index) {
+    ribbon.move_to_next_category(from_button_index);
 }
 
 void MusicSelect::CategoryPanel::draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
@@ -64,7 +64,7 @@ void MusicSelect::CategoryPanel::draw(const Resources& resources, sf::RenderTarg
 
 
 
-void MusicSelect::SongPanel::click(Ribbon& ribbon) {
+void MusicSelect::SongPanel::click(Ribbon& ribbon, std::size_t from_button_index) {
     
 }
 

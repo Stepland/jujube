@@ -86,9 +86,10 @@ void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& 
 
 void MusicSelect::Screen::press_button(const Button& button) {
     button_highlight.button_pressed(button);
-    auto index = toIndex(button);
-    if (index < 12) {
-        ribbon.at(index)->click(*this);
+    auto button_index = toIndex(button);
+    if (button_index < 12) {
+        ribbon.click_on(button_index);
+        // ribbon.at(button_index)->click(ribbon);
     } else {
         switch (button) {
         case Button::B13:

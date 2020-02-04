@@ -2,8 +2,6 @@
 
 ## Music Select Screen
 
-- Category Panel click
-    - ribbon.layout iterator ?
 - Song Panel draw
 - Song Panel click
 - Chart Panel
@@ -13,3 +11,7 @@
 ## Themeing support
 
 - when I have a whole week
+
+# Done
+
+- Category Panel click
