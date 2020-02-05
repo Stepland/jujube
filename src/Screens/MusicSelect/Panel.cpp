@@ -70,7 +70,7 @@ void MusicSelect::SongPanel::draw(Resources& resources, sf::RenderTarget& target
     sf::Sprite cover;
     sf::Texture& cover_texture = resources.fallback_cover;
     if (m_song.cover) {
-        cover_texture = *resources.covers.get(m_song.cover.value());
+        cover_texture = *resources.covers.get(m_song.folder/m_song.cover.value());
     }
     cover.setTexture(cover_texture);
     auto bounds = cover.getGlobalBounds();

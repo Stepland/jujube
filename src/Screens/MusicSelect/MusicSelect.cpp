@@ -26,7 +26,7 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
         }
     }
     */
-    ribbon.test_song_cover_sort();
+    ribbon.title_sort(song_list);
     std::cout << "loaded MusicSelect::Screen" << std::endl;
 }
 

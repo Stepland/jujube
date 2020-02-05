@@ -8,6 +8,7 @@ void Textures::Autoloader::load(const fs::path& t_path) {
     if (!texture->loadFromFile(t_path)) {
         throw std::invalid_argument("Unable to load cover image : "+t_path.string());
     }
+    texture->setSmooth(true);
     m_mapping[t_path] = texture;
 }
 

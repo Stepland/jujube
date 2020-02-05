@@ -16,6 +16,7 @@ namespace Data {
     struct Song {
         Song() = default;
         explicit Song(fs::path song_folder);
+        fs::path folder;
         std::string title;
         std::string artist;
         // Path to the album cover

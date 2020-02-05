@@ -69,7 +69,9 @@ namespace Data {
         }
     }
 
-    Song::Song(fs::path song_folder) {
+    Song::Song(fs::path song_folder) :
+        folder(song_folder)
+    {
         
         // .memon ?
         auto memon_files = getMemonFiles(song_folder);
