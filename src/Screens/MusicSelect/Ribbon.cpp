@@ -62,6 +62,14 @@ bool MusicSelect::MoveAnimation::ended() {
     return clock.getElapsedTime() / m_time_factor > sf::milliseconds(300);
 }
 
+MusicSelect::Ribbon::Ribbon(Resources& t_resources) :
+    m_resources(t_resources),
+    m_layout(),
+    empty_song()
+{
+    std::cout << "Loaded MusicSelect::Ribbon" << std::endl;
+}
+
 void MusicSelect::Ribbon::title_sort(const Data::SongList &song_list) {
     std::vector<std::reference_wrapper<const Data::Song>> songs;
     for (auto &&song : song_list.songs) {
@@ -140,9 +148,7 @@ void MusicSelect::Ribbon::test_song_cover_sort() {
         auto category_size = category_size_generator.generate();
         for (int i = 0; i < category_size; i++) {
             categories[std::string(1, letter)].push_back(
-                std::make_shared<MusicSelect::SongPanel>(
-                    Data::Song{}
-                )
+                std::make_shared<MusicSelect::SongPanel>(this->empty_song)
             );
         }
     }

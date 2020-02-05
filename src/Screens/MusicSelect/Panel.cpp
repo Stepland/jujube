@@ -69,7 +69,7 @@ void MusicSelect::SongPanel::click(Ribbon& ribbon, std::size_t from_button_index
 void MusicSelect::SongPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
     sf::Sprite cover;
     sf::Texture& cover_texture = resources.fallback_cover;
-    if (false and m_song.cover) {
+    if (m_song.cover) {
         cover_texture = *resources.covers.get(m_song.cover.value());
     }
     cover.setTexture(cover_texture);

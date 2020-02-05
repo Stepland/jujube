@@ -9,9 +9,13 @@
 
 MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
     song_list(t_song_list),
+    resources(),
+    ribbon(resources),
+    selected_panel(),
     button_highlight(panel_size),
-    ribbon(resources)
-{
+    key_mapping()
+{   
+    /*
     for (const auto& song : song_list.songs) {
         if (song.cover) {
             try {
@@ -21,11 +25,12 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
             }
         }
     }
+    */
     ribbon.test_song_cover_sort();
+    std::cout << "loaded MusicSelect::Screen" << std::endl;
 }
 
 void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
-    
     window.create(sf::VideoMode(panel_size*4, panel_size*4), "jujube", sf::Style::Titlebar);
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
@@ -45,7 +50,6 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                 break;
             }
         }
-
         ImGui::SFML::Update(window, imguiClock.restart());
         window.clear(sf::Color::Black);
         ribbon.draw_debug();
