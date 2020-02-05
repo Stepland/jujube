@@ -13,21 +13,18 @@
 - Category Panel click
 
 ## Gameplay Screen
-### TODO
-*(everything)*
 
 ## Results Screen
-### TODO
-*(everything)*
 
 ## memo Compatibility
-### TODO
-*(everything)*
 
 ## Themeing support
 *(when I have a whole week)*
 
-# v2.0.0
+# v1.1.0
+## FB9 Support
+
+# v1.2.0
 
 ## P4IO Support
 ### TODO
