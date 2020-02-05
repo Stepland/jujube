@@ -2,6 +2,7 @@
 ## Music Select Screen
 ### TODO
 - Song Panel draw
+    - async song cover loading
 - Song Panel click
 - Chart Panel
 - Visible controls
