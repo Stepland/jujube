@@ -26,8 +26,9 @@ namespace Textures {
     public:
         Autoloader() = default;
         std::shared_ptr<sf::Texture> get(const fs::path& t_path);
-    private:
         void load(const fs::path& t_path);
-        mutable std::unordered_map<fs::path, std::shared_ptr<sf::Texture>> m_mapping;
-    }; 
+        bool has(const fs::path& t_path);
+    private:
+        std::unordered_map<fs::path, std::shared_ptr<sf::Texture>> m_mapping;
+    };
 }

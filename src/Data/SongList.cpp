@@ -11,6 +11,14 @@ namespace fs = std::filesystem;
 
 namespace Data {
 
+    std::optional<fs::path> Song::full_cover_path() const {
+        if (cover) {
+            return folder/cover.value();
+        } else {
+            return {};
+        } 
+    }
+
     SongList::SongList::SongList() {
 
         // Loading all song metadata

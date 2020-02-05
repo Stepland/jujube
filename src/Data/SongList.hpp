@@ -28,6 +28,8 @@ namespace Data {
         // to allow for decimal levels (introduced in jubeat ... festo ?)
         std::unordered_map<std::string, unsigned int> chart_levels;
 
+        std::optional<fs::path> full_cover_path() const;
+
         static bool sort_by_title(const Data::Song& a, const Data::Song& b) {
             return a.title < b.title;
         }
