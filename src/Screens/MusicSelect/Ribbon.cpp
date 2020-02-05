@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "Panel.hpp"
+#include "../../Data/SongList.hpp"
 #include "../../Toolkit/QuickRNG.hpp"
 
 MusicSelect::MoveAnimation::MoveAnimation(int previous_pos, int next_pos, size_t ribbon_size, Direction direction, float &t_time_factor) : 
@@ -124,6 +125,23 @@ void MusicSelect::Ribbon::test2_sort() {
                         panel_hue_generator.generate(),
                         panel_hue_generator.generate()
                     )
+                )
+            );
+        }
+    }
+    layout_from_category_map(categories);
+}
+
+void MusicSelect::Ribbon::test_song_cover_sort() {
+    std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    std::map<std::string, std::vector<std::shared_ptr<Panel>>> categories;
+    Toolkit::UniformIntRNG category_size_generator{1, 10};
+    for (auto &&letter : alphabet) {
+        auto category_size = category_size_generator.generate();
+        for (int i = 0; i < category_size; i++) {
+            categories[std::string(1, letter)].push_back(
+                std::make_shared<MusicSelect::SongPanel>(
+                    Data::Song{}
                 )
             );
         }

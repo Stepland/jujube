@@ -8,8 +8,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../Resources/CoverAtlas.hpp"
-
 namespace fs = std::filesystem;
 
 namespace Data {

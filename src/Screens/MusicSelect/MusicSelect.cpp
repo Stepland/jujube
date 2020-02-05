@@ -15,13 +15,13 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
     for (const auto& song : song_list.songs) {
         if (song.cover) {
             try {
-                resources.cover_previews.emplace_back(song.cover.value());
+                resources.covers.get(song.cover.value());
             } catch(const std::exception& e) {
                 std::cerr << e.what() << '\n';
             }
         }
     }
-    ribbon.test2_sort();
+    ribbon.test_song_cover_sort();
 }
 
 void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {

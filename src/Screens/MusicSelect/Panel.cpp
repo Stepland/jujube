@@ -4,7 +4,7 @@
 
 #include "MusicSelect.hpp"
 
-void MusicSelect::ColorPanel::draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
+void MusicSelect::ColorPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
     sf::RectangleShape panel{{area.width*0.9f, area.height*0.9f}};
     panel.setFillColor(this->color);
     panel.setOrigin(panel.getSize().x / 2.f, panel.getSize().y / 2.f);
@@ -16,7 +16,7 @@ void MusicSelect::CategoryPanel::click(Ribbon& ribbon, std::size_t from_button_i
     ribbon.move_to_next_category(from_button_index);
 }
 
-void MusicSelect::CategoryPanel::draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
+void MusicSelect::CategoryPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
     sf::RectangleShape red_rectangle;
     red_rectangle.setFillColor(sf::Color::Transparent);
     red_rectangle.setOutlineColor(sf::Color::Red);
@@ -62,14 +62,21 @@ void MusicSelect::CategoryPanel::draw(const Resources& resources, sf::RenderTarg
     target.draw(red_rectangle);
 }
 
-
-
 void MusicSelect::SongPanel::click(Ribbon& ribbon, std::size_t from_button_index) {
     
 }
 
-void MusicSelect::SongPanel::draw(const Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
-    
+void MusicSelect::SongPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
+    sf::Sprite cover;
+    sf::Texture& cover_texture = resources.fallback_cover;
+    if (false and m_song.cover) {
+        cover_texture = *resources.covers.get(m_song.cover.value());
+    }
+    cover.setTexture(cover_texture);
+    auto bounds = cover.getGlobalBounds();
+    cover.setPosition(area.left, area.top);
+    cover.setScale(area.width / bounds.width, area.width / bounds.width);
+    target.draw(cover);
 }
 
 void MusicSelect::set_to_global_bounds(sf::RectangleShape& rect, const sf::Text& text) {

@@ -32,10 +32,11 @@ namespace MusicSelect {
     // It can be sorted in a number of ways
     class Ribbon final : public sf::Drawable, public Toolkit::Debuggable {
     public:
-        Ribbon(const Resources& t_resources) : m_resources(t_resources) {};
+        Ribbon(Resources& t_resources) : m_resources(t_resources) {};
         void title_sort(const Data::SongList& song_list);
         void test_sort();
         void test2_sort();
+        void test_song_cover_sort();
         const std::shared_ptr<MusicSelect::Panel>& get_panel_under_button(std::size_t button_index) const;
         void click_on(std::size_t button_index);
         void move_right();
@@ -51,7 +52,7 @@ namespace MusicSelect {
         std::vector<std::array<std::shared_ptr<Panel>,3>> m_layout;
         std::size_t m_position = 0;
         mutable std::optional<MoveAnimation> m_move_animation;
-        const Resources& m_resources;
+        Resources& m_resources;
         float m_time_factor = 1.f;
     };
 }
