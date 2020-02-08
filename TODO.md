@@ -1,8 +1,7 @@
 # v1.0.0
 ## Music Select Screen
 ### TODO
-- Song Panel draw
-
+- Fix debug menu
 - Song Panel click
 - Chart Panel
 - Visible controls
@@ -14,6 +13,7 @@
 - Category Panel click
 - Song Panel draw
     - async song cover loading
+    - fade in
 
 ## Gameplay Screen
 
