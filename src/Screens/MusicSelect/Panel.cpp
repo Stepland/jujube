@@ -68,11 +68,13 @@ void MusicSelect::SongPanel::click(Ribbon& ribbon, std::size_t from_button_index
 
 void MusicSelect::SongPanel::draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) {
     sf::Sprite cover;
-    sf::Texture& cover_texture = resources.fallback_cover;
+    cover.setTexture(resources.fallback_cover);
     if (m_song.cover) {
-        cover_texture = *resources.covers.get(m_song.folder/m_song.cover.value());
+        auto loaded_texture = resources.covers.async_get(m_song.folder/m_song.cover.value());
+        if (loaded_texture) {
+            cover.setTexture(**loaded_texture, true);
+        }
     }
-    cover.setTexture(cover_texture);
     auto bounds = cover.getGlobalBounds();
     cover.setPosition(area.left, area.top);
     cover.setScale(area.width / bounds.width, area.width / bounds.width);

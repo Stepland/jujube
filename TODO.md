@@ -2,7 +2,7 @@
 ## Music Select Screen
 ### TODO
 - Song Panel draw
-    - async song cover loading
+
 - Song Panel click
 - Chart Panel
 - Visible controls
@@ -12,6 +12,8 @@
 
 ### Done
 - Category Panel click
+- Song Panel draw
+    - async song cover loading
 
 ## Gameplay Screen
 
@@ -24,6 +26,9 @@
 
 # v1.1.0
 ## FB9 Support
+
+## Music Select Screen
+- bound memory usage of Textures::Autoloader
 
 # v1.2.0
 

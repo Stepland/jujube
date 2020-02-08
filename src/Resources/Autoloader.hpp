@@ -3,8 +3,10 @@
 #include <filesystem>
 #include <memory>
 #include <optional>
+#include <shared_mutex>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include <SFML/Graphics.hpp>
 
@@ -21,14 +23,20 @@ namespace std {
 }
 
 namespace Textures {
-    // Loads textures on demand and stores them in a map for easy path-based access
+    // Loads textures asynchronously (in the background) on demand and stores them in a map for easy path-based access
     class Autoloader {
     public:
         Autoloader() = default;
-        std::shared_ptr<sf::Texture> get(const fs::path& t_path);
-        void load(const fs::path& t_path);
-        bool has(const fs::path& t_path);
+        std::optional<std::shared_ptr<sf::Texture>> async_get(const fs::path& path);
+        std::optional<std::shared_ptr<sf::Texture>> get(const fs::path& path);
+        void load(const fs::path& path);
+        void async_load(const fs::path& path);
+        bool has(const fs::path& path);
+        bool is_loading(const fs::path& path);
     private:
         std::unordered_map<fs::path, std::shared_ptr<sf::Texture>> m_mapping;
+        std::shared_mutex m_mapping_mutex;
+        std::unordered_set<fs::path> m_is_loading;
+        std::shared_mutex m_is_loading_mutex;
     };
 }

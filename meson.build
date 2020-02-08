@@ -10,6 +10,8 @@ foreach module : ['system', 'window', 'graphics', 'audio']
     sfml += [dependency('sfml-'+module, version : '>=2.5.1')]
 endforeach
 
+thread_dep = dependency('threads')
+
 add_project_link_arguments(['-lstdc++', '-lstdc++fs', '-lm', '-lGL'], language : 'cpp')
 
 sources = [
@@ -53,7 +55,7 @@ sources = [
 executable(
     'jujube',
     sources,
-    dependencies: [sfml],
+    dependencies: [sfml, thread_dep],
     include_directories : include_directories('include', 'include/imgui', 'include/imgui-sfml'), 
     cpp_args : [
         '-Wall',
