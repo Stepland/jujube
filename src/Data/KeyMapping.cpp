@@ -11,9 +11,7 @@ unsigned int toIndex(Button button) {
 
 std::optional<Button> fromCoords(ButtonCoords button_coords) {
     if (
-        button_coords.x >= 0 and
         button_coords.x < 4 and
-        button_coords.y >= 0 and
         button_coords.y < 4
     ) {
         return static_cast<Button>(button_coords.x + 4*button_coords.y);
@@ -23,7 +21,7 @@ std::optional<Button> fromCoords(ButtonCoords button_coords) {
 }
 
 std::optional<Button> fromIndex(unsigned int index) {
-    if (index >= 0 and index < 16) {
+    if (index < 16) {
         return static_cast<Button>(index);
     } else {
         return {};
