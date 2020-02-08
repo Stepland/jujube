@@ -310,7 +310,7 @@ void MusicSelect::Ribbon::draw_without_animation(sf::RenderTarget &target, sf::R
 
 void MusicSelect::Ribbon::draw_debug() {
     if (debug) {
-        ImGui::Begin("Ribbon Debug"); {
+        ImGui::Begin("Ribbon Debug", &debug); {
             ImGui::SliderFloat("Time Slowdown Factor", &m_time_factor, 1.f, 10.f);
         }
         ImGui::End();
