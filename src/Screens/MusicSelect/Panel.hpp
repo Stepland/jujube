@@ -4,6 +4,7 @@
 #include <SFML/Window.hpp>
 
 #include "../../Data/SongList.hpp"
+#include "../../Toolkit/AffineTransform.hpp"
 #include "Resources.hpp"
 
 namespace MusicSelect {
@@ -53,6 +54,7 @@ namespace MusicSelect {
         void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
     private:
         const Data::Song& m_song;
+        const Toolkit::AffineTransform<float> m_seconds_to_alpha{0.0f, 0.15f, 0.f, 255.f};
     };
 
     void set_to_global_bounds(sf::RectangleShape& rect, const sf::Text& text);
