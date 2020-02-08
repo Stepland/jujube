@@ -37,7 +37,7 @@ std::optional<Button> fromIndex(unsigned int index);
 class KeyMapping {
 public:
     KeyMapping();
-    void setPanelToKey(const Button& button, const sf::Keyboard::Key& key);
+    void set_button_to_key(const Button& button, const sf::Keyboard::Key& key);
     std::optional<Button> key_to_button(const sf::Keyboard::Key& key);
     std::optional<sf::Keyboard::Key> button_to_key(const Button& button);
 private:

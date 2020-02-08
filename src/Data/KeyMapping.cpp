@@ -53,7 +53,7 @@ KeyMapping::KeyMapping() {
     }
 }
 
-void KeyMapping::setPanelToKey(const Button& button, const sf::Keyboard::Key& key) {
+void KeyMapping::set_button_to_key(const Button& button, const sf::Keyboard::Key& key) {
     if (m_key_to_button.find(key) != m_key_to_button.end()) {
         m_button_to_key.erase(m_key_to_button[key]);
         m_key_to_button.erase(key);
