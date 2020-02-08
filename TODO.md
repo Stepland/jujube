@@ -1,7 +1,8 @@
 # v1.0.0
 ## Music Select Screen
 ### TODO
-- Fix debug menu
+- Top Screen Part Handling
+- Correct display ratios
 - Song Panel click
 - Chart Panel
 - Visible controls
@@ -14,6 +15,7 @@
 - Song Panel draw
     - async song cover loading
     - fade in
+- Fix debug menu
 
 ## Gameplay Screen
 
