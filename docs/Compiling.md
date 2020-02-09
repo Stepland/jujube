@@ -7,7 +7,7 @@ jujube needs a *very* up to date C++ compiler for I'm using stuff like `std::fil
 
 ## Linux
 
-### Dependencies
+### Dependancies
 
 - **SFML 2.5.1** : You will most likely need to build SFML yourself, and with the same compiler as the one you will use for jujube because if you just get precompiled binaries for SFML from your package manager you *will* have compatibility problems. [Here's](https://www.sfml-dev.org/tutorials/2.5/compile-with-cmake.php) their docs.
 - **meson** : Installation explained [here](https://mesonbuild.com/Quick-guide.html)
