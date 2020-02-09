@@ -62,7 +62,7 @@ bool MusicSelect::MoveAnimation::ended() {
     return clock.getElapsedTime() / m_time_factor > sf::milliseconds(300);
 }
 
-MusicSelect::Ribbon::Ribbon(Resources& t_resources, unsigned int panel_size, unsigned int panel_spacing) :
+MusicSelect::Ribbon::Ribbon(Resources& t_resources, float& panel_size, float& panel_spacing) :
     m_layout(),
     m_move_animation(),
     m_resources(t_resources),
