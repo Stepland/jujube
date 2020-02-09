@@ -8,6 +8,8 @@
 - Fix debug menu
 
 ### TODO
+- Song Panel draw
+    - stretch cover to fit
 - Top Screen Part Handling
 - Correct display ratios
 - Song Panel click
