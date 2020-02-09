@@ -3,7 +3,7 @@ jujube will be a cross-platform FLOSS jubeat simulator,
 
 I'm still unsure about the name
 
-Its main goal is to be easy to install and use on any platform
+Its main goal is to be easy to install and use on Windows, Mac and Linux
 
 ## Planned Features
 ### 100% Sure
