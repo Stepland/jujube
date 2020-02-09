@@ -2,3 +2,4 @@ build*/
 .vscode/
 include/imgui*
 test_songs/
+docs/refs
