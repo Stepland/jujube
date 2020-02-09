@@ -1,5 +1,12 @@
 # v1.0.0
 ## Music Select Screen
+### Done
+- Category Panel click
+- Song Panel draw
+    - async song cover loading
+    - fade in
+- Fix debug menu
+
 ### TODO
 - Top Screen Part Handling
 - Correct display ratios
@@ -10,16 +17,12 @@
 - Options menu
     - Controller mapping
 
-### Done
-- Category Panel click
-- Song Panel draw
-    - async song cover loading
-    - fade in
-- Fix debug menu
-
 ## Gameplay Screen
 
 ## Results Screen
+
+## Windows and macOS builds
+Try static linking ?
 
 ## memo Compatibility
 
