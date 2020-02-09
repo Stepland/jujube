@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Transformable.hpp>
 
 #include "Panel.hpp"
 #include "../../Data/SongList.hpp"
@@ -30,7 +31,7 @@ namespace MusicSelect {
 
     // The Ribbon is the moving part of the Music Select Screen
     // It can be sorted in a number of ways
-    class Ribbon final : public sf::Drawable, public Toolkit::Debuggable {
+    class Ribbon final : public sf::Drawable, public sf::Transformable, public Toolkit::Debuggable {
     public:
         Ribbon(Resources& t_resources, unsigned int panel_size, unsigned int panel_spacing);
         void title_sort(const Data::SongList& song_list);
@@ -55,7 +56,7 @@ namespace MusicSelect {
         Resources& m_resources;
         float m_time_factor = 1.f;
         Data::Song empty_song;
-        std::size_t m_panel_size;
-        std::size_t m_panel_spacing;
+        float m_panel_size;
+        float m_panel_spacing;
     };
 }

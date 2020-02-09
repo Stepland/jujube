@@ -63,8 +63,9 @@ bool MusicSelect::MoveAnimation::ended() {
 }
 
 MusicSelect::Ribbon::Ribbon(Resources& t_resources, unsigned int panel_size, unsigned int panel_spacing) :
-    m_resources(t_resources),
     m_layout(),
+    m_move_animation(),
+    m_resources(t_resources),
     empty_song(),
     m_panel_size(panel_size),
     m_panel_spacing(panel_spacing)
@@ -247,6 +248,7 @@ void MusicSelect::Ribbon::move_to_next_category(const std::size_t& from_button_i
 }
 
 void MusicSelect::Ribbon::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    states.transform *= getTransform();
     if (m_move_animation) {
         if (not m_move_animation->ended()) {
             return draw_with_animation(target, states);
@@ -263,7 +265,7 @@ void MusicSelect::Ribbon::draw_with_animation(sf::RenderTarget &target, sf::Rend
     std::size_t column_zero = (relative_column_zero + m_layout.size()) % m_layout.size();
 
     if (debug) {
-        ImGui::Begin("Ribbon Debug"); {
+        if (ImGui::Begin("Ribbon Debug")) {
             ImGui::Text("float position : %f", float_position);
             ImGui::Text("zeroth column : %lu", column_zero);
         }
@@ -278,7 +280,7 @@ void MusicSelect::Ribbon::draw_with_animation(sf::RenderTarget &target, sf::Rend
                 (static_cast<float>(relative_column_zero + column_offset) - float_position) * (m_panel_size+m_panel_spacing),
                 row * (m_panel_size+m_panel_spacing)
             );
-            target.draw(*panel);
+            target.draw(*panel, states);
         }
     }
 }
@@ -289,7 +291,7 @@ void MusicSelect::Ribbon::draw_without_animation(sf::RenderTarget &target, sf::R
         for (int row = 0; row < 3; row++) {
             auto panel = m_layout.at(actual_column_index).at(row);
             panel->setPosition(column * (m_panel_size+m_panel_spacing), row * (m_panel_size+m_panel_spacing));
-            target.draw(*panel);
+            target.draw(*panel, states);
         }
     }
 }

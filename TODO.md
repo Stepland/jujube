@@ -1,17 +1,23 @@
 # v1.0.0
-## Music Select Screen
 ### Done
+## Music Select Screen
 - Category Panel click
 - Song Panel draw
     - async song cover loading
     - fade in
+    - stretch cover to fit
 - Fix debug menu
+- Handling Resolution changes
+    - Make Panels Drawable and Transformable
 
 ### TODO
-- Song Panel draw
-    - stretch cover to fit
+- Preference persistency system
+
+## Music Select Screen
+- Handling Resolution changes
+    - Compute panel size from resolution
 - Top Screen Part Handling
-- Correct display ratios
+    - Make Ribbon Transformable
 - Song Panel click
 - Chart Panel
 - Visible controls
