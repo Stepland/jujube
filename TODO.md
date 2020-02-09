@@ -1,23 +1,25 @@
 # v1.0.0
-### Done
-## Music Select Screen
+## Done
+### Music Select Screen
 - Category Panel click
 - Song Panel draw
     - async song cover loading
     - fade in
     - stretch cover to fit
+    - draw song title
 - Fix debug menu
 - Handling Resolution changes
     - Make Panels Drawable and Transformable
+    - Make Ribbon Transformable
 
-### TODO
+## TODO
 - Preference persistency system
 
-## Music Select Screen
+### Music Select Screen
 - Handling Resolution changes
     - Compute panel size from resolution
 - Top Screen Part Handling
-    - Make Ribbon Transformable
+    - Fullscreen handling
 - Song Panel click
 - Chart Panel
 - Visible controls
@@ -25,16 +27,16 @@
 - Options menu
     - Controller mapping
 
-## Gameplay Screen
+### Gameplay Screen
 
-## Results Screen
+### Results Screen
 
-## Windows and macOS builds
+### Windows and macOS builds
 Try static linking ?
 
-## memo Compatibility
+### memo Compatibility
 
-## Themeing support
+### Themeing support
 *(when I have a whole week)*
 
 # v1.1.0
