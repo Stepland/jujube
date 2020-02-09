@@ -6,6 +6,6 @@ namespace Toolkit {
     public:
         virtual ~Debuggable() = default;
         virtual void draw_debug() = 0;
-        bool debug;
+        bool debug = false;
     };
 }
