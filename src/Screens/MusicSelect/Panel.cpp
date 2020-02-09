@@ -80,10 +80,24 @@ namespace MusicSelect {
                 );
                 cover.setColor(sf::Color(255, 255, 255, alpha));
                 auto bounds = cover.getGlobalBounds();
-                cover.setScale(m_size / bounds.width, m_size / bounds.height);
+                cover.setScale(m_size*0.8f/bounds.width, m_size*0.8f/bounds.height);
+                cover.setPosition(m_size*0.1f,m_size*0.1563f);
                 target.draw(cover, states);
             }
         }
+        sf::Text song_title;
+        song_title.setFont(m_resources.noto_sans_medium);
+        song_title.setString(m_song.title);
+        song_title.setCharacterSize(static_cast<unsigned int>(0.06875f*m_size));
+        song_title.setFillColor(sf::Color::White);
+        auto song_title_bounds = song_title.getLocalBounds();
+        // text is too long : scale it
+        if (song_title_bounds.width > 0.88f * m_size) {
+            song_title.setScale(0.88f * m_size / song_title_bounds.width, 1.0f);
+        }
+        song_title.setPosition(18.f/160.f,9.f/160.f);
+        target.draw(song_title, states);
+
     }
 
     void set_to_global_bounds(sf::RectangleShape& rect, const sf::Text& text) {
