@@ -1,9 +1,9 @@
 # Compiling jujube
 
 jujube uses the meson build system.
-Only time will tell if this turned out to be a wise choice, I just can't stand CMake.
+Only time will tell if this turned out to be a wise choice, I wanted to try something other than CMake.
 
-jujube needs a *very* up to date C++ compiler for I'm using stuff like `std::filesystem` which is, at the time of writing, easily availble only on the very last version of your favorite compiler
+jujube needs a *very* up to date C++ compiler for I'm using stuff like `std::filesystem` which is, at the time of writing, *easily* availble only on the last few versions of your favorite compiler
 
 ## Linux
 
@@ -14,7 +14,7 @@ jujube needs a *very* up to date C++ compiler for I'm using stuff like `std::fil
 
 ### Building
 
-let's say you downloaded the source code in `jujube` and you decided to compile with `gcc-9`
+let's say you downloaded the source code in a folder called `jujube` and you decided to compile with `gcc-9`
 
 ```bash
 $ cd jujube
@@ -22,3 +22,5 @@ $ CXX=gcc-9 meson build
 $ cd build
 $ ninja
 ```
+
+And that's it !
