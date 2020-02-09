@@ -37,7 +37,9 @@ namespace Textures {
     class Autoloader {
     public:
         Autoloader() = default;
+        // Triggers async loading and returns empty if not already loaded
         std::optional<AutoloadedTexture> async_get(const fs::path& path);
+        // Does not trigger loading
         std::optional<AutoloadedTexture> get(const fs::path& path);
         void load(const fs::path& path);
         void async_load(const fs::path& path);

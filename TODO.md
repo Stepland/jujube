@@ -14,6 +14,8 @@
 
 ## TODO
 - Preference persistency system
+    - cereal ? https://github.com/USCiLab/cereal
+        - handling previous schema versions ?
 
 ### Music Select Screen
 - Handling Resolution changes
