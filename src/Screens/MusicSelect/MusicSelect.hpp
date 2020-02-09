@@ -24,7 +24,8 @@ namespace MusicSelect {
     private:
         // Data
         const Data::SongList& song_list;
-        std::size_t panel_size = 150;
+        std::size_t m_panel_size = 150;
+        std::size_t m_panel_spacing = 0;
 
         // Resources
         Resources resources;

@@ -10,9 +10,9 @@
 MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
     song_list(t_song_list),
     resources(),
-    ribbon(resources),
+    ribbon(resources, m_panel_size, m_panel_spacing),
     selected_panel(),
-    button_highlight(panel_size),
+    button_highlight(m_panel_size),
     key_mapping()
 {   
     /*
@@ -31,7 +31,7 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
 }
 
 void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
-    window.create(sf::VideoMode(panel_size*4, panel_size*4), "jujube", sf::Style::Titlebar);
+    window.create(sf::VideoMode(m_panel_size*4, m_panel_size*4), "jujube", sf::Style::Titlebar);
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
     bool chart_selected = false;
@@ -78,7 +78,7 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
 
 void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event) {
     if (mouse_button_event.button == sf::Mouse::Left) {
-        int clicked_panel_index = (mouse_button_event.x / panel_size) + 4 * (mouse_button_event.y / panel_size);
+        int clicked_panel_index = (mouse_button_event.x / m_panel_size) + 4 * (mouse_button_event.y / m_panel_size);
         auto button = fromIndex(clicked_panel_index);
         if (button) {
             press_button(*button);

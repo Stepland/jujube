@@ -13,46 +13,49 @@ namespace MusicSelect {
 
     // A Panel holds anything that can go under a button on the moving part
     // of the music select screen, be it nothing, a category indicator, or a song
-    class Panel {
+    class Panel : public sf::Drawable, public sf::Transformable {
     public:
+        Panel(const std::size_t& size, Resources& resources) : m_size(size), m_resources(resources) {};
         // What happens when you click on the panel
         virtual void click(Ribbon& ribbon, std::size_t from_button_index) = 0;
-        // How the panel should be displayed
-        virtual void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) = 0;
         virtual ~Panel() = default;
+    protected:
+        const std::size_t& m_size;
+        Resources& m_resources;
     };
 
     class EmptyPanel final : public Panel {
     public:
+        using Panel::Panel;
         void click(Ribbon& ribbon, std::size_t from_button_index) override {return;};
-        void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override {return;};
+    private:
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const override {return;};
     };
 
     class ColorPanel final : public Panel {
     public:
-        explicit ColorPanel(const sf::Color& t_color) : color(t_color) {};
+        ColorPanel(const std::size_t& size, Resources& resources, const sf::Color& t_color) : Panel(size, resources), m_color(t_color) {};
         void click(Ribbon& ribbon, std::size_t from_button_index) override {return;};
-        void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
     private:
-        const sf::Color color;
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+        const sf::Color m_color;
     };
 
     class CategoryPanel final : public Panel {
     public:
-        explicit CategoryPanel(const std::string& t_label) : label(t_label) {};
+        explicit CategoryPanel(const std::size_t& size, Resources& resources, const std::string& t_label) : Panel(size, resources), m_label(t_label) {};
         void click(Ribbon& ribbon, std::size_t from_button_index) override;
-        void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
-        
     private:
-        std::string label;
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+        std::string m_label;
     };
 
     class SongPanel final : public Panel {
     public:
-        explicit SongPanel(const Data::Song& t_song) : m_song(t_song) {};
+        explicit SongPanel(const std::size_t& size, Resources& resources, const Data::Song& t_song) : Panel(size, resources), m_song(t_song) {};
         void click(Ribbon& ribbon, std::size_t from_button_index) override;
-        void draw(Resources& resources, sf::RenderTarget& target, sf::FloatRect area) override;
     private:
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         const Data::Song& m_song;
         const Toolkit::AffineTransform<float> m_seconds_to_alpha{0.0f, 0.15f, 0.f, 255.f};
     };

@@ -62,10 +62,12 @@ bool MusicSelect::MoveAnimation::ended() {
     return clock.getElapsedTime() / m_time_factor > sf::milliseconds(300);
 }
 
-MusicSelect::Ribbon::Ribbon(Resources& t_resources) :
+MusicSelect::Ribbon::Ribbon(Resources& t_resources, unsigned int panel_size, unsigned int panel_spacing) :
     m_resources(t_resources),
     m_layout(),
-    empty_song()
+    empty_song(),
+    m_panel_size(panel_size),
+    m_panel_spacing(panel_spacing)
 {
     std::cout << "Loaded MusicSelect::Ribbon" << std::endl;
 }
@@ -84,19 +86,19 @@ void MusicSelect::Ribbon::title_sort(const Data::SongList &song_list) {
                 categories
                 [std::string(1, letter)]
                 .push_back(
-                    std::make_shared<SongPanel>(song)
+                    std::make_shared<SongPanel>(m_panel_size, m_resources, song)
                 );
             } else if ('a' <= letter and letter <= 'z') {
                 categories
                 [std::string(1, 'A' + (letter - 'a'))]
                 .push_back(
-                    std::make_shared<SongPanel>(song)
+                    std::make_shared<SongPanel>(m_panel_size, m_resources, song)
                 );
             } else {
-                categories["?"].push_back(std::make_shared<SongPanel>(song));
+                categories["?"].push_back(std::make_shared<SongPanel>(m_panel_size, m_resources, song));
             }
         } else {
-            categories["?"].push_back(std::make_shared<SongPanel>(song));
+            categories["?"].push_back(std::make_shared<SongPanel>(m_panel_size, m_resources, song));
         }
     }
     layout_from_category_map(categories);
@@ -105,15 +107,15 @@ void MusicSelect::Ribbon::title_sort(const Data::SongList &song_list) {
 void MusicSelect::Ribbon::test_sort() {
     m_layout.clear();
     m_layout.push_back({
-        std::make_shared<EmptyPanel>(),
-        std::make_shared<CategoryPanel>("A"),
-        std::make_shared<CategoryPanel>("truc")
+        std::make_shared<EmptyPanel>(m_panel_size, m_resources),
+        std::make_shared<CategoryPanel>(m_panel_size, m_resources, "A"),
+        std::make_shared<CategoryPanel>(m_panel_size, m_resources, "truc")
     });
     for (size_t i = 0; i < 3; i++) {
         m_layout.push_back({
-            std::make_shared<EmptyPanel>(),
-            std::make_shared<EmptyPanel>(),
-            std::make_shared<EmptyPanel>()
+            std::make_shared<EmptyPanel>(m_panel_size, m_resources),
+            std::make_shared<EmptyPanel>(m_panel_size, m_resources),
+            std::make_shared<EmptyPanel>(m_panel_size, m_resources)
         });
     }
 }
@@ -128,6 +130,7 @@ void MusicSelect::Ribbon::test2_sort() {
         for (int i = 0; i < category_size; i++) {
             categories[std::string(1, letter)].push_back(
                 std::make_shared<MusicSelect::ColorPanel>(
+                    m_panel_size, m_resources,
                     sf::Color(
                         panel_hue_generator.generate(),
                         panel_hue_generator.generate(),
@@ -148,7 +151,7 @@ void MusicSelect::Ribbon::test_song_cover_sort() {
         auto category_size = category_size_generator.generate();
         for (int i = 0; i < category_size; i++) {
             categories[std::string(1, letter)].push_back(
-                std::make_shared<MusicSelect::SongPanel>(this->empty_song)
+                std::make_shared<MusicSelect::SongPanel>(m_panel_size, m_resources, this->empty_song)
             );
         }
     }
@@ -177,7 +180,7 @@ void MusicSelect::Ribbon::layout_from_category_map(const std::map<std::string, s
     for (auto &&[category, panels] : categories) {
         if (not panels.empty()) {
             std::vector<std::shared_ptr<Panel>> current_column;
-            current_column.push_back(std::make_shared<CategoryPanel>(category));
+            current_column.push_back(std::make_shared<CategoryPanel>(m_panel_size, m_resources, category));
             for (auto &&panel : panels) {
                 if (current_column.size() == 3) {
                     m_layout.push_back({current_column[0], current_column[1], current_column[2]});
@@ -188,7 +191,7 @@ void MusicSelect::Ribbon::layout_from_category_map(const std::map<std::string, s
             }
             if (not current_column.empty()) {
                 while (current_column.size() < 3) {
-                    current_column.push_back(std::make_shared<EmptyPanel>());
+                    current_column.push_back(std::make_shared<EmptyPanel>(m_panel_size, m_resources));
                 }
                 m_layout.push_back({current_column[0], current_column[1], current_column[2]});
             }
@@ -270,19 +273,12 @@ void MusicSelect::Ribbon::draw_with_animation(sf::RenderTarget &target, sf::Rend
     for (int column_offset = -1; column_offset <= 4; column_offset++) {
         std::size_t actual_column = (column_zero + column_offset + m_layout.size()) % m_layout.size();
         for (int row = 0; row < 3; row++) {
-            m_layout
-            .at(actual_column)
-            .at(row)
-            ->draw(
-                m_resources,
-                target,
-                sf::FloatRect(
-                    (static_cast<float>(relative_column_zero + column_offset) - float_position) * 150.f,
-                    row * 150.f,
-                    150.f,
-                    150.f
-                )
+            auto panel = m_layout.at(actual_column).at(row);
+            panel->setPosition(
+                (static_cast<float>(relative_column_zero + column_offset) - float_position) * (m_panel_size+m_panel_spacing),
+                row * (m_panel_size+m_panel_spacing)
             );
+            target.draw(*panel);
         }
     }
 }
@@ -291,19 +287,9 @@ void MusicSelect::Ribbon::draw_without_animation(sf::RenderTarget &target, sf::R
     for (int column = -1; column <= 4; column++) {
         int actual_column_index = (column + m_position + m_layout.size()) % m_layout.size();
         for (int row = 0; row < 3; row++) {
-            m_layout
-            .at(actual_column_index)
-            .at(row)
-            ->draw(
-                m_resources,
-                target,
-                sf::FloatRect(
-                    column * 150.f,
-                    row * 150.f,
-                    150.f,
-                    150.f
-                )
-            );
+            auto panel = m_layout.at(actual_column_index).at(row);
+            panel->setPosition(column * (m_panel_size+m_panel_spacing), row * (m_panel_size+m_panel_spacing));
+            target.draw(*panel);
         }
     }
 }
@@ -312,6 +298,22 @@ void MusicSelect::Ribbon::draw_debug() {
     if (debug) {
         ImGui::Begin("Ribbon Debug", &debug); {
             ImGui::SliderFloat("Time Slowdown Factor", &m_time_factor, 1.f, 10.f);
+            if (ImGui::CollapsingHeader("Panels")) {
+                auto panel_size = static_cast<int>(m_panel_size);
+                if(ImGui::InputInt("Size", &panel_size)) {
+                    if (panel_size < 0) {
+                        panel_size = 0;
+                    }
+                    m_panel_size = static_cast<std::size_t>(panel_size);
+                }
+                auto panel_spacing = static_cast<int>(m_panel_spacing);
+                if(ImGui::InputInt("Spacing", &panel_spacing)) {
+                    if (panel_spacing < 0) {
+                        panel_spacing = 0;
+                    }
+                    m_panel_spacing = static_cast<std::size_t>(panel_spacing);
+                }
+            }
         }
         ImGui::End();
     }
