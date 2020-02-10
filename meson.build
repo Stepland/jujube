@@ -1,18 +1,23 @@
 project(
     'jujube',
     'cpp',
-    default_options : ['cpp_std=c++20'],
+    default_options : ['cpp_std=c++17'],
     version : '0.1.0-alpha',
 )
 
+cc = meson.get_compiler('cpp')
+
 sfml = []
-foreach module : ['system', 'window', 'graphics', 'audio'] 
+foreach module : ['system', 'window', 'graphics', 'audio']
     sfml += [dependency('sfml-'+module, version : '>=2.5.1')]
 endforeach
 
 thread_dep = dependency('threads')
+m_dep = cc.find_library('m', required : false)
+gl_dep = dependency('gl')
 
-add_project_link_arguments(['-lstdc++', '-lstdc++fs', '-lm', '-lGL'], language : 'cpp')
+
+add_project_link_arguments(['-lstdc++', '-lstdc++fs'], language : 'cpp')
 
 sources = [
     'include/imgui/imgui.cpp',
@@ -55,7 +60,7 @@ sources = [
 executable(
     'jujube',
     sources,
-    dependencies: [sfml, thread_dep],
+    dependencies: [sfml, thread_dep, m_dep, gl_dep],
     include_directories : include_directories('include', 'include/imgui', 'include/imgui-sfml'), 
     cpp_args : [
         '-Wall',
