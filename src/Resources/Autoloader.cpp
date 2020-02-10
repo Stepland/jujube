@@ -15,7 +15,7 @@ namespace Textures {
             m_is_loading.insert(path);
         }
         auto texture = std::make_shared<sf::Texture>();
-        if (!texture->loadFromFile(path)) {
+        if (!texture->loadFromFile(path.string())) {
             throw std::invalid_argument("Unable to load cover image : "+path.string());
         }
         texture->setSmooth(true);
