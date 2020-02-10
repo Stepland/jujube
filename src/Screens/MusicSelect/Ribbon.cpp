@@ -330,9 +330,15 @@ namespace MusicSelect {
         if (m_layout.empty()) {
             m_layout.push_back({
                 std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
-                std::make_shared<EmptyPanel>(m_panel_size, m_resources),
-                std::make_shared<EmptyPanel>(m_panel_size, m_resources),
+                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
+                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
             });
+            m_layout.push_back({
+                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
+                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
+                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
+            });
+            return;
         }
         while (m_layout.size() < 4) {
             m_layout.push_back({
