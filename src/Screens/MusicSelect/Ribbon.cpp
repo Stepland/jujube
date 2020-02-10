@@ -72,7 +72,7 @@ namespace MusicSelect {
         m_panel_size(panel_size),
         m_panel_spacing(panel_spacing)
     {
-        std::cout << "Loaded Ribbon" << std::endl;
+        std::cout << "Loaded MusicSelect::Ribbon" << std::endl;
     }
 
     void Ribbon::title_sort(const Data::SongList &song_list) {
