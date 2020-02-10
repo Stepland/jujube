@@ -49,6 +49,7 @@ namespace MusicSelect {
         void draw_with_animation(sf::RenderTarget& target, sf::RenderStates states) const;
         void draw_without_animation(sf::RenderTarget& target, sf::RenderStates states) const;
         void layout_from_category_map(const std::map<std::string,std::vector<std::shared_ptr<Panel>>>& categories);
+        void fill_layout();
         std::size_t get_layout_column(const std::size_t& button_index) const;
         std::vector<std::array<std::shared_ptr<Panel>,3>> m_layout;
         std::size_t m_position = 0;

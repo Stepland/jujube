@@ -105,4 +105,29 @@ namespace MusicSelect {
         rect.setSize({bounds.width, bounds.height});
         rect.setPosition({bounds.left, bounds.top});
     }
+
+    void ColoredMessagePanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+        states.transform *= getTransform();
+        sf::RectangleShape frame{{m_size*0.9f, m_size*0.9f}};
+        frame.setFillColor(sf::Color::Black);
+        frame.setOutlineThickness(1.f);
+        frame.setOutlineColor(m_color);
+        frame.setOrigin(frame.getSize().x / 2.f, frame.getSize().y / 2.f);
+        frame.setPosition(m_size/2.f, m_size/2.f);
+        target.draw(frame, states);
+
+        sf::Text message;
+        message.setFont(m_resources.noto_sans_medium);
+        message.setString(m_message);
+        message.setCharacterSize(static_cast<unsigned int>(0.1f*m_size));
+        message.setFillColor(m_color);
+        auto bounds = message.getLocalBounds();
+        message.setOrigin(bounds.left+bounds.width*0.5f, bounds.top+bounds.height*0.5f);
+        auto biggest_side = std::max(bounds.width, bounds.height);
+        if (biggest_side > m_size*0.8f) {
+            message.setScale(m_size*0.8f / biggest_side, m_size*0.8f / biggest_side);
+        }
+        message.setPosition(m_size*0.5f, m_size*0.5f);
+        target.draw(message, states);
+    }
 }

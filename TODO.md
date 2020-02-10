@@ -11,6 +11,7 @@
 - Handling Resolution changes
     - Make Panels Drawable and Transformable
     - Make Ribbon Transformable
+- Fix jujube crashing on empty layout
 
 ## TODO
 - Preference persistency system

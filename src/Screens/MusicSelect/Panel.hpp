@@ -32,6 +32,16 @@ namespace MusicSelect {
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override {return;};
     };
 
+    class ColoredMessagePanel final : public Panel {
+    public:
+        ColoredMessagePanel(const float& size, Resources& resources, const sf::Color& color, const std::string& message) : Panel(size, resources), m_color(color), m_message(message) {};
+        void click(Ribbon& ribbon, std::size_t from_button_index) override {return;};
+    private:
+        void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+        const sf::Color m_color;
+        const std::string m_message;
+    };
+
     class ColorPanel final : public Panel {
     public:
         ColorPanel(const float& size, Resources& resources, const sf::Color& t_color) : Panel(size, resources), m_color(t_color) {};
