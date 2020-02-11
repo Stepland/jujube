@@ -12,11 +12,9 @@
     - Make Panels Drawable and Transformable
     - Make Ribbon Transformable
 - Fix jujube crashing on empty layout
+- Preference persistency system
 
 ## TODO
-- Preference persistency system
-    - cereal ? https://github.com/USCiLab/cereal
-        - handling previous schema versions ?
 
 ### Music Select Screen
 - Handling Resolution changes
