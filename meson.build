@@ -30,6 +30,7 @@ sources = [
     'src/Data/KeyMapping.cpp',
     'src/Data/Note.hpp',
     'src/Data/Note.cpp',
+    'src/Data/Preferences.hpp',
     'src/Data/Score.hpp',
     'src/Data/SongList.hpp',
     'src/Data/SongList.cpp',

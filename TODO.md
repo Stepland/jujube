@@ -22,7 +22,7 @@
 - Handling Resolution changes
     - Compute panel size from resolution
 - Top Screen Part Handling
-    - Fullscreen handling
+- Fullscreen handling
 - Song Panel click
 - Chart Panel
 - Visible controls

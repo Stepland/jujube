@@ -68,6 +68,7 @@ namespace MusicSelect {
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         const Data::Song& m_song;
         const Toolkit::AffineTransform<float> m_seconds_to_alpha{0.0f, 0.15f, 0.f, 255.f};
+        std::optional<std::reference_wrapper<std::string>> selected_chart;
     };
 
     void set_to_global_bounds(sf::RectangleShape& rect, const sf::Text& text);
