@@ -14,14 +14,9 @@
 // #include "Screens/Result.hpp"
 
 int main(int argc, char const *argv[]) {
-
-    std::cout << ss.str() << std::endl;
-    return 0;
-    
-    sf::RenderWindow window;
-    
-    Data::SongList song_list;
     Data::Preferences preferences;
+    sf::RenderWindow window;
+    Data::SongList song_list;
     MusicSelect::Screen music_select{song_list};
     
     music_select.select_chart(window);
