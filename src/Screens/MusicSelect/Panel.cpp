@@ -89,7 +89,7 @@ namespace MusicSelect {
         song_title.setFont(m_resources.noto_sans_medium);
         song_title.setString(m_song.title);
         song_title.setCharacterSize(static_cast<unsigned int>(0.06875f*m_size));
-        song_title.setFillColor(sf::Color::White);
+        song_title.setFillColor(sf::Color::Black);
         auto song_title_bounds = song_title.getLocalBounds();
         // text is too long : scale it
         if (song_title_bounds.width > 0.88f * m_size) {
