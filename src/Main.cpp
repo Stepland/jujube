@@ -15,7 +15,14 @@
 
 int main(int argc, char const *argv[]) {
     Data::Preferences preferences;
-    sf::RenderWindow window;
+    sf::RenderWindow window{
+        sf::VideoMode(
+            preferences.screen.width,
+            preferences.screen.height
+        ),
+        "jujube",
+        preferences.screen.fullscreen ? sf::Style::Fullscreen : sf::Style::Default
+    };
     Data::SongList song_list;
     MusicSelect::Screen music_select{song_list};
     

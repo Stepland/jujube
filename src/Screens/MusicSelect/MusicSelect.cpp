@@ -31,14 +31,13 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
 }
 
 void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
-    window.create(sf::VideoMode(768, 1360), "jujube", sf::Style::Titlebar);
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
     bool chart_selected = false;
     sf::Clock imguiClock;
     ribbon.setPosition(8.f, 602.f);
     button_highlight.setPosition(8.f, 602.f);
-    while (not chart_selected) {
+    while ((not chart_selected) and window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(event);
@@ -48,6 +47,8 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                 break;
             case sf::Event::MouseButtonPressed:
                 handle_mouse_click(event.mouseButton);
+            case sf::Event::Closed:
+                window.close();
             default:
                 break;
             }
