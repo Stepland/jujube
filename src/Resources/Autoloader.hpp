@@ -1,6 +1,6 @@
 #pragma once
 
-#include <filesystem>
+#include <ghc/filesystem.hpp>
 #include <memory>
 #include <optional>
 #include <shared_mutex>
@@ -12,7 +12,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-namespace fs = std::filesystem;
+namespace fs = ghc::filesystem;
 
 // Define the way we hash fs::path for use in unordered maps
 namespace std {

@@ -4,7 +4,7 @@
 #include <cassert>
 #include <sstream>
 
-namespace fs = std::filesystem;
+namespace fs = ghc::filesystem;
 
 Textures::CoverAltas::CoverAltas() :
     path_to_index(),
