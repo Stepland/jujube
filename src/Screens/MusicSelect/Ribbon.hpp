@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 
