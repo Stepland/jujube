@@ -17,7 +17,7 @@ m_dep = cc.find_library('m', required : false)
 gl_dep = dependency('gl')
 
 
-add_project_link_arguments(['-lstdc++', '-lstdc++fs'], language : 'cpp')
+add_project_link_arguments(['-lstdc++'], language : 'cpp')
 
 sources = [
     'include/imgui/imgui.cpp',
