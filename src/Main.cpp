@@ -27,7 +27,7 @@ int main(int argc, char const *argv[]) {
         settings
     };
     Data::SongList song_list;
-    MusicSelect::Screen music_select{song_list};
+    MusicSelect::Screen music_select{song_list, preferences};
     
     music_select.select_chart(window);
     /*

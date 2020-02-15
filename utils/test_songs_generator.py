@@ -2,6 +2,8 @@ import argparse
 from path import Path
 from PIL import Image
 import json
+import random
+from functools import partial
 from faker import Faker
 fake = Faker()
 
@@ -13,6 +15,13 @@ parser.add_argument("--clean", action="store_true")
 parser.add_argument("--random-name", action="store_true", dest="random_name")
 
 args = parser.parse_args()
+
+DIF_NAMES = [
+    lambda : "BSC",
+    lambda : "ADV",
+    lambda : "EXT",
+    partial(fake.lexify, text="????", letters="abcdefghijklmnopqrstuvwxyz"),
+]
 
 def create_song_folder_from_image(image: Path):
     song_name = fake.sentence().strip(".") if args.random_name else image.stem
@@ -30,15 +39,16 @@ def create_song_folder_from_image(image: Path):
             "album cover path": output_image.name,
             "BPM": 120,
             "offset": 0,
-        },
-        "data": {
-            "BSC" : {
-                "level": 1,
-                "resolution": 4,
-                "notes": []
-            }
         }
     }
+    data = memon.setdefault("data", {})
+    for i in range(random.randint(1,6)):
+        data[DIF_NAMES[3 if i > 3 else i]()] = {
+            "level": random.randint(1,10),
+            "notes": [],
+            "resolution": 4
+        }
+
     json.dump(
         memon,
         open(song_folder/f"{song_name}.memon", "w"),

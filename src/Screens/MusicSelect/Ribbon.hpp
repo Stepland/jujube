@@ -5,6 +5,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 
+#include "../../Data/Preferences.hpp"
 #include "../../Data/SongList.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
 #include "../../Toolkit/Debuggable.hpp"
@@ -36,7 +37,7 @@ namespace MusicSelect {
     // It can be sorted in a number of ways
     class Ribbon final : public sf::Drawable, public sf::Transformable, public Toolkit::Debuggable {
     public:
-        Ribbon(SharedResources& t_resources, float& panel_size, float& panel_spacing);
+        Ribbon(SharedResources& t_resources);
         void title_sort(const Data::SongList& song_list);
         void test_sort();
         void test2_sort();
@@ -47,7 +48,6 @@ namespace MusicSelect {
         void move_left();
         void move_to_next_category(const std::size_t& from_button_index);
         void draw_debug() override;
-        std::string m_global_chart_dif;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         void draw_with_animation(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -61,7 +61,5 @@ namespace MusicSelect {
         SharedResources& m_resources;
         float m_time_factor = 1.f;
         Data::Song empty_song;
-        float& m_panel_size;
-        float& m_panel_spacing;
     };
 }

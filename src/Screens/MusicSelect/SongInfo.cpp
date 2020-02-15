@@ -4,11 +4,10 @@
 
 namespace MusicSelect {
 
-    BigCover::BigCover(SharedResources& resources, const float& size) :
-        m_resources(resources),
-        m_size(size),
-        m_cover_fallback({size,size})
+    BigCover::BigCover(SharedResources& resources) :
+        m_resources(resources)
     {
+        m_cover_fallback.setSize({get_size(), get_size()});
         m_cover_fallback.setFillColor(sf::Color::Transparent);
         m_cover_fallback.setOutlineThickness(1.f);
         m_cover_fallback.setOutlineColor(sf::Color::White);
@@ -35,7 +34,7 @@ namespace MusicSelect {
         }
         sf::Sprite cover{*(cover_texture->texture)};
         auto bounds = cover.getGlobalBounds();
-        cover.setScale(m_size/bounds.width, m_size/bounds.height);
+        cover.setScale(get_size()/bounds.width, get_size()/bounds.height);
         auto alpha = static_cast<std::uint8_t>(
             m_seconds_to_alpha.clampedTransform(
                 selected_panel->selected_since.getElapsedTime().asSeconds()
@@ -45,14 +44,18 @@ namespace MusicSelect {
         target.draw(cover, states);
     }
 
-    SongInfo::SongInfo(SharedResources& resources, const float& width, const float& height) :
+    SongInfo::SongInfo(SharedResources& resources) :
         m_resources(resources),
-        m_width(width),
-        m_height(height),
-        m_big_cover(resources, width*0.42f)
+        m_big_cover(resources)
     {
-        m_big_cover.setOrigin(width*0.42f*0.5f, 0.f);
-        m_big_cover.setPosition(width*0.5f, width*0.017f);
+        m_big_cover.setOrigin(
+            m_big_cover.get_size()*0.5f,
+            0.f
+        );
+        m_big_cover.setPosition(
+            get_big_cover_x(),
+            get_big_cover_y()
+        );
     }
 
     void SongInfo::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -76,18 +79,18 @@ namespace MusicSelect {
                 song_title,
                 m_resources.noto_sans_medium,
                 static_cast<unsigned int>(
-                    0.026315789f*m_width
+                    0.026315789f*get_width()
                 )
             };
             auto song_title_bounds = song_title_label.getLocalBounds();
-            if (song_title_bounds.width > 0.42f * m_width) {
-                song_title_label.setScale(0.42f * m_width / song_title_bounds.width, 1.0f);
+            if (song_title_bounds.width > m_big_cover.get_size()) {
+                song_title_label.setScale(m_big_cover.get_size() / song_title_bounds.width, 1.0f);
             }
             song_title_label.setFillColor(sf::Color::White);
             auto cover_pos = m_big_cover.getPosition();
             song_title_label.setPosition(
-                m_width*(0.5f - (0.42f/2.f)),
-                m_width*(0.017f + 0.42f + 0.01f)
+                get_big_cover_x() - m_big_cover.get_size()/2.f,
+                get_big_cover_y() + m_big_cover.get_size() + 0.01f*get_width()
             );
             target.draw(song_title_label);
         }
@@ -97,23 +100,22 @@ namespace MusicSelect {
                 song_artist,
                 m_resources.noto_sans_medium,
                 static_cast<unsigned int>(
-                    0.02f*m_width
+                    0.02f*get_width()
                 )
             };
             song_artist_label.setStyle(sf::Text::Italic);
             auto song_artist_bounds = song_artist_label.getLocalBounds();
-            if (song_artist_bounds.width > 0.42f * m_width) {
-                song_artist_label.setScale(0.42f * m_width / song_artist_bounds.width, 1.0f);
+            if (song_artist_bounds.width > m_big_cover.get_size()) {
+                song_artist_label.setScale(m_big_cover.get_size() / song_artist_bounds.width, 1.0f);
             }
             song_artist_label.setFillColor(sf::Color::White);
             song_artist_label.setFillColor(sf::Color::White);
             auto cover_pos = m_big_cover.getPosition();
             song_artist_label.setPosition(
-                m_width*(0.5f - (0.42f/2.f)),
-                m_width*(0.017f + 0.42f + 0.01f + 0.04f)
+                get_big_cover_x() - m_big_cover.get_size()/2.f,
+                get_big_cover_y() + m_big_cover.get_size() + 0.05f*get_width()
             );
             target.draw(song_artist_label);
         }
-    };
-
+    }
 }

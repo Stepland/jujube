@@ -19,16 +19,12 @@ namespace MusicSelect {
     // it loads a cache of available songs in the song_list attribute
     class Screen {
     public:
-        Screen(const Data::SongList& t_song_list);
+        Screen(const Data::SongList& t_song_list, Data::Preferences& t_preferences);
         void select_chart(sf::RenderWindow& window);
 
     private:
         // Data
         const Data::SongList song_list;
-        float m_panel_size = 160.0f;
-        float m_panel_spacing = 112.0f / 3.0f;
-        float m_upper_part_width = 768.0f;
-        float m_upper_part_height = 464.0f;
 
         // Resources
         SharedResources resources;

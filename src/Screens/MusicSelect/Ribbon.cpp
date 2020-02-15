@@ -64,13 +64,11 @@ namespace MusicSelect {
         return clock.getElapsedTime() / m_time_factor > sf::milliseconds(300);
     }
 
-    Ribbon::Ribbon(SharedResources& t_resources, float& panel_size, float& panel_spacing) :
+    Ribbon::Ribbon(SharedResources& t_resources) :
         m_layout(),
         m_move_animation(),
         m_resources(t_resources),
-        empty_song(),
-        m_panel_size(panel_size),
-        m_panel_spacing(panel_spacing)
+        empty_song()
     {
         std::cout << "Loaded MusicSelect::Ribbon" << std::endl;
     }
@@ -89,19 +87,19 @@ namespace MusicSelect {
                     categories
                     [std::string(1, letter)]
                     .push_back(
-                        std::make_shared<SongPanel>(m_panel_size, m_resources, song)
+                        std::make_shared<SongPanel>(m_resources, song)
                     );
                 } else if ('a' <= letter and letter <= 'z') {
                     categories
                     [std::string(1, 'A' + (letter - 'a'))]
                     .push_back(
-                        std::make_shared<SongPanel>(m_panel_size, m_resources, song)
+                        std::make_shared<SongPanel>(m_resources, song)
                     );
                 } else {
-                    categories["?"].push_back(std::make_shared<SongPanel>(m_panel_size, m_resources, song));
+                    categories["?"].push_back(std::make_shared<SongPanel>(m_resources, song));
                 }
             } else {
-                categories["?"].push_back(std::make_shared<SongPanel>(m_panel_size, m_resources, song));
+                categories["?"].push_back(std::make_shared<SongPanel>(m_resources, song));
             }
         }
         layout_from_category_map(categories);
@@ -110,15 +108,15 @@ namespace MusicSelect {
     void Ribbon::test_sort() {
         m_layout.clear();
         m_layout.push_back({
-            std::make_shared<EmptyPanel>(m_panel_size, m_resources),
-            std::make_shared<CategoryPanel>(m_panel_size, m_resources, "A"),
-            std::make_shared<CategoryPanel>(m_panel_size, m_resources, "truc")
+            std::make_shared<EmptyPanel>(m_resources),
+            std::make_shared<CategoryPanel>(m_resources, "A"),
+            std::make_shared<CategoryPanel>(m_resources, "truc")
         });
         for (size_t i = 0; i < 3; i++) {
             m_layout.push_back({
-                std::make_shared<EmptyPanel>(m_panel_size, m_resources),
-                std::make_shared<EmptyPanel>(m_panel_size, m_resources),
-                std::make_shared<EmptyPanel>(m_panel_size, m_resources)
+                std::make_shared<EmptyPanel>(m_resources),
+                std::make_shared<EmptyPanel>(m_resources),
+                std::make_shared<EmptyPanel>(m_resources)
             });
         }
         fill_layout();
@@ -134,7 +132,7 @@ namespace MusicSelect {
             for (int i = 0; i < category_size; i++) {
                 categories[std::string(1, letter)].push_back(
                     std::make_shared<ColorPanel>(
-                        m_panel_size, m_resources,
+                        m_resources,
                         sf::Color(
                             panel_hue_generator.generate(),
                             panel_hue_generator.generate(),
@@ -155,7 +153,7 @@ namespace MusicSelect {
             auto category_size = category_size_generator.generate();
             for (int i = 0; i < category_size; i++) {
                 categories[std::string(1, letter)].push_back(
-                    std::make_shared<SongPanel>(m_panel_size, m_resources, this->empty_song)
+                    std::make_shared<SongPanel>(m_resources, this->empty_song)
                 );
             }
         }
@@ -184,7 +182,7 @@ namespace MusicSelect {
         for (auto &&[category, panels] : categories) {
             if (not panels.empty()) {
                 std::vector<std::shared_ptr<Panel>> current_column;
-                current_column.push_back(std::make_shared<CategoryPanel>(m_panel_size, m_resources, category));
+                current_column.push_back(std::make_shared<CategoryPanel>(m_resources, category));
                 for (auto &&panel : panels) {
                     if (current_column.size() == 3) {
                         m_layout.push_back({current_column[0], current_column[1], current_column[2]});
@@ -195,7 +193,7 @@ namespace MusicSelect {
                 }
                 if (not current_column.empty()) {
                     while (current_column.size() < 3) {
-                        current_column.push_back(std::make_shared<EmptyPanel>(m_panel_size, m_resources));
+                        current_column.push_back(std::make_shared<EmptyPanel>(m_resources));
                     }
                     m_layout.push_back({current_column[0], current_column[1], current_column[2]});
                 }
@@ -275,14 +273,19 @@ namespace MusicSelect {
             }
             ImGui::End();
         }
-
+        auto panel_step = (
+            (
+                m_resources.preferences.layout.panel_size +
+                m_resources.preferences.layout.panel_spacing
+            ) * m_resources.preferences.screen.width
+        );
         for (int column_offset = -1; column_offset <= 4; column_offset++) {
             std::size_t actual_column = (column_zero + column_offset + m_layout.size()) % m_layout.size();
             for (int row = 0; row < 3; row++) {
                 auto panel = m_layout.at(actual_column).at(row);
                 panel->setPosition(
-                    (static_cast<float>(relative_column_zero + column_offset) - float_position) * (m_panel_size+m_panel_spacing),
-                    row * (m_panel_size+m_panel_spacing)
+                    (static_cast<float>(relative_column_zero + column_offset) - float_position) * (panel_step),
+                    row * (panel_step)
                 );
                 target.draw(*panel, states);
             }
@@ -290,11 +293,17 @@ namespace MusicSelect {
     }
 
     void Ribbon::draw_without_animation(sf::RenderTarget &target, sf::RenderStates states) const {
+        auto panel_step = (
+            (
+                m_resources.preferences.layout.panel_size +
+                m_resources.preferences.layout.panel_spacing
+            ) * m_resources.preferences.screen.width
+        );
         for (int column = -1; column <= 4; column++) {
             int actual_column_index = (column + m_position + m_layout.size()) % m_layout.size();
             for (int row = 0; row < 3; row++) {
                 auto panel = m_layout.at(actual_column_index).at(row);
-                panel->setPosition(column * (m_panel_size+m_panel_spacing), row * (m_panel_size+m_panel_spacing));
+                panel->setPosition(column * (panel_step), row * (panel_step));
                 target.draw(*panel, states);
             }
         }
@@ -304,6 +313,7 @@ namespace MusicSelect {
         if (debug) {
             ImGui::Begin("Ribbon Debug", &debug); {
                 ImGui::SliderFloat("Time Slowdown Factor", &m_time_factor, 1.f, 10.f);
+                /*
                 if (ImGui::CollapsingHeader("Panels")) {
                     auto panel_size = static_cast<int>(m_panel_size);
                     if(ImGui::InputInt("Size", &panel_size)) {
@@ -320,6 +330,7 @@ namespace MusicSelect {
                         m_panel_spacing = static_cast<std::size_t>(panel_spacing);
                     }
                 }
+                */
             }
             ImGui::End();
         }
@@ -329,22 +340,22 @@ namespace MusicSelect {
     void Ribbon::fill_layout() {
         if (m_layout.empty()) {
             m_layout.push_back({
-                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
-                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
-                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
+                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
+                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
+                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
             });
             m_layout.push_back({
-                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
-                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
-                std::make_shared<ColoredMessagePanel>(m_panel_size, m_resources, sf::Color::Red, "- EMPTY -"),
+                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
+                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
+                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
             });
             return;
         }
         while (m_layout.size() < 4) {
             m_layout.push_back({
-                std::make_shared<EmptyPanel>(m_panel_size, m_resources),
-                std::make_shared<EmptyPanel>(m_panel_size, m_resources),
-                std::make_shared<EmptyPanel>(m_panel_size, m_resources),
+                std::make_shared<EmptyPanel>(m_resources),
+                std::make_shared<EmptyPanel>(m_resources),
+                std::make_shared<EmptyPanel>(m_resources),
             });
         }
     }

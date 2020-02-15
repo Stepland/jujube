@@ -11,11 +11,11 @@ namespace MusicSelect {
 
     class BigCover : public sf::Drawable, public sf::Transformable {
     public:
-        BigCover(SharedResources& resources, const float& size);
+        BigCover(SharedResources& resources);
+        float get_size() const {return m_resources.preferences.layout.big_cover_size*m_resources.preferences.screen.width;};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         SharedResources& m_resources;
-        float m_size;
         sf::RectangleShape m_cover_fallback;
         const Toolkit::AffineTransform<float> m_seconds_to_alpha{0.0f, 0.3f, 0.f, 255.f};
     };
@@ -23,13 +23,14 @@ namespace MusicSelect {
     // Displays the song info on the top part of the screen
     class SongInfo : public sf::Drawable, public sf::Transformable {
     public:
-        SongInfo(SharedResources& resources, const float& width, const float& height);
+        SongInfo(SharedResources& resources);
+        float get_width() const {return m_resources.preferences.screen.width;};
+        float get_big_cover_x() const {return m_resources.preferences.layout.big_cover_x*get_width();};
+        float get_big_cover_y() const {return m_resources.preferences.layout.big_cover_y*get_width();};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         void draw_song_title(sf::RenderTarget& target) const;
         SharedResources& m_resources;
-        const float& m_width;
-        const float& m_height;
         BigCover m_big_cover;
     };
 }

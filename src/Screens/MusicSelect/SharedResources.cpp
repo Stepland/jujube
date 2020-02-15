@@ -3,7 +3,8 @@
 #include <iostream>
 
 namespace MusicSelect {
-    SharedResources::SharedResources() :
+    SharedResources::SharedResources(Data::Preferences& p) :
+        preferences(p),
         covers(),
         fallback_cover(),
         noto_sans_medium()

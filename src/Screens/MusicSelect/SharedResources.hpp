@@ -7,6 +7,7 @@
 #include <SFML/System.hpp>
 
 #include "../../Resources/Autoloader.hpp"
+#include "../../Data/Preferences.hpp"
 #include "../../Data/SongList.hpp"
 
 #include "Panel.hpp"
@@ -22,8 +23,10 @@ namespace MusicSelect {
     };
 
     struct SharedResources {
-        SharedResources();
+        SharedResources(Data::Preferences& p);
         
+        Data::Preferences& preferences;
+
         Textures::Autoloader covers;
         sf::Texture fallback_cover;
         

@@ -7,13 +7,13 @@
 
 #include "../../Data/KeyMapping.hpp"
 
-MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
+MusicSelect::Screen::Screen(const Data::SongList& t_song_list, Data::Preferences& t_preferences) :
     song_list(t_song_list),
-    resources(),
-    ribbon(resources, m_panel_size, m_panel_spacing),
-    song_info(resources, m_upper_part_width, m_upper_part_height),
+    resources(t_preferences),
+    ribbon(resources),
+    song_info(resources),
     selected_panel(),
-    button_highlight(m_panel_size, m_panel_spacing),
+    button_highlight(resources),
     key_mapping()
 {
     ribbon.title_sort(song_list);
@@ -25,8 +25,14 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
     ImGui::SFML::Init(window);
     bool chart_selected = false;
     sf::Clock imguiClock;
-    ribbon.setPosition(8.f, 602.f);
-    button_highlight.setPosition(8.f, 602.f);
+    ribbon.setPosition(
+        resources.preferences.layout.ribbon_x*resources.preferences.screen.width,
+        resources.preferences.layout.ribbon_y*resources.preferences.screen.width
+    );
+    button_highlight.setPosition(
+        resources.preferences.layout.ribbon_x*resources.preferences.screen.width,
+        resources.preferences.layout.ribbon_y*resources.preferences.screen.width
+    );
     while ((not chart_selected) and window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -73,6 +79,7 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
 }
 
 void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event) {
+    /*
     if (mouse_button_event.button == sf::Mouse::Left) {
         int clicked_panel_index = (mouse_button_event.x / m_panel_size) + 4 * (mouse_button_event.y / m_panel_size);
         auto button = fromIndex(clicked_panel_index);
@@ -80,6 +87,7 @@ void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& 
             press_button(*button);
         }
     }
+    */
 }
 
 void MusicSelect::Screen::press_button(const Button& button) {
