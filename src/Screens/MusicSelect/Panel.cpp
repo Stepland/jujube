@@ -1,8 +1,11 @@
 #include "Panel.hpp"
 
+#include <functional>
+
 #include <SFML/Graphics.hpp>
 
 #include "MusicSelect.hpp"
+#include "SharedResources.hpp"
 
 namespace MusicSelect {
     void ColorPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -64,7 +67,41 @@ namespace MusicSelect {
     }
 
     void SongPanel::click(Ribbon& ribbon, std::size_t from_button_index) {
-        
+        if (selected_chart.has_value()) {
+            // The song was already selected : look for the next chart in order
+            auto it = m_song.chart_levels.upper_bound(*selected_chart);
+            if (it != m_song.chart_levels.cend()) {
+                selected_chart = it->first;
+            } else {
+                selected_chart = m_song.chart_levels.cbegin()->first;
+            }
+        } else {
+            // The song was not selected before : unselect the last one
+            if (m_resources.selected_panel.has_value()) {
+                m_resources.selected_panel->panel.unselect();
+            }
+            // Look for the first chart with dif greater or equal to the last select one
+            // or else select the first chart
+            auto it = m_song.chart_levels.lower_bound(ribbon.m_global_chart_dif);
+            if (it != m_song.chart_levels.cend()) {
+                selected_chart = it->first;
+            } else {
+                selected_chart = m_song.chart_levels.cbegin()->first;
+            }
+        }
+        m_resources.selected_panel.emplace(TimedSelectedPanel{*this});
+    }
+
+    void SongPanel::unselect() {
+        selected_chart.reset();
+    }
+
+    std::optional<ChartSelection> SongPanel::get_selected_chart() const {
+        if (selected_chart) {
+            return ChartSelection{m_song, *selected_chart};
+        } else {
+            return {};
+        }
     }
 
     void SongPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -75,7 +112,7 @@ namespace MusicSelect {
                 sf::Sprite cover{*(loaded_texture->texture)};
                 auto alpha = static_cast<std::uint8_t>(
                     m_seconds_to_alpha.clampedTransform(
-                        loaded_texture->clock.getElapsedTime().asSeconds()
+                        loaded_texture->loaded_since.getElapsedTime().asSeconds()
                     )
                 );
                 cover.setColor(sf::Color(255, 255, 255, alpha));
@@ -89,7 +126,7 @@ namespace MusicSelect {
         song_title.setFont(m_resources.noto_sans_medium);
         song_title.setString(m_song.title);
         song_title.setCharacterSize(static_cast<unsigned int>(0.06875f*m_size));
-        song_title.setFillColor(sf::Color::Black);
+        song_title.setFillColor(sf::Color::White);
         auto song_title_bounds = song_title.getLocalBounds();
         // text is too long : scale it
         if (song_title_bounds.width > 0.88f * m_size) {
@@ -97,7 +134,6 @@ namespace MusicSelect {
         }
         song_title.setPosition(18.f/160.f,9.f/160.f);
         target.draw(song_title, states);
-
     }
 
     void set_to_global_bounds(sf::RectangleShape& rect, const sf::Text& text) {

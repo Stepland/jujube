@@ -11,6 +11,7 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
     song_list(t_song_list),
     resources(),
     ribbon(resources, m_panel_size, m_panel_spacing),
+    song_info(resources, m_upper_part_width, m_upper_part_height),
     selected_panel(),
     button_highlight(m_panel_size, m_panel_spacing),
     key_mapping()
@@ -47,17 +48,20 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                 break;
             case sf::Event::MouseButtonPressed:
                 handle_mouse_click(event.mouseButton);
+                break;
             case sf::Event::Closed:
                 window.close();
+                break;
             default:
                 break;
             }
         }
         ImGui::SFML::Update(window, imguiClock.restart());
-        window.clear(sf::Color(252, 201, 0, 255));
+        window.clear(sf::Color::Black);
         ribbon.draw_debug();
         window.draw(ribbon);
         window.draw(button_highlight);
+        window.draw(song_info);
         ImGui::SFML::Render(window);
         window.display();
     }

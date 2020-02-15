@@ -64,7 +64,7 @@ namespace MusicSelect {
         return clock.getElapsedTime() / m_time_factor > sf::milliseconds(300);
     }
 
-    Ribbon::Ribbon(Resources& t_resources, float& panel_size, float& panel_spacing) :
+    Ribbon::Ribbon(SharedResources& t_resources, float& panel_size, float& panel_spacing) :
         m_layout(),
         m_move_animation(),
         m_resources(t_resources),

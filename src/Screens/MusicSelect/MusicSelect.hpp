@@ -9,7 +9,8 @@
 #include "../../Data/KeyMapping.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
 #include "Ribbon.hpp"
-#include "Resources.hpp"
+#include "SongInfo.hpp"
+#include "SharedResources.hpp"
 #include "ButtonHighlight.hpp"
 
 namespace MusicSelect {
@@ -23,15 +24,18 @@ namespace MusicSelect {
 
     private:
         // Data
-        const Data::SongList& song_list;
+        const Data::SongList song_list;
         float m_panel_size = 160.0f;
         float m_panel_spacing = 112.0f / 3.0f;
+        float m_upper_part_width = 768.0f;
+        float m_upper_part_height = 464.0f;
 
         // Resources
-        Resources resources;
+        SharedResources resources;
 
         // State
         Ribbon ribbon;
+        SongInfo song_info;
         std::optional<std::reference_wrapper<SongPanel>> selected_panel;
         ButtonHighlight button_highlight;
     

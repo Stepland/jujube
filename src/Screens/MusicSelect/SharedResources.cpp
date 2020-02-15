@@ -1,8 +1,8 @@
-#include "Resources.hpp"
+#include "SharedResources.hpp"
 
 #include <iostream>
 
-MusicSelect::Resources::Resources() :
+MusicSelect::SharedResources::SharedResources() :
     covers(),
     fallback_cover(),
     noto_sans_medium()

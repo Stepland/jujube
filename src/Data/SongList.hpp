@@ -3,14 +3,22 @@
 #include <filesystem>
 #include <iterator>
 #include <list>
+#include <map>
 #include <optional>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 namespace fs = std::filesystem;
 
 namespace Data {
+
+    /*
+    * Difficulty name ordering : BSC > ADV > EXT > anything else in lexicographical order
+    */
+    struct cmp_dif_name {
+        std::map<std::string,int> dif_names = {{"BSC",1},{"ADV",2},{"EXT",3}};
+        bool operator()(const std::string& a, const std::string& b) const;
+    };
 
     // Basic metadata about a song
     struct Song {
@@ -26,7 +34,7 @@ namespace Data {
         // Mapping from chart difficulty (BSC, ADV, EXT ...) to the numeric level,
         // the level is stored multiplied by 10 and displayed divided by 10
         // to allow for decimal levels (introduced in jubeat ... festo ?)
-        std::unordered_map<std::string, unsigned int> chart_levels;
+        std::map<std::string, unsigned int, cmp_dif_name> chart_levels;
 
         std::optional<fs::path> full_cover_path() const;
 

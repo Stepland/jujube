@@ -28,9 +28,9 @@ namespace Textures {
 
     // Hold time elapsed since loaded
     struct AutoloadedTexture {
-        AutoloadedTexture(std::shared_ptr<sf::Texture> t_texture) : texture(t_texture), clock() {};
+        AutoloadedTexture(std::shared_ptr<sf::Texture> t_texture) : texture(t_texture), loaded_since() {};
         std::shared_ptr<sf::Texture> texture;
-        sf::Clock clock;
+        sf::Clock loaded_since;
     };
 
     // Loads textures asynchronously (in the background) on demand and stores them in a map for easy path-based access
