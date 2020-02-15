@@ -15,18 +15,7 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list) :
     selected_panel(),
     button_highlight(m_panel_size, m_panel_spacing),
     key_mapping()
-{   
-    /*
-    for (const auto& song : song_list.songs) {
-        if (song.cover) {
-            try {
-                resources.covers.get(song.cover.value());
-            } catch(const std::exception& e) {
-                std::cerr << e.what() << '\n';
-            }
-        }
-    }
-    */
+{
     ribbon.title_sort(song_list);
     std::cout << "loaded MusicSelect::Screen" << std::endl;
 }

@@ -26,7 +26,6 @@ namespace Textures {
             m_mapping.emplace(path, texture);
             m_is_loading.erase(path);
         }
-        std::cout << "Loaded " << path << std::endl;
     }
 
     void Autoloader::async_load(const fs::path& path) {

@@ -56,6 +56,8 @@ sources = [
     'src/Toolkit/Debuggable.hpp',
     'src/Toolkit/EasingFunctions.hpp',
     'src/Toolkit/EasingFunctions.cpp',
+    'src/Toolkit/HSL.hpp',
+    'src/Toolkit/HSL.cpp',
     'src/Toolkit/QuickRNG.hpp',
     'src/Toolkit/QuickRNG.cpp',
 ]

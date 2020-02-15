@@ -56,8 +56,8 @@ namespace Data {
         }
 
         void load() {
-            auto path = std::filesystem::path("data/preferences.json");
-            if (std::filesystem::exists(path)) {
+            auto path = ghc::filesystem::path("data/preferences.json");
+            if (ghc::filesystem::exists(path)) {
                 std::ifstream prefs_file;
                 prefs_file.open(path);
                 try {
@@ -71,11 +71,11 @@ namespace Data {
         };
 
         void save() {
-            auto data_folder = std::filesystem::path("data");
-            if (not std::filesystem::exists(data_folder)) {
-                std::filesystem::create_directory(data_folder);
+            auto data_folder = ghc::filesystem::path("data");
+            if (not ghc::filesystem::exists(data_folder)) {
+                ghc::filesystem::create_directory(data_folder);
             }
-            if (not std::filesystem::is_directory(data_folder)) {
+            if (not ghc::filesystem::is_directory(data_folder)) {
                 std::cerr << "Can't create data folder to save preferences, a file named 'data' exists" << std::endl;
             }
             std::ofstream preferences_file;

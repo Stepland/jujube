@@ -16,6 +16,7 @@ args = parser.parse_args()
 
 def create_song_folder_from_image(image: Path):
     song_name = fake.sentence().strip(".") if args.random_name else image.stem
+    song_artist = fake.name()
     song_folder = args.output_folder / song_name
     song_folder.mkdir()
     output_image = song_folder / f"{song_name}.jpg"
@@ -24,7 +25,7 @@ def create_song_folder_from_image(image: Path):
         "version": "0.1.0",
         "metadata": {
             "song title": song_name,
-            "artist": "",
+            "artist": song_artist,
             "music path": "",
             "album cover path": output_image.name,
             "BPM": 120,

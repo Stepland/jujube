@@ -15,13 +15,16 @@
 
 int main(int argc, char const *argv[]) {
     Data::Preferences preferences;
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
     sf::RenderWindow window{
         sf::VideoMode(
             preferences.screen.width,
             preferences.screen.height
         ),
         "jujube",
-        preferences.screen.fullscreen ? sf::Style::Fullscreen : sf::Style::Default
+        preferences.screen.fullscreen ? sf::Style::Fullscreen : sf::Style::Default,
+        settings
     };
     Data::SongList song_list;
     MusicSelect::Screen music_select{song_list};

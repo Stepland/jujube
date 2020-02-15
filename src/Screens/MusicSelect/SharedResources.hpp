@@ -23,9 +23,19 @@ namespace MusicSelect {
 
     struct SharedResources {
         SharedResources();
+        
         Textures::Autoloader covers;
         sf::Texture fallback_cover;
+        
         sf::Font noto_sans_medium;
+        
         std::optional<TimedSelectedPanel> selected_panel;
+        std::string get_last_selected_chart();
+        std::optional<std::string> get_selected_chart();
+        std::optional<std::reference_wrapper<const Data::Song>> get_selected_song();
+
+        sf::Color BSC_color = sf::Color{34,216,92};
+        sf::Color ADV_color = sf::Color{252,212,32};
+        sf::Color EXT_color = sf::Color{234,46,32};
     };
 }

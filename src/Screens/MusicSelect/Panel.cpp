@@ -4,6 +4,9 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../../Toolkit/HSL.hpp"
+#include "../../Toolkit/NormalizedOrigin.hpp"
+
 #include "MusicSelect.hpp"
 #include "SharedResources.hpp"
 
@@ -30,7 +33,7 @@ namespace MusicSelect {
         frame.setFillColor(sf::Color::Black);
         frame.setOutlineThickness(1.f);
         frame.setOutlineColor(sf::Color::White);
-        frame.setOrigin(frame.getSize().x / 2.f, frame.getSize().y / 2.f);
+        Toolkit::setNormOrigin(frame, 0.5f, 0.5f);
         frame.setPosition(m_size/2.f, m_size/2.f);
         target.draw(frame, states);
 
@@ -53,7 +56,7 @@ namespace MusicSelect {
         label_text.setCharacterSize(100U);
         label_text.setFillColor(sf::Color::White);
         auto text_bounds = label_text.getLocalBounds();
-        label_text.setOrigin(text_bounds.width / 2.f, text_bounds.height / 2.f);
+        Toolkit::setNormOrigin(label_text, 0.5f, 0.5f);
         if (text_bounds.height > text_bounds.width) {
             label_text.setScale(m_size*0.8f/text_bounds.height, m_size*0.8f/text_bounds.height);
         } else {
@@ -88,8 +91,8 @@ namespace MusicSelect {
             } else {
                 selected_chart = m_song.chart_levels.cbegin()->first;
             }
+            m_resources.selected_panel.emplace(TimedSelectedPanel{*this});
         }
-        m_resources.selected_panel.emplace(TimedSelectedPanel{*this});
     }
 
     void SongPanel::unselect() {
@@ -105,6 +108,9 @@ namespace MusicSelect {
     }
 
     void SongPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+        // We should gray out the panel if the currently selected difficulty doesn't exist for this song
+        auto selected_chart = m_resources.get_last_selected_chart();
+        bool should_be_grayed_out = m_song.chart_levels.find(selected_chart) == m_song.chart_levels.end();
         if (m_song.cover) {
             auto loaded_texture = m_resources.covers.async_get(m_song.folder/m_song.cover.value());
             if (loaded_texture) {
@@ -115,12 +121,48 @@ namespace MusicSelect {
                         loaded_texture->loaded_since.getElapsedTime().asSeconds()
                     )
                 );
-                cover.setColor(sf::Color(255, 255, 255, alpha));
+                auto grey = should_be_grayed_out ? 2 : 1;
+                cover.setColor(sf::Color(255/grey, 255/grey, 255/grey, alpha));
                 auto bounds = cover.getGlobalBounds();
                 cover.setScale(m_size*0.8f/bounds.width, m_size*0.8f/bounds.height);
                 cover.setPosition(m_size*0.1f,m_size*0.1563f);
                 target.draw(cover, states);
             }
+        }
+        sf::CircleShape chart_dif_badge{m_size*0.1f, 30};
+        Toolkit::setNormOrigin(chart_dif_badge, 0.5f, 0.5f);
+        chart_dif_badge.setPosition(m_size*0.1f, m_size*(0.1563f + 0.15f));
+        if (should_be_grayed_out) {
+            chart_dif_badge.setFillColor(sf::Color(128,128,128));
+        } else {
+            if (selected_chart == "BSC") {
+                chart_dif_badge.setFillColor(m_resources.BSC_color);
+            } else if (selected_chart == "ADV") {
+                chart_dif_badge.setFillColor(m_resources.ADV_color);
+            } else if (selected_chart == "EXT") {
+                chart_dif_badge.setFillColor(m_resources.EXT_color);
+            } else {
+                chart_dif_badge.setFillColor(
+                    Toolkit::HSL(
+                        static_cast<int>(std::hash<std::string>{}(selected_chart)),
+                        83,
+                        49
+                    ).TurnToRGB()
+                );
+            }
+        }
+        target.draw(chart_dif_badge, states);
+        if (not should_be_grayed_out) {
+            auto dif = m_song.chart_levels.at(selected_chart);
+            sf::Text dif_label{
+                std::to_string(dif),
+                m_resources.noto_sans_medium,
+                static_cast<unsigned int>(m_size*0.15f)
+            };
+            dif_label.setFillColor(sf::Color::White);
+            Toolkit::setNormOrigin(dif_label, 0.5f, 0.5f);
+            dif_label.setPosition(m_size*0.1f, m_size*(0.1563f + 0.15f));
+            target.draw(dif_label, states);
         }
         sf::Text song_title;
         song_title.setFont(m_resources.noto_sans_medium);
