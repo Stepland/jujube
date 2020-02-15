@@ -1,6 +1,6 @@
 #pragma once
 
-#include <filesystem>
+#include <ghc/filesystem.hpp>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -8,7 +8,7 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace fs = std::filesystem;
+namespace fs = ghc::filesystem;
 
 // Define the way we hash fs::path for use in unordered maps
 namespace std {

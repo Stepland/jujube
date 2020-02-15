@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstddef>
-#include <filesystem>
+#include <ghc/filesystem.hpp>
 #include <fstream>
 
 #include <cereal/archives/json.hpp>

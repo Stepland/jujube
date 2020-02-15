@@ -1,6 +1,6 @@
 #pragma once
 
-#include <filesystem>
+#include <ghc/filesystem.hpp>
 #include <iterator>
 #include <list>
 #include <map>
@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace fs = std::filesystem;
+namespace fs = ghc::filesystem;
 
 namespace Data {
 
