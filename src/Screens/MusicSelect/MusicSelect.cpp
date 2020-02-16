@@ -52,6 +52,14 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                 window.setView(sf::View({0, 0, event.size.width, event.size.height}));
                 resources.preferences.screen.height = event.size.height;
                 resources.preferences.screen.width = event.size.width;
+                ribbon.setPosition(
+                    resources.preferences.layout.ribbon_x*resources.preferences.screen.width,
+                    resources.preferences.layout.ribbon_y*resources.preferences.screen.width
+                );
+                button_highlight.setPosition(
+                    resources.preferences.layout.ribbon_x*resources.preferences.screen.width,
+                    resources.preferences.layout.ribbon_y*resources.preferences.screen.width
+                );
                 break;
             default:
                 break;
