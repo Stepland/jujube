@@ -35,12 +35,12 @@ namespace MusicSelect {
         std::optional<std::reference_wrapper<SongPanel>> selected_panel;
         ButtonHighlight button_highlight;
     
-        KeyMapping key_mapping;
+        Data::KeyMapping key_mapping;
         // converts a key press into a button press
         void handle_key_press(const sf::Event::KeyEvent& key_event);
         // converts a mouse click into a button press
         void handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event);
         // chooses what happens for each button
-        void press_button(const Button& button);
+        void press_button(const Data::Button& button);
     };
 }

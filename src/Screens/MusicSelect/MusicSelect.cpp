@@ -5,6 +5,7 @@
 
 #include <iostream>
 
+#include "../../Data/Buttons.hpp"
 #include "../../Data/KeyMapping.hpp"
 
 MusicSelect::Screen::Screen(const Data::SongList& t_song_list, Data::Preferences& t_preferences) :
@@ -104,18 +105,18 @@ void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& 
     */
 }
 
-void MusicSelect::Screen::press_button(const Button& button) {
+void MusicSelect::Screen::press_button(const Data::Button& button) {
     button_highlight.button_pressed(button);
-    auto button_index = toIndex(button);
+    auto button_index = Data::button_to_index(button);
     if (button_index < 12) {
         ribbon.click_on(button_index);
         // ribbon.at(button_index)->click(ribbon);
     } else {
         switch (button) {
-        case Button::B13:
+        case Data::Button::B13:
             ribbon.move_left();
             break;
-        case Button::B14:
+        case Data::Button::B14:
             ribbon.move_right();
         default:
             break;

@@ -108,9 +108,9 @@ namespace MusicSelect {
 
     void SongPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
-        auto selected_chart = m_resources.get_last_selected_chart();
+        auto last_selected_chart = m_resources.get_last_selected_chart();
         // We should gray out the panel if the currently selected difficulty doesn't exist for this song
-        bool should_be_grayed_out = m_song.chart_levels.find(selected_chart) == m_song.chart_levels.end();
+        bool should_be_grayed_out = m_song.chart_levels.find(last_selected_chart) == m_song.chart_levels.end();
         if (m_song.cover) {
             auto loaded_texture = m_resources.covers.async_get(m_song.folder/m_song.cover.value());
             if (loaded_texture) {
@@ -135,12 +135,12 @@ namespace MusicSelect {
             chart_dif_badge.setFillColor(sf::Color(128,128,128));
         } else {
             chart_dif_badge.setFillColor(
-                m_resources.get_chart_color(selected_chart)
+                m_resources.get_chart_color(last_selected_chart)
             );
         }
         target.draw(chart_dif_badge, states);
         if (not should_be_grayed_out) {
-            auto dif = m_song.chart_levels.at(selected_chart);
+            auto dif = m_song.chart_levels.at(last_selected_chart);
             sf::Text dif_label{
                 std::to_string(dif),
                 m_resources.noto_sans_medium,

@@ -21,6 +21,8 @@
     - Artist
     - Chart
     - Chart List
+    - Density graph
+        - format-agnostic chart class
 - Song Panel click
     - difficulty cycle
 - Handling Resolution changes
@@ -29,10 +31,15 @@
 
 ## TODO
 
+- Add KeyMapping to preferences
+
 ### Music Select Screen
 - Top Screen Part Handling
     - Density graph
+        - format-agnostic chart class
+        - async audio load
 - Sound
+- Black frame
 - Fullscreen handling
 - Song Panel click
     - animation
@@ -59,7 +66,7 @@
 ## FB9 Support
 
 ## Music Select Screen
-- bound memory usage of Textures::Autoloader
+- bound memory usage of Toolkit::Cache
 
 # v1.2.0
 

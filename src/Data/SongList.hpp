@@ -32,8 +32,6 @@ namespace Data {
         // Path the the audio file
         std::optional<fs::path> audio;
         // Mapping from chart difficulty (BSC, ADV, EXT ...) to the numeric level,
-        // the level is stored multiplied by 10 and displayed divided by 10
-        // to allow for decimal levels (introduced in jubeat ... festo ?)
         std::map<std::string, unsigned int, cmp_dif_name> chart_levels;
 
         std::optional<fs::path> full_cover_path() const;

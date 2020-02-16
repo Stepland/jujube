@@ -31,7 +31,7 @@ namespace Data {
         float panel_step() const {return panel_size+panel_spacing;};
         float ribbon_x = 8.f / 768.f;
         float ribbon_y = 602.f / 768.f;
-        float big_cover_size = 320.f / 768.f;
+        float big_cover_size = 300.f / 768.f;
         float big_cover_x = 0.5f;
         float big_cover_y = 0.017f;
         float big_level_x = 656.f / 768.f;
@@ -45,7 +45,6 @@ namespace Data {
                 CEREAL_NVP(panel_spacing),
                 CEREAL_NVP(ribbon_x),
                 CEREAL_NVP(ribbon_y),
-                CEREAL_NVP(big_cover_size),
                 CEREAL_NVP(upper_part_height)
             ); 
         }

@@ -10,7 +10,7 @@ namespace MusicSelect {
         m_highlight.setOutlineThickness(1.f);
     }
 
-    void ButtonHighlight::button_pressed(Button button) {
+    void ButtonHighlight::button_pressed(Data::Button button) {
         m_button_presses_history[button].restart();
     }
 
@@ -24,7 +24,7 @@ namespace MusicSelect {
         auto it = m_button_presses_history.begin();
         while (it != m_button_presses_history.end()) {
             auto elapsed = it->second.getElapsedTime();
-            auto coords = toCoords(it->first);
+            auto coords = Data::button_to_coords(it->first);
             if (elapsed > sf::milliseconds(250)) {
                 it = m_button_presses_history.erase(it);
             } else {

@@ -64,6 +64,7 @@ namespace MusicSelect {
         draw_song_title(target, states);
         draw_big_level(target, states);
         draw_chart_list(target, states);
+        draw_density_graph(target, states);
     }
 
     void SongInfo::draw_song_title(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -212,6 +213,22 @@ namespace MusicSelect {
                 target.draw(select_triangle);
             }
             dif_index++;
+        }
+    }
+
+    void SongInfo::draw_density_graph(sf::RenderTarget& target, sf::RenderStates states) const {
+        sf::RectangleShape line{{get_screen_width()*1.1f,2.f/768.f*get_screen_width()}};
+        Toolkit::set_origin_normalized(line, 0.5f, 0.5f);
+        line.setFillColor(sf::Color::White);
+        line.setPosition(get_screen_width()*0.5f,425.f/768.f*get_screen_width());
+        target.draw(line, states);
+        auto selected_panel = m_resources.selected_panel;
+        if (not selected_panel.has_value()) {
+            return;
+        }
+        auto selected_chart = selected_panel->panel.get_selected_chart();
+        if (not selected_chart.has_value()) {
+            return;
         }
     }
 }

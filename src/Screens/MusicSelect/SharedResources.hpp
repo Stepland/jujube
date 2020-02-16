@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "../../Resources/Autoloader.hpp"
+#include "../../Resources/TextureCache.hpp"
 #include "../../Data/Preferences.hpp"
 #include "../../Data/SongList.hpp"
 
@@ -27,7 +27,7 @@ namespace MusicSelect {
         
         Data::Preferences& preferences;
 
-        Textures::Autoloader covers;
+        Textures::TextureCache covers;
         sf::Texture fallback_cover;
         
         sf::Font noto_sans_medium;
