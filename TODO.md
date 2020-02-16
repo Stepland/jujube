@@ -19,32 +19,36 @@
     - Cover
     - Title
     - Artist
+- Song Panel click
+    - difficulty cycle
+- Handling Resolution changes
+    - reload preferences on change
+- Fix the annoying visual glitch that flashes a song title and dif on the ribbon
 
 ## TODO
 
 ### Music Select Screen
-- Handling Resolution changes
-    - reload preferences on change
 - Top Screen Part Handling
     - Chart
     - Chart List
     - Density graph
 - Sound
 - Fullscreen handling
-- Fix the annoying visual glitch that flashes a song title and dif on the ribbon
 - Song Panel click
+    - animation
+    - cd
 - Chart Panel
 - Visible controls
 - Sort menu
 - Options menu
     - Controller mapping
+- Start Button
 
 ### Gameplay Screen
 
 ### Results Screen
 
 ### Windows and macOS builds
-Try static linking ?
 
 ### memo Compatibility
 
