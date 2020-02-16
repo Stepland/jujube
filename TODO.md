@@ -37,7 +37,6 @@
 - Top Screen Part Handling
     - Density graph
         - format-agnostic chart class
-        - async audio load
 - Sound
 - Black frame
 - Fullscreen handling
@@ -47,6 +46,7 @@
 - Chart Panel
 - Visible controls
 - Sort menu
+    - Differenciate Sort / Folder
 - Options menu
     - Controller mapping
 - Start Button
