@@ -13,13 +13,23 @@
     - Make Ribbon Transformable
 - Fix jujube crashing on empty layout
 - Preference persistency system
+- Compute panel size from resolution
+- Compute FUCKING EVERYTHING from resolution
+- Top Screen Part Handling
+    - Cover
+    - Title
+    - Artist
 
 ## TODO
 
 ### Music Select Screen
 - Handling Resolution changes
-    - Compute panel size from resolution
+    - reload preferences on change
 - Top Screen Part Handling
+    - Chart
+    - Chart List
+    - Density graph
+- Sound
 - Fullscreen handling
 - Song Panel click
 - Chart Panel
