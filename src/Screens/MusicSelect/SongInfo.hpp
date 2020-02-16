@@ -27,6 +27,8 @@ namespace MusicSelect {
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         void draw_song_title(sf::RenderTarget& target, sf::RenderStates states) const;
         void draw_big_level(sf::RenderTarget& target, sf::RenderStates states) const;
+        void draw_chart_list(sf::RenderTarget& target, sf::RenderStates states) const;
         mutable BigCover m_big_cover;
+        const Toolkit::AffineTransform<float> m_seconds_to_badge_anim{0.f, 0.15f, 0.f, 1.f};
     };
 }

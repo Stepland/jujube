@@ -20,6 +20,7 @@
     - Title
     - Artist
     - Chart
+    - Chart List
 - Song Panel click
     - difficulty cycle
 - Handling Resolution changes
@@ -30,7 +31,6 @@
 
 ### Music Select Screen
 - Top Screen Part Handling
-    - Chart List
     - Density graph
 - Sound
 - Fullscreen handling

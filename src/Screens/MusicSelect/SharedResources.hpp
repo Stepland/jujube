@@ -15,9 +15,11 @@ namespace MusicSelect {
     class SelectablePanel;
 
     struct TimedSelectedPanel {
-        TimedSelectedPanel(SelectablePanel& s) : panel(s), selected_since() {};
+        TimedSelectedPanel(SelectablePanel& s) : panel(s), first_click(), last_click() {};
         SelectablePanel& panel;
-        sf::Clock selected_since;
+        sf::Clock first_click;
+        sf::Clock last_click;
+        bool is_first_click = true;
     };
 
     struct SharedResources {

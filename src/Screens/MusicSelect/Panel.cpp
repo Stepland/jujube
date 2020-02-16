@@ -75,6 +75,8 @@ namespace MusicSelect {
             } else {
                 selected_chart = m_song.chart_levels.cbegin()->first;
             }
+            m_resources.selected_panel->last_click.restart();
+            m_resources.selected_panel->is_first_click = false;
         } else {
             // Look for the first chart with dif greater or equal to the last select one
             // or else select the first chart
