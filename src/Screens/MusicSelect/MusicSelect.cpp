@@ -47,6 +47,12 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
             case sf::Event::Closed:
                 window.close();
                 break;
+            case sf::Event::Resized:
+                // update the view to the new size of the window
+                window.setView(sf::View({0, 0, event.size.width, event.size.height}));
+                resources.preferences.screen.height = event.size.height;
+                resources.preferences.screen.width = event.size.width;
+                break;
             default:
                 break;
             }

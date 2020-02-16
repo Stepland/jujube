@@ -10,7 +10,6 @@ namespace MusicSelect {
     BigCover::BigCover(SharedResources& resources) :
         HoldsSharedResources(resources)
     {
-        m_cover_fallback.setSize({get_size(), get_size()});
         m_cover_fallback.setFillColor(sf::Color::Transparent);
         m_cover_fallback.setOutlineThickness(1.f);
         m_cover_fallback.setOutlineColor(sf::Color::White);
@@ -18,6 +17,7 @@ namespace MusicSelect {
 
     void BigCover::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
+        m_cover_fallback.setSize({get_size(), get_size()});
         target.draw(m_cover_fallback, states);
         auto selected_panel = m_resources.selected_panel;
         if (not selected_panel.has_value()) {
@@ -47,22 +47,14 @@ namespace MusicSelect {
         target.draw(cover, states);
     }
 
-    SongInfo::SongInfo(SharedResources& resources) :
-        HoldsSharedResources(resources),
-        m_big_cover(resources)
-    {
-        m_big_cover.setOrigin(
-            m_big_cover.get_size()*0.5f,
-            0.f
-        );
-        m_big_cover.setPosition(
-            get_big_cover_x(),
-            get_big_cover_y()
-        );
+    SongInfo::SongInfo(SharedResources& resources) : HoldsSharedResources(resources), m_big_cover(resources) {
+
     }
 
     void SongInfo::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
+        m_big_cover.setOrigin(m_big_cover.get_size()*0.5f, 0.f);
+        m_big_cover.setPosition(get_big_cover_x(), get_big_cover_y());
         target.draw(m_big_cover, states);
         draw_song_title(target);
     }
