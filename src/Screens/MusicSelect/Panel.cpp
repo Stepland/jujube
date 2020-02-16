@@ -105,13 +105,13 @@ namespace MusicSelect {
     }
 
     void SongPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-        // We should gray out the panel if the currently selected difficulty doesn't exist for this song
+        states.transform *= getTransform();
         auto selected_chart = m_resources.get_last_selected_chart();
+        // We should gray out the panel if the currently selected difficulty doesn't exist for this song
         bool should_be_grayed_out = m_song.chart_levels.find(selected_chart) == m_song.chart_levels.end();
         if (m_song.cover) {
             auto loaded_texture = m_resources.covers.async_get(m_song.folder/m_song.cover.value());
             if (loaded_texture) {
-                states.transform *= getTransform();
                 sf::Sprite cover{*(loaded_texture->texture)};
                 auto alpha = static_cast<std::uint8_t>(
                     m_seconds_to_alpha.clampedTransform(
