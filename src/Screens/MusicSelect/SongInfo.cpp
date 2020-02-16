@@ -1,11 +1,14 @@
 #include "SongInfo.hpp"
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+
+#include "Panel.hpp"
 
 namespace MusicSelect {
 
     BigCover::BigCover(SharedResources& resources) :
-        m_resources(resources)
+        HoldsSharedResources(resources)
     {
         m_cover_fallback.setSize({get_size(), get_size()});
         m_cover_fallback.setFillColor(sf::Color::Transparent);
@@ -45,7 +48,7 @@ namespace MusicSelect {
     }
 
     SongInfo::SongInfo(SharedResources& resources) :
-        m_resources(resources),
+        HoldsSharedResources(resources),
         m_big_cover(resources)
     {
         m_big_cover.setOrigin(
@@ -79,7 +82,7 @@ namespace MusicSelect {
                 song_title,
                 m_resources.noto_sans_medium,
                 static_cast<unsigned int>(
-                    0.026315789f*get_width()
+                    0.026315789f*get_screen_width()
                 )
             };
             auto song_title_bounds = song_title_label.getLocalBounds();
@@ -90,7 +93,7 @@ namespace MusicSelect {
             auto cover_pos = m_big_cover.getPosition();
             song_title_label.setPosition(
                 get_big_cover_x() - m_big_cover.get_size()/2.f,
-                get_big_cover_y() + m_big_cover.get_size() + 0.01f*get_width()
+                get_big_cover_y() + m_big_cover.get_size() + 0.01f*get_screen_width()
             );
             target.draw(song_title_label);
         }
@@ -100,7 +103,7 @@ namespace MusicSelect {
                 song_artist,
                 m_resources.noto_sans_medium,
                 static_cast<unsigned int>(
-                    0.02f*get_width()
+                    0.02f*get_screen_width()
                 )
             };
             song_artist_label.setStyle(sf::Text::Italic);
@@ -113,7 +116,7 @@ namespace MusicSelect {
             auto cover_pos = m_big_cover.getPosition();
             song_artist_label.setPosition(
                 get_big_cover_x() - m_big_cover.get_size()/2.f,
-                get_big_cover_y() + m_big_cover.get_size() + 0.05f*get_width()
+                get_big_cover_y() + m_big_cover.get_size() + 0.05f*get_screen_width()
             );
             target.draw(song_artist_label);
         }

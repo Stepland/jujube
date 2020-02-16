@@ -30,7 +30,7 @@ namespace Data {
         float panel_position_y = 602.f / 1360.f;
         float panel_size = 160.f / 768.f;
         float panel_spacing = (112.f / 3.f) / 768.f;
-        float panel_step() {return panel_size+panel_spacing;};
+        float panel_step() const {return panel_size+panel_spacing;};
         float ribbon_x = 8.f / 768.f;
         float ribbon_y = 602.f / 768.f;
         float big_cover_size = 320.f / 768.f;

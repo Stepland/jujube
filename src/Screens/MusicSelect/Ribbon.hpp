@@ -35,7 +35,7 @@ namespace MusicSelect {
 
     // The Ribbon is the moving part of the Music Select Screen
     // It can be sorted in a number of ways
-    class Ribbon final : public sf::Drawable, public sf::Transformable, public Toolkit::Debuggable {
+    class Ribbon final : public sf::Drawable, public sf::Transformable, public HoldsSharedResources, public Toolkit::Debuggable {
     public:
         Ribbon(SharedResources& t_resources);
         void title_sort(const Data::SongList& song_list);
@@ -58,7 +58,6 @@ namespace MusicSelect {
         std::vector<std::array<std::shared_ptr<Panel>,3>> m_layout;
         std::size_t m_position = 0;
         mutable std::optional<MoveAnimation> m_move_animation;
-        SharedResources& m_resources;
         float m_time_factor = 1.f;
         Data::Song empty_song;
     };

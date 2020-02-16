@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Panel.hpp"
+
 namespace MusicSelect {
     SharedResources::SharedResources(Data::Preferences& p) :
         preferences(p),

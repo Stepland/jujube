@@ -64,12 +64,7 @@ namespace MusicSelect {
         return clock.getElapsedTime() / m_time_factor > sf::milliseconds(300);
     }
 
-    Ribbon::Ribbon(SharedResources& t_resources) :
-        m_layout(),
-        m_move_animation(),
-        m_resources(t_resources),
-        empty_song()
-    {
+    Ribbon::Ribbon(SharedResources& t_resources) : HoldsSharedResources(t_resources) {
         std::cout << "Loaded MusicSelect::Ribbon" << std::endl;
     }
 
@@ -273,19 +268,13 @@ namespace MusicSelect {
             }
             ImGui::End();
         }
-        auto panel_step = (
-            (
-                m_resources.preferences.layout.panel_size +
-                m_resources.preferences.layout.panel_spacing
-            ) * m_resources.preferences.screen.width
-        );
         for (int column_offset = -1; column_offset <= 4; column_offset++) {
             std::size_t actual_column = (column_zero + column_offset + m_layout.size()) % m_layout.size();
             for (int row = 0; row < 3; row++) {
                 auto panel = m_layout.at(actual_column).at(row);
                 panel->setPosition(
-                    (static_cast<float>(relative_column_zero + column_offset) - float_position) * (panel_step),
-                    row * (panel_step)
+                    (static_cast<float>(relative_column_zero + column_offset) - float_position) * (get_panel_step()),
+                    row * (get_panel_step())
                 );
                 target.draw(*panel, states);
             }
@@ -293,17 +282,11 @@ namespace MusicSelect {
     }
 
     void Ribbon::draw_without_animation(sf::RenderTarget &target, sf::RenderStates states) const {
-        auto panel_step = (
-            (
-                m_resources.preferences.layout.panel_size +
-                m_resources.preferences.layout.panel_spacing
-            ) * m_resources.preferences.screen.width
-        );
         for (int column = -1; column <= 4; column++) {
             int actual_column_index = (column + m_position + m_layout.size()) % m_layout.size();
             for (int row = 0; row < 3; row++) {
                 auto panel = m_layout.at(actual_column_index).at(row);
-                panel->setPosition(column * (panel_step), row * (panel_step));
+                panel->setPosition(column * (get_panel_step()), row * (get_panel_step()));
                 target.draw(*panel, states);
             }
         }

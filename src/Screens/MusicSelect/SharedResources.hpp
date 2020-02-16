@@ -10,8 +10,6 @@
 #include "../../Data/Preferences.hpp"
 #include "../../Data/SongList.hpp"
 
-#include "Panel.hpp"
-
 namespace MusicSelect {
 
     class SelectablePanel;
@@ -40,5 +38,18 @@ namespace MusicSelect {
         sf::Color BSC_color = sf::Color{34,216,92};
         sf::Color ADV_color = sf::Color{252,212,32};
         sf::Color EXT_color = sf::Color{234,46,32};
+    };
+
+    struct HoldsSharedResources {
+        HoldsSharedResources(SharedResources& resources) : m_resources(resources) {};
+        float get_screen_width() const {return static_cast<float>(m_resources.preferences.screen.width);};
+        float get_screen_height() const {return static_cast<float>(m_resources.preferences.screen.height);};
+        float get_panel_size() const {return m_resources.preferences.layout.panel_size*get_screen_width();};
+        float get_panel_spacing() const {return m_resources.preferences.layout.panel_spacing*get_screen_width();};
+        float get_panel_step() const {return m_resources.preferences.layout.panel_step()*get_screen_width();};
+        float get_big_cover_x() const {return m_resources.preferences.layout.big_cover_x*get_screen_width();};
+        float get_big_cover_y() const {return m_resources.preferences.layout.big_cover_y*get_screen_width();};
+    protected:
+        SharedResources& m_resources;
     };
 }

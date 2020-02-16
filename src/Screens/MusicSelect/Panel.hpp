@@ -13,18 +13,16 @@
 namespace MusicSelect {
 
     class Ribbon;
-    class SharedResources;
 
     // A Panel holds anything that can go under a button on the moving part
     // of the music select screen, be it nothing, a category indicator, or a song
-    class Panel : public sf::Drawable, public sf::Transformable {
+    class Panel : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
     public:
-        Panel(SharedResources& resources) : m_resources(resources) {};
+        explicit Panel(SharedResources& resources);
         // What happens when you click on the panel
         virtual void click(Ribbon& ribbon, std::size_t from_button_index) = 0;
         virtual ~Panel() = default;
     protected:
-        SharedResources& m_resources;
         float get_size() const;
     };
 

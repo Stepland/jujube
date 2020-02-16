@@ -11,9 +11,14 @@
 #include "SharedResources.hpp"
 
 namespace MusicSelect {
-    float Panel::get_size() const {
-        return m_resources.preferences.layout.panel_size*m_resources.preferences.screen.width;
+    Panel::Panel(SharedResources& resources) : HoldsSharedResources(resources) {
+        
     }
+
+    float Panel::get_size() const {
+        return get_panel_size();
+    }
+    
     void ColorPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         sf::RectangleShape panel{{get_size()*0.9f, get_size()*0.9f}};
         panel.setFillColor(m_color);
