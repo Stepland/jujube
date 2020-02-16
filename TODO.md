@@ -31,6 +31,7 @@
     - Density graph
 - Sound
 - Fullscreen handling
+- Fix the annoying visual glitch that flashes a song title and dif on the ribbon
 - Song Panel click
 - Chart Panel
 - Visible controls
