@@ -34,6 +34,8 @@ namespace Data {
         float big_cover_size = 320.f / 768.f;
         float big_cover_x = 0.5f;
         float big_cover_y = 0.017f;
+        float big_level_x = 656.f / 768.f;
+        float big_level_y = 30.f / 768.f;
         float upper_part_height = 464.f / 768.f;
 
         template<class Archive>
@@ -49,7 +51,7 @@ namespace Data {
         }
     };
 
-    // RAII style class which loads preferences from the dedicated file and saves them when destructed
+    // RAII style class which loads preferences from the dedicated file when constructed and saves them when destructed
     struct Preferences {
         Screen screen;
         Layout layout;

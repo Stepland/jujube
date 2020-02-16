@@ -37,7 +37,7 @@ namespace MusicSelect {
         frame.setFillColor(sf::Color::Black);
         frame.setOutlineThickness(1.f);
         frame.setOutlineColor(sf::Color::White);
-        Toolkit::setNormOrigin(frame, 0.5f, 0.5f);
+        Toolkit::set_origin_normalized(frame, 0.5f, 0.5f);
         frame.setPosition(get_size()*0.5f, get_size()*0.5f);
         target.draw(frame, states);
 
@@ -57,7 +57,7 @@ namespace MusicSelect {
             static_cast<unsigned int>(get_size()*0.7f)
         };
         label_text.setFillColor(sf::Color::White);
-        Toolkit::setNormOrigin(label_text, 0.5f, 0.5f);
+        Toolkit::set_origin_normalized(label_text, 0.5f, 0.5f);
         auto text_bounds = label_text.getGlobalBounds();
         if (text_bounds.width > get_size()*0.6f) {
             label_text.setScale(get_size()*0.6f / text_bounds.width, get_size()*0.6f / text_bounds.width);
@@ -127,26 +127,14 @@ namespace MusicSelect {
             }
         }
         sf::CircleShape chart_dif_badge{get_size()*0.1f, 30};
-        Toolkit::setNormOrigin(chart_dif_badge, 0.5f, 0.5f);
+        Toolkit::set_origin_normalized(chart_dif_badge, 0.5f, 0.5f);
         chart_dif_badge.setPosition(get_size()*0.1f, get_size()*(0.1563f + 0.15f));
         if (should_be_grayed_out) {
             chart_dif_badge.setFillColor(sf::Color(128,128,128));
         } else {
-            if (selected_chart == "BSC") {
-                chart_dif_badge.setFillColor(m_resources.BSC_color);
-            } else if (selected_chart == "ADV") {
-                chart_dif_badge.setFillColor(m_resources.ADV_color);
-            } else if (selected_chart == "EXT") {
-                chart_dif_badge.setFillColor(m_resources.EXT_color);
-            } else {
-                chart_dif_badge.setFillColor(
-                    Toolkit::HSL(
-                        static_cast<int>(std::hash<std::string>{}(selected_chart)),
-                        83,
-                        49
-                    ).TurnToRGB()
-                );
-            }
+            chart_dif_badge.setFillColor(
+                m_resources.get_chart_color(selected_chart)
+            );
         }
         target.draw(chart_dif_badge, states);
         if (not should_be_grayed_out) {
@@ -157,7 +145,7 @@ namespace MusicSelect {
                 static_cast<unsigned int>(get_size()*0.15f)
             };
             dif_label.setFillColor(sf::Color::White);
-            Toolkit::setNormOrigin(dif_label, 0.5f, 0.5f);
+            Toolkit::set_origin_normalized(dif_label, 0.5f, 0.5f);
             dif_label.setPosition(get_size()*0.1f, get_size()*(0.1563f + 0.15f));
             target.draw(dif_label, states);
         }

@@ -58,6 +58,7 @@ sources = [
     'src/Toolkit/EasingFunctions.cpp',
     'src/Toolkit/HSL.hpp',
     'src/Toolkit/HSL.cpp',
+    'src/Toolkit/NormalizedOrigin.hpp',
     'src/Toolkit/QuickRNG.hpp',
     'src/Toolkit/QuickRNG.cpp',
 ]

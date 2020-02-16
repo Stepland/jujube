@@ -19,6 +19,7 @@
     - Cover
     - Title
     - Artist
+    - Chart
 - Song Panel click
     - difficulty cycle
 - Handling Resolution changes
@@ -29,7 +30,6 @@
 
 ### Music Select Screen
 - Top Screen Part Handling
-    - Chart
     - Chart List
     - Density graph
 - Sound

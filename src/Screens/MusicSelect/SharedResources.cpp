@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "../../Toolkit/HSL.hpp"
+
 #include "Panel.hpp"
 
 namespace MusicSelect {
@@ -44,5 +46,21 @@ namespace MusicSelect {
             return {};
         }
         return chart_selection->song;
+    }
+
+    sf::Color SharedResources::get_chart_color(const std::string& chart) {
+        if (chart == "BSC") {
+            return BSC_color;
+        } else if (chart == "ADV") {
+            return ADV_color;
+        } else if (chart == "EXT") {
+            return EXT_color;
+        } else {
+            return Toolkit::HSL(
+                static_cast<int>(std::hash<std::string>{}(chart)),
+                83,
+                49
+            ).TurnToRGB();
+        }
     }
 }
