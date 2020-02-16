@@ -26,8 +26,6 @@ namespace Data {
     };
 
     struct Layout {
-        float panel_position_x = 8.f / 768.f;
-        float panel_position_y = 602.f / 1360.f;
         float panel_size = 160.f / 768.f;
         float panel_spacing = (112.f / 3.f) / 768.f;
         float panel_step() const {return panel_size+panel_spacing;};
@@ -41,8 +39,6 @@ namespace Data {
         template<class Archive>
         void serialize(Archive & archive) {
             archive(
-                CEREAL_NVP(panel_position_x),
-                CEREAL_NVP(panel_position_y),
                 CEREAL_NVP(panel_size),
                 CEREAL_NVP(panel_spacing),
                 CEREAL_NVP(ribbon_x),
