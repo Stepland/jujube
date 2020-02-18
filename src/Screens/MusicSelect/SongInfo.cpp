@@ -117,7 +117,7 @@ namespace MusicSelect {
             auto cover_pos = m_big_cover.getPosition();
             song_artist_label.setPosition(
                 get_big_cover_x() - m_big_cover.get_size()/2.f,
-                get_big_cover_y() + m_big_cover.get_size() + 0.05f*get_screen_width()
+                get_big_cover_y() + m_big_cover.get_size() + 0.04f*get_screen_width()
             );
             target.draw(song_artist_label, states);
         }

@@ -7,6 +7,7 @@
 #include "../../Data/Song.hpp"
 #include "../../Data/Chart.hpp"
 #include "../../Data/KeyMapping.hpp"
+#include "../../Drawables/BlackFrame.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
 #include "Ribbon.hpp"
 #include "SongInfo.hpp"
@@ -34,6 +35,8 @@ namespace MusicSelect {
         SongInfo song_info;
         std::optional<std::reference_wrapper<SongPanel>> selected_panel;
         ButtonHighlight button_highlight;
+
+        Drawables::BlackFrame black_frame;
     
         Data::KeyMapping key_mapping;
         // converts a key press into a button press

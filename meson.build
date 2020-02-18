@@ -34,6 +34,8 @@ sources = [
     'src/Data/Score.hpp',
     'src/Data/Song.hpp',
     'src/Data/Song.cpp',
+    'src/Drawables/BlackFrame.hpp',
+    'src/Drawables/BlackFrame.cpp',
     'src/Resources/TextureCache.cpp',
     'src/Resources/TextureCache.hpp',
     # 'src/Resources/CoverAtlas.hpp',

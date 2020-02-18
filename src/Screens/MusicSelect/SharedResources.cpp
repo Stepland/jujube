@@ -8,7 +8,7 @@
 
 namespace MusicSelect {
     SharedResources::SharedResources(Data::Preferences& p) :
-        preferences(p),
+        Data::HoldsPreferences(p),
         covers(),
         fallback_cover(),
         noto_sans_medium()

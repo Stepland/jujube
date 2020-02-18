@@ -15,6 +15,7 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list, Data::Preferences
     song_info(resources),
     selected_panel(),
     button_highlight(resources),
+    black_frame(t_preferences),
     key_mapping()
 {
     ribbon.title_sort(song_list);
@@ -27,12 +28,12 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
     bool chart_selected = false;
     sf::Clock imguiClock;
     ribbon.setPosition(
-        resources.preferences.layout.ribbon_x*resources.preferences.screen.width,
-        resources.preferences.layout.ribbon_y*resources.preferences.screen.width
+        resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
+        resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
     );
     button_highlight.setPosition(
-        resources.preferences.layout.ribbon_x*resources.preferences.screen.width,
-        resources.preferences.layout.ribbon_y*resources.preferences.screen.width
+        resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
+        resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
     );
     while ((not chart_selected) and window.isOpen()) {
         sf::Event event;
@@ -51,15 +52,15 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
             case sf::Event::Resized:
                 // update the view to the new size of the window
                 window.setView(sf::View({0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)}));
-                resources.preferences.screen.height = event.size.height;
-                resources.preferences.screen.width = event.size.width;
+                resources.m_preferences.screen.height = event.size.height;
+                resources.m_preferences.screen.width = event.size.width;
                 ribbon.setPosition(
-                    resources.preferences.layout.ribbon_x*resources.preferences.screen.width,
-                    resources.preferences.layout.ribbon_y*resources.preferences.screen.width
+                    resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
+                    resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
                 );
                 button_highlight.setPosition(
-                    resources.preferences.layout.ribbon_x*resources.preferences.screen.width,
-                    resources.preferences.layout.ribbon_y*resources.preferences.screen.width
+                    resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
+                    resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
                 );
                 break;
             default:
@@ -67,11 +68,12 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
             }
         }
         ImGui::SFML::Update(window, imguiClock.restart());
-        window.clear(sf::Color::Black);
+        window.clear(sf::Color(7, 23, 53));
         ribbon.draw_debug();
         window.draw(ribbon);
         window.draw(button_highlight);
         window.draw(song_info);
+        window.draw(black_frame);
         ImGui::SFML::Render(window);
         window.display();
     }

@@ -102,4 +102,21 @@ namespace Data {
             ); 
         }
     };
+
+    struct HoldsPreferences {
+        HoldsPreferences(Preferences& t_preferences) : m_preferences(t_preferences) {};
+        float get_screen_width() const {return static_cast<float>(m_preferences.screen.width);};
+        float get_screen_height() const {return static_cast<float>(m_preferences.screen.height);};
+        float get_panel_size() const {return m_preferences.layout.panel_size*get_screen_width();};
+        float get_panel_spacing() const {return m_preferences.layout.panel_spacing*get_screen_width();};
+        float get_ribbon_x() const {return m_preferences.layout.ribbon_x*get_screen_width();};
+        float get_ribbon_y() const {return m_preferences.layout.ribbon_y*get_screen_width();};
+        float get_panel_step() const {return m_preferences.layout.panel_step()*get_screen_width();};
+        float get_big_cover_x() const {return m_preferences.layout.big_cover_x*get_screen_width();};
+        float get_big_cover_y() const {return m_preferences.layout.big_cover_y*get_screen_width();};
+        float get_big_level_x() const {return m_preferences.layout.big_level_x*get_screen_width();};
+        float get_big_level_y() const {return m_preferences.layout.big_level_y*get_screen_width();};
+        float get_upper_part_height() const {return m_preferences.layout.upper_part_height*get_screen_width();};
+        Preferences& m_preferences;
+    };
 }

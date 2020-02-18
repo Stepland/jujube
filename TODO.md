@@ -28,17 +28,18 @@
 - Handling Resolution changes
     - reload preferences on change
 - Fix the annoying visual glitch that flashes a song title and dif on the ribbon
+- Top Screen Part Handling
+    - Density graph
+        - format-agnostic chart class
+- Black frame
 
 ## TODO
 
 - Add KeyMapping to preferences
+- Make Drawables lazily react to resolution changes
 
 ### Music Select Screen
-- Top Screen Part Handling
-    - Density graph
-        - format-agnostic chart class
 - Sound
-- Black frame
 - Fullscreen handling
 - Song Panel click
     - animation

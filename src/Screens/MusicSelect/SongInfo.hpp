@@ -12,7 +12,7 @@ namespace MusicSelect {
     class BigCover : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
     public:
         BigCover(SharedResources& resources);
-        float get_size() const {return m_resources.preferences.layout.big_cover_size*get_screen_width();};
+        float get_size() const {return m_preferences.layout.big_cover_size*get_screen_width();};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         mutable sf::RectangleShape m_cover_fallback;
