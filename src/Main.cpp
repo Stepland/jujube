@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <cereal/archives/json.hpp>
 
-#include "Data/SongList.hpp"
+#include "Data/Song.hpp"
 #include "Data/Preferences.hpp"
 // #include "Data/Chart.hpp"
 // #include "Data/Score.hpp"

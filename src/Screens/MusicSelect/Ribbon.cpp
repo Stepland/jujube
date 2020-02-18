@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "Panel.hpp"
-#include "../../Data/SongList.hpp"
+#include "../../Data/Song.hpp"
 #include "../../Toolkit/QuickRNG.hpp"
 
 
@@ -69,15 +69,19 @@ namespace MusicSelect {
     }
 
     void Ribbon::title_sort(const Data::SongList &song_list) {
-        std::vector<std::reference_wrapper<const Data::Song>> songs;
+        std::vector<std::shared_ptr<const Data::Song>> songs;
         for (auto &&song : song_list.songs) {
-            songs.push_back(std::cref(song));
+            songs.push_back(song);
         }
-        std::sort(songs.begin(), songs.end(), Data::Song::sort_by_title);
+        std::sort(
+            songs.begin(),
+            songs.end(),
+            [](std::shared_ptr<const Data::Song> a, std::shared_ptr<const Data::Song> b){return Data::Song::sort_by_title(*a, *b);}
+        );
         std::map<std::string, std::vector<std::shared_ptr<Panel>>> categories;
         for (const auto &song : songs) {
-            if (song.get().title.size() > 0) {
-                char letter = song.get().title[0];
+            if (song->title.size() > 0) {
+                char letter = song->title[0];
                 if ('A' <= letter and letter <= 'Z') {
                     categories
                     [std::string(1, letter)]
@@ -134,21 +138,6 @@ namespace MusicSelect {
                             panel_hue_generator.generate()
                         )
                     )
-                );
-            }
-        }
-        layout_from_category_map(categories);
-    }
-
-    void Ribbon::test_song_cover_sort() {
-        std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        std::map<std::string, std::vector<std::shared_ptr<Panel>>> categories;
-        Toolkit::UniformIntRNG category_size_generator{1, 10};
-        for (auto &&letter : alphabet) {
-            auto category_size = category_size_generator.generate();
-            for (int i = 0; i < category_size; i++) {
-                categories[std::string(1, letter)].push_back(
-                    std::make_shared<SongPanel>(m_resources, this->empty_song)
                 );
             }
         }

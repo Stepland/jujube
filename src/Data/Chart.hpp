@@ -10,8 +10,8 @@
 
 namespace Data {
     struct Chart {
-        explicit Chart(const stepland::memon& memon, const std::string& chart);
-        unsigned int level;
+        Chart(const stepland::memon& memon, const std::string& difficulty);
+        int level;
         std::set<Note> notes;
         std::size_t resolution;
     };

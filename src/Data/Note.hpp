@@ -4,10 +4,10 @@
 
 namespace Data {
     struct Note {
-        // Timing is stored as ticks on a 300Hz clock
-        std::size_t timing;
+        // Timing is stored as ticks on a 300Hz clock starting at the begging of the audio
+        long int timing;
         Button position;
-        // zero is standard note
+        // zero length means it's a standard note
         std::size_t length;
         Button tail;
 

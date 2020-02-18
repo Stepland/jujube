@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "../../Data/SongList.hpp"
+#include "../../Data/Song.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
 #include "SharedResources.hpp"
 
@@ -64,7 +64,7 @@ namespace MusicSelect {
 
     struct ChartSelection {
         const Data::Song& song;
-        const std::string& chart;
+        const std::string& difficulty;
     };
 
     class SelectablePanel : public Panel {
@@ -77,13 +77,13 @@ namespace MusicSelect {
 
     class SongPanel final : public SelectablePanel {
     public:
-        explicit SongPanel(SharedResources& resources, const Data::Song& t_song) : SelectablePanel(resources), m_song(t_song) {};
+        explicit SongPanel(SharedResources& resources, const std::shared_ptr<const Data::Song>& t_song) : SelectablePanel(resources), m_song(t_song) {};
         void click(Ribbon& ribbon, std::size_t from_button_index) override;
         void unselect() override;
         std::optional<ChartSelection> get_selected_chart() const override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-        const Data::Song& m_song;
+        std::shared_ptr<const Data::Song> m_song;
         const Toolkit::AffineTransform<float> m_seconds_to_alpha{0.0f, 0.15f, 0.f, 255.f};
         std::optional<std::string> selected_chart;
     };

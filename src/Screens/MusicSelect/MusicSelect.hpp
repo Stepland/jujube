@@ -4,7 +4,7 @@
 
 #include <SFML/Window.hpp>
 
-#include "../../Data/SongList.hpp"
+#include "../../Data/Song.hpp"
 #include "../../Data/Chart.hpp"
 #include "../../Data/KeyMapping.hpp"
 #include "../../Toolkit/AffineTransform.hpp"

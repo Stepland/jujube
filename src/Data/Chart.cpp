@@ -5,24 +5,28 @@
 #include "Buttons.hpp"
 
 namespace Data {
-    Chart::Chart(const stepland::memon& memon, const std::string& chart_name) {
-        auto it = memon.charts.find(chart_name);
+    Chart::Chart(const stepland::memon& memon, const std::string& difficulty) {
+        auto it = memon.charts.find(difficulty);
         if (it == memon.charts.end()) {
-            throw std::invalid_argument("Memon file has no "+chart_name+" chart");
+            throw std::invalid_argument("Memon file has no "+difficulty+" chart");
         }
         auto [_, chart] = *it;
-        level = static_cast<unsigned int>(chart.level);
+        level = chart.level;
         resolution = static_cast<std::size_t>(chart.resolution);
         Toolkit::AffineTransform<float> memon_timing_to_300Hz(
             0.f, static_cast<float>(chart.resolution),
             -memon.offset*300.f, (-memon.offset+60.f/memon.BPM)*300.f
         );
+        Toolkit::AffineTransform<float> memon_timing_to_300Hz_proportional(
+            0.f, static_cast<float>(chart.resolution),
+            0.f, (60.f/memon.BPM)*300.f
+        );
         for (auto &&note : chart.notes) {
             auto timing = static_cast<std::size_t>(memon_timing_to_300Hz.transform(note.get_timing()));
             auto position = static_cast<Button>(note.get_pos());
-            auto length = static_cast<std::size_t>(note.get_length());
+            auto length = static_cast<std::size_t>(memon_timing_to_300Hz_proportional.transform(note.get_length()));
             auto tail = convert_memon_tail(position, note.get_tail_pos());
-            notes.emplace(timing, position, length, tail);
+            notes.insert({timing, position, length, tail});
         }
     }
 

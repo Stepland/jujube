@@ -22,11 +22,11 @@ namespace MusicSelect {
         std::cout << "Loaded MusicSelect::SharedResources" << std::endl;
     }
 
-    std::string SharedResources::get_last_selected_chart() {
-        return get_selected_chart().value_or("BSC");
+    std::string SharedResources::get_last_selected_difficulty() {
+        return get_selected_difficulty().value_or("BSC");
     }
 
-    std::optional<std::string> SharedResources::get_selected_chart() {
+    std::optional<std::string> SharedResources::get_selected_difficulty() {
         if (not selected_panel.has_value()) {
             return {};
         }
@@ -34,7 +34,7 @@ namespace MusicSelect {
         if (not chart_selection.has_value()) {
             return {};
         }
-        return chart_selection->chart;
+        return chart_selection->difficulty;
     }
 
     std::optional<std::reference_wrapper<const Data::Song>> MusicSelect::SharedResources::get_selected_song() {

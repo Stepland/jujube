@@ -6,7 +6,7 @@
 #include <SFML/Graphics/Transformable.hpp>
 
 #include "../../Data/Preferences.hpp"
-#include "../../Data/SongList.hpp"
+#include "../../Data/Song.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
 #include "../../Toolkit/Debuggable.hpp"
 #include "../../Toolkit/EasingFunctions.hpp"
@@ -59,6 +59,5 @@ namespace MusicSelect {
         std::size_t m_position = 0;
         mutable std::optional<MoveAnimation> m_move_animation;
         float m_time_factor = 1.f;
-        Data::Song empty_song;
     };
 }

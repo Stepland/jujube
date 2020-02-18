@@ -52,9 +52,10 @@ namespace MusicSelect {
         target.draw(cover, states);
     }
 
-    SongInfo::SongInfo(SharedResources& resources) : HoldsSharedResources(resources), m_big_cover(resources) {
-
-    }
+    SongInfo::SongInfo(SharedResources& resources) :
+        HoldsSharedResources(resources),
+        m_big_cover(resources)
+    {}
 
     void SongInfo::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
@@ -142,7 +143,7 @@ namespace MusicSelect {
         target.draw(level_label, states);
         
         sf::Text level_number_label{
-            std::to_string(selected_chart->song.chart_levels.at(selected_chart->chart)),
+            std::to_string(selected_chart->song.chart_levels.at(selected_chart->difficulty)),
             m_resources.noto_sans_medium,
             static_cast<unsigned int>(130.f/768.f*get_screen_width())
         };
@@ -151,23 +152,23 @@ namespace MusicSelect {
         level_number_label.setFillColor(sf::Color::White);
         target.draw(level_number_label, states);
 
-        std::string full_chart_name = selected_chart->chart;
-        if (selected_chart->chart == "BSC") {
-            full_chart_name = "BASIC";
-        } else if (selected_chart->chart == "ADV") {
-            full_chart_name = "ADVANCED";
-        } else if (selected_chart->chart == "EXT") {
-            full_chart_name = "EXTREME";
+        std::string full_difficulty = selected_chart->difficulty;
+        if (selected_chart->difficulty == "BSC") {
+            full_difficulty = "BASIC";
+        } else if (selected_chart->difficulty == "ADV") {
+            full_difficulty = "ADVANCED";
+        } else if (selected_chart->difficulty == "EXT") {
+            full_difficulty = "EXTREME";
         }
 
         sf::Text chart_label{
-            full_chart_name,
+            full_difficulty,
             m_resources.noto_sans_medium,
             static_cast<unsigned int>(20.f/768.f*get_screen_width())
         };
         Toolkit::set_origin_normalized_no_position(chart_label, 0.5f, 0.f);
         chart_label.setPosition(get_big_level_x(), get_big_level_y()+(145.f/768.f*get_screen_width()));
-        chart_label.setFillColor(m_resources.get_chart_color(selected_chart->chart));
+        chart_label.setFillColor(m_resources.get_chart_color(selected_chart->difficulty));
         target.draw(chart_label, states);
     }
 
@@ -185,13 +186,13 @@ namespace MusicSelect {
         auto dif_badge_y = 40.f/768.f*get_screen_width();
         auto dif_badge_step = 3.f*dif_badge_radius;
         std::size_t dif_index = 0;
-        for (auto &&[chart_name, level] : selected_chart->song.chart_levels) {
+        for (auto &&[difficulty, level] : selected_chart->song.chart_levels) {
             sf::CircleShape dif_badge{dif_badge_radius};
             Toolkit::set_origin_normalized(dif_badge, 0.5f, 0.5f);
-            dif_badge.setFillColor(m_resources.get_chart_color(chart_name));
+            dif_badge.setFillColor(m_resources.get_chart_color(difficulty));
             dif_badge.setPosition(dif_badge_x+dif_index*dif_badge_step, dif_badge_y);
             target.draw(dif_badge, states);
-            if (chart_name == selected_chart->chart) {
+            if (difficulty == selected_chart->difficulty) {
                 sf::CircleShape select_triangle(dif_badge_radius, 3);
                 Toolkit::set_origin_normalized(select_triangle, 0.5f, 0.5f);
                 select_triangle.rotate(180.f);

@@ -8,7 +8,9 @@
 
 #include "../../Resources/TextureCache.hpp"
 #include "../../Data/Preferences.hpp"
-#include "../../Data/SongList.hpp"
+#include "../../Data/Song.hpp"
+
+#include "DensityGraph.hpp"
 
 namespace MusicSelect {
 
@@ -31,10 +33,12 @@ namespace MusicSelect {
         sf::Texture fallback_cover;
         
         sf::Font noto_sans_medium;
+
+        Data::DensityGraphCache density_graphs;
         
         std::optional<TimedSelectedPanel> selected_panel;
-        std::string get_last_selected_chart();
-        std::optional<std::string> get_selected_chart();
+        std::string get_last_selected_difficulty();
+        std::optional<std::string> get_selected_difficulty();
         std::optional<std::reference_wrapper<const Data::Song>> get_selected_song();
 
         sf::Color BSC_color = sf::Color{34,216,92};

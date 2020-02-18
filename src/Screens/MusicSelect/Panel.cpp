@@ -69,22 +69,22 @@ namespace MusicSelect {
     void SongPanel::click(Ribbon& ribbon, std::size_t from_button_index) {
         if (selected_chart.has_value()) {
             // The song was already selected : look for the next chart in order
-            auto it = m_song.chart_levels.upper_bound(*selected_chart);
-            if (it != m_song.chart_levels.cend()) {
+            auto it = m_song->chart_levels.upper_bound(*selected_chart);
+            if (it != m_song->chart_levels.cend()) {
                 selected_chart = it->first;
             } else {
-                selected_chart = m_song.chart_levels.cbegin()->first;
+                selected_chart = m_song->chart_levels.cbegin()->first;
             }
             m_resources.selected_panel->last_click.restart();
             m_resources.selected_panel->is_first_click = false;
         } else {
             // Look for the first chart with dif greater or equal to the last select one
             // or else select the first chart
-            auto it = m_song.chart_levels.lower_bound(m_resources.get_last_selected_chart());
-            if (it != m_song.chart_levels.cend()) {
+            auto it = m_song->chart_levels.lower_bound(m_resources.get_last_selected_difficulty());
+            if (it != m_song->chart_levels.cend()) {
                 selected_chart = it->first;
             } else {
-                selected_chart = m_song.chart_levels.cbegin()->first;
+                selected_chart = m_song->chart_levels.cbegin()->first;
             }
             // The song was not selected before : first unselect the last one
             if (m_resources.selected_panel.has_value()) {
@@ -100,7 +100,7 @@ namespace MusicSelect {
 
     std::optional<ChartSelection> SongPanel::get_selected_chart() const {
         if (selected_chart) {
-            return ChartSelection{m_song, *selected_chart};
+            return ChartSelection{*m_song, *selected_chart};
         } else {
             return {};
         }
@@ -108,11 +108,11 @@ namespace MusicSelect {
 
     void SongPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
-        auto last_selected_chart = m_resources.get_last_selected_chart();
+        auto last_selected_chart = m_resources.get_last_selected_difficulty();
         // We should gray out the panel if the currently selected difficulty doesn't exist for this song
-        bool should_be_grayed_out = m_song.chart_levels.find(last_selected_chart) == m_song.chart_levels.end();
-        if (m_song.cover) {
-            auto loaded_texture = m_resources.covers.async_get(m_song.folder/m_song.cover.value());
+        bool should_be_grayed_out = m_song->chart_levels.find(last_selected_chart) == m_song->chart_levels.end();
+        if (m_song->cover) {
+            auto loaded_texture = m_resources.covers.async_get(m_song->folder/m_song->cover.value());
             if (loaded_texture) {
                 sf::Sprite cover{*(loaded_texture->texture)};
                 auto alpha = static_cast<std::uint8_t>(
@@ -140,7 +140,7 @@ namespace MusicSelect {
         }
         target.draw(chart_dif_badge, states);
         if (not should_be_grayed_out) {
-            auto dif = m_song.chart_levels.at(last_selected_chart);
+            auto dif = m_song->chart_levels.at(last_selected_chart);
             sf::Text dif_label{
                 std::to_string(dif),
                 m_resources.noto_sans_medium,
@@ -153,7 +153,7 @@ namespace MusicSelect {
         }
         sf::Text song_title;
         song_title.setFont(m_resources.noto_sans_medium);
-        song_title.setString(m_song.title);
+        song_title.setString(m_song->title);
         song_title.setCharacterSize(static_cast<unsigned int>(0.06875f*get_size()));
         song_title.setFillColor(sf::Color::White);
         auto song_title_bounds = song_title.getLocalBounds();
