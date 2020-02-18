@@ -5,16 +5,52 @@
 
 #include <SFML/Audio.hpp>
 
-namespace Data {
+namespace MusicSelect {
+
+    DensityGraph::DensityGraph(const std::array<unsigned int, 115>& t_densities) :
+        m_densities(t_densities),
+        m_vertex_array(sf::Quads, 0)
+    {
+        std::size_t column = 0;
+        for (auto &&density : m_densities) {
+            for (size_t row = 0; row < static_cast<std::size_t>(density); row++) {
+                m_vertex_array.append(sf::Vertex(
+                    sf::Vector2f(column*5.0f, row*-5.0f),
+                    sf::Color::White
+                ));
+                m_vertex_array.append(sf::Vertex(
+                    sf::Vector2f(column*5.0f, row*-5.0f),
+                    sf::Color::White
+                ));
+                m_vertex_array.append(sf::Vertex(
+                    sf::Vector2f(column*5.0f, row*-5.0f),
+                    sf::Color::White
+                ));
+                m_vertex_array.append(sf::Vertex(
+                    sf::Vector2f(column*5.0f, row*-5.0f),
+                    sf::Color::White
+                ));
+            }
+            column++;
+        }
+    }
+
+    void DensityGraph::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+        states.transform *= getTransform();
+        target.draw(m_vertex_array, states);
+    }
 
     DensityGraph compute_density_graph_1(const SongDifficulty& sd) {
         return compute_density_graph_2(sd.song, sd.difficulty);
     }
 
-    DensityGraph compute_density_graph_2(const Song& song, const std::string& difficulty) {
+    DensityGraph compute_density_graph_2(const Data::Song& song, const std::string& difficulty) {
         auto c = song.get_chart(difficulty);
         if (not c.has_value()) {
             throw std::invalid_argument("Song "+song.title+" has no "+difficulty+" chart");
+        }
+        if (c->notes.empty()) {
+            return compute_density_graph_3(*c, 0, 0);
         }
         if (not song.audio.has_value()) {
             return compute_density_graph_3(*c, c->notes.begin()->timing, c->notes.rbegin()->timing);
@@ -30,8 +66,8 @@ namespace Data {
         );
     }
 
-    DensityGraph compute_density_graph_3(const Chart& chart, long start, long end) {
-        DensityGraph d{};
+    DensityGraph compute_density_graph_3(const Data::Chart& chart, long start, long end) {
+        std::array<unsigned int, 115> d{};
         if (start != end) {
             for (auto &&note : chart.notes) {
                 auto index = (note.timing-start)*115/(end-start);
@@ -40,10 +76,10 @@ namespace Data {
             std::replace_if(
                 d.begin(),
                 d.end(),
-                std::bind(std::greater<unsigned int>(), std::placeholders::_1, 8),
+                std::bind(std::greater<unsigned int>(), std::placeholders::_1, 8U),
                 8
             );
         }
-        return d;
+        return DensityGraph{d};
     }
 }

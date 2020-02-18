@@ -30,7 +30,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return {};
         }
-        auto chart_selection = selected_panel->panel.get_selected_chart();
+        auto chart_selection = selected_panel->panel.get_selected_difficulty();
         if (not chart_selection.has_value()) {
             return {};
         }
@@ -41,7 +41,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return {};
         }
-        auto chart_selection = selected_panel->panel.get_selected_chart();
+        auto chart_selection = selected_panel->panel.get_selected_difficulty();
         if (not chart_selection.has_value()) {
             return {};
         }

@@ -8,6 +8,7 @@
 
 #include "../../Data/Song.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
+#include "DensityGraph.hpp"
 #include "SharedResources.hpp"
 
 namespace MusicSelect {
@@ -62,17 +63,12 @@ namespace MusicSelect {
         std::string m_label;
     };
 
-    struct ChartSelection {
-        const Data::Song& song;
-        const std::string& difficulty;
-    };
-
     class SelectablePanel : public Panel {
     public:
         using Panel::Panel;
         virtual ~SelectablePanel() = default;
         virtual void unselect() = 0;
-        virtual std::optional<ChartSelection> get_selected_chart() const = 0;
+        virtual std::optional<SongDifficulty> get_selected_difficulty() const = 0;
     };
 
     class SongPanel final : public SelectablePanel {
@@ -80,7 +76,7 @@ namespace MusicSelect {
         explicit SongPanel(SharedResources& resources, const std::shared_ptr<const Data::Song>& t_song) : SelectablePanel(resources), m_song(t_song) {};
         void click(Ribbon& ribbon, std::size_t from_button_index) override;
         void unselect() override;
-        std::optional<ChartSelection> get_selected_chart() const override;
+        std::optional<SongDifficulty> get_selected_difficulty() const override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         std::shared_ptr<const Data::Song> m_song;

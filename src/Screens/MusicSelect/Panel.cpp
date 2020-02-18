@@ -98,9 +98,9 @@ namespace MusicSelect {
         selected_chart.reset();
     }
 
-    std::optional<ChartSelection> SongPanel::get_selected_chart() const {
+    std::optional<SongDifficulty> SongPanel::get_selected_difficulty() const {
         if (selected_chart) {
-            return ChartSelection{*m_song, *selected_chart};
+            return SongDifficulty{*m_song, *selected_chart};
         } else {
             return {};
         }

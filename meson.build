@@ -2,7 +2,7 @@ project(
     'jujube',
     'cpp',
     default_options : ['cpp_std=c++17'],
-    version : '0.1.0-alpha',
+    version : '0.1.0-alpha'
 )
 
 cc = meson.get_compiler('cpp')
@@ -15,7 +15,6 @@ endforeach
 thread_dep = dependency('threads')
 m_dep = cc.find_library('m', required : false)
 gl_dep = dependency('gl')
-
 
 add_project_link_arguments(['-lstdc++'], language : 'cpp')
 

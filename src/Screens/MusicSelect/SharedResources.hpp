@@ -34,7 +34,7 @@ namespace MusicSelect {
         
         sf::Font noto_sans_medium;
 
-        Data::DensityGraphCache density_graphs;
+        MusicSelect::DensityGraphCache density_graphs;
         
         std::optional<TimedSelectedPanel> selected_panel;
         std::string get_last_selected_difficulty();

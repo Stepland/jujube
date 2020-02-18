@@ -28,7 +28,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return;
         }
-        auto selected_chart = selected_panel->panel.get_selected_chart();
+        auto selected_chart = selected_panel->panel.get_selected_difficulty();
         if (not selected_chart.has_value()) {
             return;
         }
@@ -73,7 +73,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return;
         }
-        auto selected_chart = selected_panel->panel.get_selected_chart();
+        auto selected_chart = selected_panel->panel.get_selected_difficulty();
         if (not selected_chart.has_value()) {
             return;
         }
@@ -128,7 +128,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return;
         }
-        auto selected_chart = selected_panel->panel.get_selected_chart();
+        auto selected_chart = selected_panel->panel.get_selected_difficulty();
         if (not selected_chart.has_value()) {
             return;
         }
@@ -177,7 +177,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return;
         }
-        auto selected_chart = selected_panel->panel.get_selected_chart();
+        auto selected_chart = selected_panel->panel.get_selected_difficulty();
         if (not selected_chart.has_value()) {
             return;
         }
@@ -227,9 +227,16 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return;
         }
-        auto selected_chart = selected_panel->panel.get_selected_chart();
-        if (not selected_chart.has_value()) {
+        auto selected_difficulty = selected_panel->panel.get_selected_difficulty();
+        if (not selected_difficulty.has_value()) {
             return;
         }
+        m_resources.density_graphs.load(*selected_difficulty);
+        auto densities = m_resources.density_graphs.get(*selected_difficulty);
+        if (not densities.has_value()) {
+            return;
+        }
+        densities->setScale(get_screen_width()/768.f, get_screen_width()/768.f);
+        target.draw(*densities, states);
     }
 }
