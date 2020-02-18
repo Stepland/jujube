@@ -11,8 +11,6 @@
 - Handling Resolution changes
     - Make Panels Drawable and Transformable
     - Make Ribbon Transformable
-- Fix jujube crashing on empty layout
-- Preference persistency system
 - Compute panel size from resolution
 - Compute FUCKING EVERYTHING from resolution
 - Top Screen Part Handling
@@ -25,17 +23,22 @@
         - format-agnostic chart class
 - Song Panel click
     - difficulty cycle
-- Handling Resolution changes
-    - reload preferences on change
 - Fix the annoying visual glitch that flashes a song title and dif on the ribbon
 - Top Screen Part Handling
     - Density graph
         - format-agnostic chart class
 - Black frame
 
-## TODO
-
+### Misc
+- Handling Resolution changes
+    - reload preferences on change
+- Fix jujube crashing on empty layout
+- Preference persistency system
 - Add KeyMapping to preferences
+    - Make KeyMapping look nicer in json form
+    - Sort by button
+## TODO
+### Misc
 - Make Drawables lazily react to resolution changes
 
 ### Music Select Screen
@@ -61,7 +64,7 @@
 ### memo Compatibility
 
 ### Themeing support
-*(when I have a whole week)*
+- Python bindings ?
 
 # v1.1.0
 ## FB9 Support

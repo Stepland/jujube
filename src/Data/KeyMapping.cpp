@@ -1,5 +1,7 @@
 #include "KeyMapping.hpp"
 
+#include <cereal/details/traits.hpp>
+
 namespace Data {
     KeyMapping::KeyMapping() {
         m_key_to_button[sf::Keyboard::Num1] = Button::B1;
@@ -56,3 +58,4 @@ namespace Data {
         }
     }
 }
+

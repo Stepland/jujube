@@ -69,6 +69,14 @@ namespace Toolkit {
             return m_is_loading.find(key) != m_is_loading.end();
         }
 
+        void reserve(const std::size_t& n) {
+            std::unique_lock<std::shared_mutex> lock_mapping{m_mapping_mutex, std::defer_lock};
+            std::unique_lock<std::shared_mutex> lock_is_loading{m_is_loading_mutex, std::defer_lock};
+            std::lock(lock_mapping, lock_is_loading);
+            m_mapping.reserve(n);
+            m_is_loading.reserve(n);
+        }
+
     private:
         std::unordered_map<Key, Value> m_mapping;
         std::shared_mutex m_mapping_mutex;

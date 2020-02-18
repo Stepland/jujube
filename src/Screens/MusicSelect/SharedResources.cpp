@@ -13,6 +13,7 @@ namespace MusicSelect {
         fallback_cover(),
         noto_sans_medium()
     {
+        covers.reserve(256);
         if (not noto_sans_medium.loadFromFile("assets/fonts/NotoSans-Medium.ttf")) {
             throw std::runtime_error("Unable to load assets/fonts/NotoSans-Medium.ttf");
         }
