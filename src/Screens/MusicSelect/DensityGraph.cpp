@@ -5,6 +5,8 @@
 
 #include <SFML/Audio.hpp>
 
+#include "../../Toolkit/AffineTransform.hpp"
+
 namespace MusicSelect {
 
     DensityGraph::DensityGraph(const std::array<unsigned int, 115>& t_densities) :
@@ -12,22 +14,23 @@ namespace MusicSelect {
         m_vertex_array(sf::Quads, 0)
     {
         std::size_t column = 0;
+        sf::Vector2f origin{0.f, 39.f};
         for (auto &&density : m_densities) {
             for (size_t row = 0; row < static_cast<std::size_t>(density); row++) {
                 m_vertex_array.append(sf::Vertex(
-                    sf::Vector2f(column*5.0f, row*-5.0f),
+                    origin+sf::Vector2f(column*5.0f, row*-5.0f),
                     sf::Color::White
                 ));
                 m_vertex_array.append(sf::Vertex(
-                    sf::Vector2f(column*5.0f, row*-5.0f),
+                    origin+sf::Vector2f(column*5.0f-4.0f, row*-5.0f),
                     sf::Color::White
                 ));
                 m_vertex_array.append(sf::Vertex(
-                    sf::Vector2f(column*5.0f, row*-5.0f),
+                    origin+sf::Vector2f(column*5.0f-4.0, row*-5.0f-4.0f),
                     sf::Color::White
                 ));
                 m_vertex_array.append(sf::Vertex(
-                    sf::Vector2f(column*5.0f, row*-5.0f),
+                    origin+sf::Vector2f(column*5.0f, row*-5.0f-4.0f),
                     sf::Color::White
                 ));
             }
@@ -69,8 +72,14 @@ namespace MusicSelect {
     DensityGraph compute_density_graph_3(const Data::Chart& chart, long start, long end) {
         std::array<unsigned int, 115> d{};
         if (start != end) {
+            Toolkit::AffineTransform<float> ticks_to_column{
+                static_cast<float>(start),
+                static_cast<float>(end),
+                0.f,
+                115.f
+            };
             for (auto &&note : chart.notes) {
-                auto index = (note.timing-start)*115/(end-start);
+                auto index = static_cast<unsigned int>(ticks_to_column.transform(static_cast<float>(note.timing)));
                 d.at(index) += 1;
             }
             std::replace_if(
@@ -81,5 +90,12 @@ namespace MusicSelect {
             );
         }
         return DensityGraph{d};
+    }
+}
+
+namespace Toolkit {
+    template<>
+    void set_origin_normalized(MusicSelect::DensityGraph& s, float x, float y) {
+        s.setOrigin(x*574.f, y*39.f);
     }
 }

@@ -236,7 +236,9 @@ namespace MusicSelect {
         if (not densities.has_value()) {
             return;
         }
+        Toolkit::set_origin_normalized(*densities, 0.5f, 1.f);
         densities->setScale(get_screen_width()/768.f, get_screen_width()/768.f);
+        densities->setPosition(get_screen_width()*0.5f,423.f/768.f*get_screen_width());
         target.draw(*densities, states);
     }
 }

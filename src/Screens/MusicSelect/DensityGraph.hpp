@@ -8,6 +8,7 @@
 #include "../../Data/Chart.hpp"
 #include "../../Data/Song.hpp"
 #include "../../Toolkit/Cache.hpp"
+#include "../../Toolkit/NormalizedOrigin.hpp"
 
 namespace MusicSelect {
     class DensityGraph : public sf::Drawable, public sf::Transformable {
@@ -47,4 +48,9 @@ namespace std {
             return song_hash;
         }
     };
+}
+
+namespace Toolkit {
+    template<>
+    void set_origin_normalized(MusicSelect::DensityGraph& s, float x, float y);
 }

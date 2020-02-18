@@ -24,8 +24,12 @@ namespace Data {
         for (auto &&note : chart.notes) {
             auto timing = static_cast<std::size_t>(memon_timing_to_300Hz.transform(note.get_timing()));
             auto position = static_cast<Button>(note.get_pos());
-            auto length = static_cast<std::size_t>(memon_timing_to_300Hz_proportional.transform(note.get_length()));
-            auto tail = convert_memon_tail(position, note.get_tail_pos());
+            std::size_t length = 0;
+            Button tail = Button::B1;
+            if (note.get_length() != 0) {
+                length = static_cast<std::size_t>(memon_timing_to_300Hz_proportional.transform(note.get_length()));
+                auto tail = convert_memon_tail(position, note.get_tail_pos());
+            }
             notes.insert({timing, position, length, tail});
         }
     }
@@ -60,7 +64,7 @@ namespace Data {
         if (auto tail = coords_to_button({x+dx, y+dy})) {
             return *tail;
         } else {
-            throw std::runtime_error("Invalid tail_position : "+tail_position);
+            throw std::runtime_error("Invalid tail_position : "+std::to_string(tail_position));
         }
     }
 }

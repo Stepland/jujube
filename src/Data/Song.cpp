@@ -82,7 +82,10 @@ namespace Data {
             [](const fs::directory_entry& de) {return de.path().extension() == ".memon";}
         );
         if (memon_path != fs::end(folder_memon)) {
-            res.push_back(std::make_shared<MemonSong>(memon_path->path()));
+            auto song = std::make_shared<MemonSong>(memon_path->path());
+            if (not song->chart_levels.empty()) {
+                res.push_back(song);
+            }
             return res;
         }
         // Nothing found : recurse in subfolders
