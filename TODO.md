@@ -37,6 +37,7 @@
 - Add KeyMapping to preferences
     - Make KeyMapping look nicer in json form
     - Sort by button
+    
 ## TODO
 ### Misc
 - Make Drawables lazily react to resolution changes
