@@ -50,7 +50,7 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                 break;
             case sf::Event::Resized:
                 // update the view to the new size of the window
-                window.setView(sf::View({0, 0, event.size.width, event.size.height}));
+                window.setView(sf::View({0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)}));
                 resources.preferences.screen.height = event.size.height;
                 resources.preferences.screen.width = event.size.width;
                 ribbon.setPosition(
