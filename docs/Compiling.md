@@ -5,10 +5,11 @@ Only time will tell if this turned out to be a wise choice, I wanted to try some
 
 Regardless of the target platform the build steps are pretty much the same :
 
-0. Get an up-to-date C++ compiler (compatible with C++17 at least, with support for `std::filesystem`)
+0. Get an up-to-date C++ compiler (compatible with C++17 at least)
 0. Install (or build) the dependencies :
     - **meson** : the build system, installation explained [here](https://mesonbuild.com/Quick-guide.html)
     - **SFML 2.5.1** : the game framework
+    - *possibly others*
 0. Download the code from the repo
 0. Go to your terminal and type
     ```bash
@@ -23,7 +24,7 @@ and voila !
 
 ## Linux
 
-For the compiler, `gcc 8.0.0` and up should work but I only tested with `gcc 9.2.1`
+For the compiler, gcc `8.0.0` and up should work but I only tested with gcc `9.2.1`
 
 The meson install is pretty straightforward.
 
@@ -44,4 +45,37 @@ Once you're done `pacman -Syu`ing and `pacman -Su`ing your system you can instal
 $ pacman -S mingw-w64-x86_64-sfml
 ```
 
-then you can just use the same build commands as Linux
+then you can just use the same build commands as Linux from the MSYS2 terminal
+
+## MacOS
+### clang-9 from brew's llvm package
+If you do not have it already, install [Homebrew](https://brew.sh/).
+When it's done use it to install basically everything :
+
+```bash
+$ brew install llvm sfml openal-soft
+```
+
+Once it's done (llvm is huge, go do something else while it installs),
+open a terminal, `cd` to your local copy of jujube's repo and use this carefully crafted command to setup your build folder :
+
+```bash
+$ LLVM=$(brew --prefix llvm) \
+CC=$LLVM/bin/clang \
+CXX=$LLVM/bin/clang++ \
+LD=$LLVM/bin/ld.lld \
+AR=$LLVM/bin/llvm-ar \
+RANLIB=$LLVM/bin/llvm-ranlib \
+PKG_CONFIG_PATH+=$(brew --prefix sfml)/lib/pkgconfig:$(brew --prefix openal-soft)/lib/pkgconfig \
+LDFLAGS+="-L$LLVM/lib -Wl,-rpath,$LLVM/lib" \
+CPPFLAGS+="-I$LLVM/include -I$LLVM/include/c++/v1/" \
+meson build
+```
+
+then just
+
+```bash
+$ cd build
+$ ninja
+```
+
