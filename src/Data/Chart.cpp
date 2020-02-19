@@ -22,13 +22,13 @@ namespace Data {
             0.f, (60.f/memon.BPM)*300.f
         );
         for (auto &&note : chart.notes) {
-            auto timing = static_cast<std::size_t>(memon_timing_to_300Hz.transform(note.get_timing()));
+            auto timing = static_cast<long>(memon_timing_to_300Hz.transform(note.get_timing()));
             auto position = static_cast<Button>(note.get_pos());
             std::size_t length = 0;
             Button tail = Button::B1;
             if (note.get_length() != 0) {
                 length = static_cast<std::size_t>(memon_timing_to_300Hz_proportional.transform(note.get_length()));
-                auto tail = convert_memon_tail(position, note.get_tail_pos());
+                tail = convert_memon_tail(position, note.get_tail_pos());
             }
             notes.insert({timing, position, length, tail});
         }
@@ -61,10 +61,19 @@ namespace Data {
                 dx = -(tail_position/4 + 1);
             }
         }
-        if (auto tail = coords_to_button({x+dx, y+dy})) {
-            return *tail;
-        } else {
+
+        auto tail_x = x+dx;
+        auto tail_y = y+dy;
+        if (tail_x < 0 or tail_x > 3 or tail_y < 0 or tail_y > 3) {
             throw std::runtime_error("Invalid tail_position : "+std::to_string(tail_position));
         }
+        auto tail = coords_to_button({
+            static_cast<unsigned int>(tail_x),
+            static_cast<unsigned int>(tail_y)
+        });
+        if (not tail.has_value()) {
+            throw std::runtime_error("Invalid tail_position : "+std::to_string(tail_position));
+        }
+        return *tail;
     }
 }
