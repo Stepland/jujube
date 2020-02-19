@@ -1,3 +1,5 @@
+#include <cassert>
+#include <cstdio>
 #include <fstream>
 #include <string>
 #include <unordered_map>
@@ -52,8 +54,7 @@ int main(int argc, char const *argv[]) {
         cereal::JSONInputArchive archive{file};
         archive(test);
     }
-    if (ref.m.m_map != test.m.m_map) {
-        return -1;
-    }
+    assert((ref.m.m_map == test.m.m_map));
+    std::remove("cereal_test_specialize_enums.json");
     return 0;
 }

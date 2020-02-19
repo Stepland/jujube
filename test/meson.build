@@ -1,7 +1,13 @@
-cereal_unordered_map = executable(
-    'cereal_unordered_map',
-    'cereal_unordered_map.cpp',
-    include_directories : inc
-)
+test_files = [
+    'cereal_specialize_enums.cpp',
+    'cereal_unordered_map.cpp'
+]
 
-test('cereal unordered_map test', cereal_unordered_map)
+foreach test_file : test_files
+    test_executable = executable(
+        test_file+'.out',
+        test_file,
+        include_directories : inc
+    )
+    test(test_file+' test', test_executable)
+endforeach
