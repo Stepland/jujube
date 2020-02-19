@@ -23,7 +23,7 @@ namespace Data {
         std::unordered_map<sf::Keyboard::Key, Button> m_key_to_button;
         std::unordered_map<Button, sf::Keyboard::Key> m_button_to_key;
 
-        friend class Preferences;
+        friend struct Preferences;
     };
 }
 
