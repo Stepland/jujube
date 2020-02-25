@@ -1,3 +1,13 @@
+/*
+
+88,dPYba,,adPYba,    ,adPPYba,  88,dPYba,,adPYba,    ,adPPYba,   8b,dPPYba,
+88P'   "88"    "8a  a8P_____88  88P'   "88"    "8a  a8"     "8a  88P'   `"8a  memoncpp
+88      88      88  8PP"""""""  88      88      88  8b       d8  88       88  v0.2.0
+88      88      88  "8b,   ,aa  88      88      88  "8a,   ,a8"  88       88  https://github.com/Stepland/memoncpp
+88      88      88   `"Ybbd8"'  88      88      88   `"YbbdP"'   88       88  https://github.com/Stepland/memon
+
+*/
+
 #ifndef MEMON_HPP_
 #define MEMON_HPP_
 
@@ -143,54 +153,76 @@ namespace stepland {
     * Represents a .memon file : several charts and some metadata
     */
     struct memon {
+        
+        struct preview_loop {
+            float position;
+            float duration;
+        };
 
         std::map<std::string,chart,compare_dif_names> charts;
         std::string song_title;
         std::string artist;
         std::string music_path;
         std::string album_cover_path;
+        std::optional<preview_loop> preview;
         float BPM;
         float offset;
 
         friend std::istream& operator>>(std::istream& file, memon& m) {
             nlohmann::json j;
             file >> j;
-            if (j.find("version") != j.end()) {
-                if (j.at("version").is_string()) {
-                    auto version = j.at("version").get<std::string>();
-                    if (version == "0.1.0") {
-                        m.load_from_memon_v0_1_0(j);
-                    } else {
-                        throw std::invalid_argument("Unsupported .memon version : "+version);
-                    }
-                } else {
-                    throw std::invalid_argument("Unexpected version field : "+j.at("version").dump());
-                }
-            } else {
+            // Basic checks
+            if (j.find("version") == j.end()) {
                 m.load_from_memon_fallback(j);
+                return file;
+            }
+            if (not j.at("version").is_string()) {
+                throw std::invalid_argument("Unexpected version field : "+j.at("version").dump());
+            }
+
+            auto version = j.at("version").get<std::string>();
+            if (version == "0.1.0") {
+                m.load_from_memon_v0_1_0(j);
+            } else if (version == "0.2.0") {
+                m.load_from_memon_v0_2_0(j);
+            } else {
+                throw std::invalid_argument("Unsupported .memon version : "+version);
             }
             return file;
         }
 
         /*
-        * Memon schema v0.1.0 :
-        * 	- "data" is now an object mapping a difficulty name to a chart,
-        *     this way the difficulty names are guaranteed to be unique
-        * 	- "jacket path" is now "album cover path" because engrish much ?
+        * v0.2.0
+        *   - "preview" as been added as an optional metadata key holding the song
+        *     preview loop info, it's an object with two required fields :
+        *       - "position" : time at which loop starts (in floating point seconds)
+        *       - "length" : loop length (in floating point seconds)
         */
-        void load_from_memon_v0_1_0(nlohmann::json memon_json) {
+        void load_from_memon_v0_2_0(nlohmann::json memon_json) {
             
             auto metadata = memon_json.at("metadata");
             if (not metadata.is_object()) {
                 throw std::invalid_argument("metadata fields is not an object");
             }
             
-            this->song_title = metadata.value("song title","");
-            this->artist = metadata.value("artist","");
-            this->music_path = metadata.value("music path","");
-            this->album_cover_path = metadata.value("album cover path","");
-            this->BPM = metadata.value("BPM",120.0f);
-            this->offset = metadata.value("offset",0.0f);
+            this->song_title = metadata.at("song title").get<std::string>();
+            this->artist = metadata.at("artist").get<std::string>();
+            this->music_path = metadata.at("music path").get<std::string>();
+            this->album_cover_path = metadata.at("album cover path").get<std::string>();
+            this->BPM = metadata.at("BPM").get<float>();
+            this->offset = metadata.at("offset").get<float>();
+
+            // "preview" is optional in v0.2.0, it missing is NOT an error
+            if (metadata.find("preview") != metadata.end()) {
+                auto preview_json = metadata.at("preview");
+                float raw_position = preview_json.at("position").get<float>();
+                assert((raw_position >= 0.f));
+                float raw_duration = preview_json.at("duration").get<float>();
+                assert((raw_duration >= 0.f));
+                this->preview.emplace();
+                this->preview->position = raw_position;
+                this->preview->position = raw_duration;
+            }
 
             if (not memon_json.at("data").is_object()) {
                 throw std::invalid_argument("data field is not an object");
@@ -199,26 +231,15 @@ namespace stepland {
             for (auto& [dif_name, chart_json] : memon_json.at("data").items()) {
                 
                 chart new_chart;
-                new_chart.level = chart_json.value("level", 0);
+                new_chart.level = chart_json.at("level").get<int>();
                 new_chart.resolution = chart_json.at("resolution").get<int>();
+                assert((new_chart.resolution > 0));
 
                 if (not chart_json.at("notes").is_array()) {
-                    throw std::invalid_argument(dif_name+" chart notes field has bad structure");
+                    throw std::invalid_argument(dif_name+" chart notes field must be an array");
                 }
             
-                for (auto& note : chart_json.at("notes")) {
-                    if (
-                        not (
-                            note.is_object()
-                            and note.find("n") != note.end()
-                            and note.find("t") != note.end()
-                            and note.find("l") != note.end()
-                            and note.find("p") != note.end()
-                        )
-                    ) {
-                        throw std::invalid_argument(dif_name+" chart has notes with bad structure");
-                    }
-                    
+                for (auto& note : chart_json.at("notes")) {                    
                     new_chart.notes.emplace(
                         note.at("n").get<int>(),
                         note.at("t").get<int>(),
@@ -231,8 +252,55 @@ namespace stepland {
         }
 
         /*
-        * Fallback memon parser
-        * Respects the old schema, with notable quirks :
+        * v0.1.0
+        * 	- "data" is now an object mapping a difficulty name to a chart,
+        *     this way the difficulty names are guaranteed to be unique
+        * 	- "jacket path" is now "album cover path" because engrish much ?
+        */
+        void load_from_memon_v0_1_0(nlohmann::json memon_json) {
+            
+            auto metadata = memon_json.at("metadata");
+            if (not metadata.is_object()) {
+                throw std::invalid_argument("metadata fields is not an object");
+            }
+            
+            this->song_title = metadata.at("song title").get<std::string>();
+            this->artist = metadata.at("artist").get<std::string>();
+            this->music_path = metadata.at("music path").get<std::string>();
+            this->album_cover_path = metadata.at("album cover path").get<std::string>();
+            this->BPM = metadata.at("BPM").get<float>();
+            this->offset = metadata.at("offset").get<float>();
+
+            if (not memon_json.at("data").is_object()) {
+                throw std::invalid_argument("data field is not an object");
+            }
+
+            for (auto& [dif_name, chart_json] : memon_json.at("data").items()) {
+                
+                chart new_chart;
+                new_chart.level = chart_json.at("level").get<int>();
+                new_chart.resolution = chart_json.at("resolution").get<int>();
+                assert((new_chart.resolution > 0));
+
+                if (not chart_json.at("notes").is_array()) {
+                    throw std::invalid_argument(dif_name+" chart notes field must be an array");
+                }
+            
+                for (auto& note : chart_json.at("notes")) {                    
+                    new_chart.notes.emplace(
+                        note.at("n").get<int>(),
+                        note.at("t").get<int>(),
+                        note.at("l").get<int>(),
+                        note.at("p").get<int>()
+                    );
+                }
+                this->charts[dif_name] = new_chart;
+            }
+        }
+
+        /*
+        * Fallback parser
+        * Respects the old, unversionned schema, with notable quirks :
         *   - "data" is an array of charts, each with a difficulty name
         *   - the album cover path field is named "jacket path"
         */
@@ -243,10 +311,10 @@ namespace stepland {
                 throw std::invalid_argument("metadata fields is not an object");
             }
 
-            this->song_title = metadata.value("song title","");
-            this->artist = metadata.value("artist","");
-            this->music_path = metadata.value("music path","");
-            this->album_cover_path = metadata.value("jacket path","");
+            this->song_title = metadata.at("song title").get<std::string>();
+            this->artist = metadata.at("artist").get<std::string>();
+            this->music_path = metadata.at("music path").get<std::string>();
+            this->album_cover_path = metadata.at("jacket path").get<std::string>();
             this->BPM = metadata.value("BPM",120.f);
             this->offset = metadata.value("offset",0.f);
 

@@ -41,9 +41,11 @@
 ## TODO
 ### Misc
 - Make Drawables lazily react to resolution changes
+- Handle JCK and special characters
 
 ### Music Select Screen
 - Sound
+    - Music Sample
 - Fullscreen handling
 - Song Panel click
     - animation
