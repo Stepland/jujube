@@ -22,19 +22,19 @@ Regardless of the target platform the build steps are pretty much the same :
 
 and voila !
 
+If you managed to compile jujube with another toolchain I did not mention here you're very welcome to do a PR appending the relevant parts of this doc.
+
 ## Linux
 
-For the compiler, gcc `8.0.0` and up should work but I only tested with gcc `9.2.1`
+You need at least gcc `9.0.0`
 
 The meson install is pretty straightforward.
 
-For SFML, If you want to use another compiler than the one shipped with your system you may need to re-build SFML yourself using the compiler you chose. [Here's](https://www.sfml-dev.org/tutorials/2.5/compile-with-cmake.php) their docs. Don't forget to manually specify the compiler at the configuration step.
+For SFML, If you want to use another compiler than the one shipped with your system you may need to re-build SFML yourself using the compiler you chose. [Here's](https://www.sfml-dev.org/tutorials/2.5/compile-with-cmake.php) their docs. Don't forget to manually specify the compiler (and maybe the library install path) at the configuration step.
 
 ## Windows
 
-This section explains how to setup MSYS2 to compile jujube. MSYS2 is most likely *not* the only way to go but it's my favorite way of getting a very recent c++-friendly toolchain on windows.
-
-If you managed to compile jujube with another toolchain you're very welcome to do a PR appending this part of the documentation.
+This section explains how to setup MSYS2 to compile jujube. MSYS2 is most likely *not* the only way to go but it's my favorite way of getting a very recent gnu-friendly toolchain on windows.
 
 ### MSYS2
 
@@ -45,7 +45,7 @@ Once you're done `pacman -Syu`ing and `pacman -Su`ing your system you can instal
 $ pacman -S mingw-w64-x86_64-sfml
 ```
 
-then you can just use the same build commands as Linux from the MSYS2 terminal
+then you can just use the same build commands as the Linux section but from the MSYS2 terminal
 
 ## MacOS
 ### clang-9 from brew's llvm package
@@ -56,8 +56,7 @@ When it's done use it to install basically everything :
 $ brew install llvm sfml openal-soft
 ```
 
-Once it's done (llvm is huge, go do something else while it installs),
-open a terminal, `cd` to your local copy of jujube's repo and use this carefully crafted command to setup your build folder :
+Once it's done (llvm is huge, go do something else while it installs), open a terminal, `cd` to your local copy of jujube's repo and use this carefully crafted command to setup your build folder :
 
 ```bash
 $ LLVM=$(brew --prefix llvm) \
