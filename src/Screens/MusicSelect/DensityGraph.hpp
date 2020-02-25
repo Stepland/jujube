@@ -32,11 +32,11 @@ namespace MusicSelect {
         }
     };
 
-    DensityGraph compute_density_graph_1(const SongDifficulty& sd);
-    DensityGraph compute_density_graph_2(const Data::Song& song, const std::string& difficulty);
-    DensityGraph compute_density_graph_3(const Data::Chart& chart, long start, long end);
+    DensityGraph compute_density_graph_from_struct(const SongDifficulty& sd);
+    DensityGraph compute_density_graph_from_song_difficulty(const Data::Song& song, const std::string& difficulty);
+    DensityGraph compute_density_graph_from_chart(const Data::Chart& chart, long start, long end);
 
-    using DensityGraphCache = Toolkit::Cache<SongDifficulty, DensityGraph, &compute_density_graph_1>;
+    using DensityGraphCache = Toolkit::Cache<SongDifficulty, DensityGraph, &compute_density_graph_from_struct>;
 }
 
 namespace std {
