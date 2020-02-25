@@ -11,6 +11,7 @@
 #include "../../Data/Song.hpp"
 
 #include "DensityGraph.hpp"
+#include "MusicPreview.hpp"
 
 namespace MusicSelect {
 
@@ -24,6 +25,7 @@ namespace MusicSelect {
         bool is_first_click = true;
     };
 
+    // Holds everything that needs to be shared by all levels of the class hierarchy
     struct SharedResources : public Data::HoldsPreferences {
         SharedResources(Data::Preferences& p);
 
@@ -43,6 +45,8 @@ namespace MusicSelect {
         sf::Color ADV_color = sf::Color{252,212,32};
         sf::Color EXT_color = sf::Color{234,46,32};
         sf::Color get_chart_color(const std::string& chart);
+
+        MusicPreview music_preview;
     };
 
     // Proxy for HoldsPreferences

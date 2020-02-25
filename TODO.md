@@ -28,6 +28,8 @@
     - Density graph
         - format-agnostic chart class
 - Black frame
+- Sound
+    - Music Sample
 
 ### Misc
 - Handling Resolution changes
@@ -45,7 +47,7 @@
 
 ### Music Select Screen
 - Sound
-    - Music Sample
+    - Sound Effects
 - Fullscreen handling
 - Song Panel click
     - animation

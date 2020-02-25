@@ -91,6 +91,7 @@ namespace MusicSelect {
                 m_resources.selected_panel->panel.unselect();
             }
             m_resources.selected_panel.emplace(TimedSelectedPanel{*this});
+            m_resources.music_preview.play(m_song->full_audio_path(), m_song->preview);
         }
     }
 

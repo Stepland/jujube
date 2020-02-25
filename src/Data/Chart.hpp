@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <set>
 
-#include <memon.hpp>
+#include <memon/memon.hpp>
 
 #include "Buttons.hpp"
 #include "Note.hpp"

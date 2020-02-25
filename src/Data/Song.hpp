@@ -1,6 +1,5 @@
 #pragma once
 
-#include <ghc/filesystem.hpp>
 #include <iterator>
 #include <list>
 #include <map>
@@ -9,6 +8,9 @@
 #include <string>
 #include <variant>
 #include <unordered_map>
+
+#include <ghc/filesystem.hpp>
+#include <SFML/Audio.hpp>
 
 #include "Chart.hpp"
 
@@ -33,6 +35,7 @@ namespace Data {
         std::optional<fs::path> cover;
         // Path the the audio file
         std::optional<fs::path> audio;
+        std::optional<sf::Music::TimeSpan> preview;
         // Mapping from chart difficulty (BSC, ADV, EXT ...) to the numeric level,
         std::map<std::string, unsigned int, cmp_dif_name> chart_levels;
 

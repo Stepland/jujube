@@ -5,7 +5,7 @@
 #include <iostream>
 #include <list>
 
-#include <memon.hpp>
+#include <memon/memon.hpp>
 
 namespace fs = ghc::filesystem;
 
@@ -114,6 +114,12 @@ namespace Data {
         }
         if (not m.music_path.empty()) {
             this->audio.emplace(m.music_path);
+        }
+        if (m.preview) {
+            this->preview.emplace(
+                sf::seconds(m.preview->position),
+                sf::seconds(m.preview->duration)
+            );
         }
         for (const auto& [difficulty, chart] : m.charts) {
             this->chart_levels[difficulty] = chart.level;

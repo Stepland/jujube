@@ -76,6 +76,7 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         window.draw(black_frame);
         ImGui::SFML::Render(window);
         window.display();
+        resources.music_preview.update();
     }
     ImGui::SFML::Shutdown();
 }

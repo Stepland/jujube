@@ -45,6 +45,8 @@ sources = [
     'src/Screens/MusicSelect/ButtonHighlight.cpp',
     'src/Screens/MusicSelect/DensityGraph.hpp',
     'src/Screens/MusicSelect/DensityGraph.cpp',
+    'src/Screens/MusicSelect/MusicPreview.hpp',
+    'src/Screens/MusicSelect/MusicPreview.cpp',
     'src/Screens/MusicSelect/MusicSelect.hpp',
     'src/Screens/MusicSelect/MusicSelect.cpp',
     'src/Screens/MusicSelect/Panel.hpp',

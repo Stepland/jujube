@@ -44,10 +44,10 @@ namespace MusicSelect {
     }
 
     DensityGraph compute_density_graph_from_struct(const SongDifficulty& sd) {
-        return compute_density_graph_from_song(sd.song, sd.difficulty);
+        return compute_density_graph_from_song_difficulty(sd.song, sd.difficulty);
     }
 
-    DensityGraph compute_density_graph_from_song(const Data::Song& song, const std::string& difficulty) {
+    DensityGraph compute_density_graph_from_song_difficulty(const Data::Song& song, const std::string& difficulty) {
         auto c = song.get_chart(difficulty);
         if (not c.has_value()) {
             throw std::invalid_argument("Song "+song.title+" has no "+difficulty+" chart");
