@@ -23,6 +23,7 @@ namespace MusicSelect {
         void play(std::optional<fs::path> music_path, std::optional<sf::Music::TimeSpan> loop);
         void update();
     private:
+        void play_async(std::optional<fs::path> music_path, std::optional<sf::Music::TimeSpan> loop);
         std::optional<MusicLoop> m_music_loop;
     };
 }

@@ -1,10 +1,11 @@
 #include "MusicPreview.hpp"
 
+#include <thread>
 #include <iostream>
 
 namespace MusicSelect {
 
-    void MusicPreview::play(std::optional<fs::path> music_path, std::optional<sf::Music::TimeSpan> loop) {
+    void MusicPreview::play_async(std::optional<fs::path> music_path, std::optional<sf::Music::TimeSpan> loop) {
         m_music_loop.emplace();
         if (not music_path.has_value()) {
             return;
@@ -30,6 +31,10 @@ namespace MusicSelect {
             100.f, 0.f
         };
         m_music_loop->music.play();
+    }
+
+    void MusicPreview::play(std::optional<fs::path> music_path, std::optional<sf::Music::TimeSpan> loop) {
+        std::thread(&MusicPreview::play_async, this, music_path, loop).detach();
     }
 
     void MusicPreview::update() {
