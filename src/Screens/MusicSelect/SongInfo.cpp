@@ -81,7 +81,7 @@ namespace MusicSelect {
         if (not song_title.empty()) {
             sf::Text song_title_label{
                 song_title,
-                m_resources.noto_sans_medium,
+                m_resources.fallback_font.medium,
                 static_cast<unsigned int>(
                     0.026315789f*get_screen_width()
                 )
@@ -102,7 +102,7 @@ namespace MusicSelect {
         if (not song_artist.empty()) {
             sf::Text song_artist_label{
                 song_artist,
-                m_resources.noto_sans_medium,
+                m_resources.fallback_font.medium,
                 static_cast<unsigned int>(
                     0.02f*get_screen_width()
                 )
@@ -134,7 +134,7 @@ namespace MusicSelect {
         }
         sf::Text level_label{
             "LEVEL",
-            m_resources.noto_sans_medium,
+            m_resources.fallback_font.light,
             static_cast<unsigned int>(12.f/768.f*get_screen_width())
         };
         Toolkit::set_origin_normalized(level_label, 0.5f, 0.f);
@@ -144,7 +144,7 @@ namespace MusicSelect {
         
         sf::Text level_number_label{
             std::to_string(selected_chart->song.chart_levels.at(selected_chart->difficulty)),
-            m_resources.noto_sans_medium,
+            m_resources.fallback_font.black,
             static_cast<unsigned int>(130.f/768.f*get_screen_width())
         };
         Toolkit::set_origin_normalized(level_number_label, 0.5f, 0.f);
@@ -163,7 +163,7 @@ namespace MusicSelect {
 
         sf::Text chart_label{
             full_difficulty,
-            m_resources.noto_sans_medium,
+            m_resources.fallback_font.medium,
             static_cast<unsigned int>(20.f/768.f*get_screen_width())
         };
         Toolkit::set_origin_normalized_no_position(chart_label, 0.5f, 0.f);

@@ -7,16 +7,29 @@
 #include "Panel.hpp"
 
 namespace MusicSelect {
+
+    FallbackFont::FallbackFont() :
+        light(),
+        medium(),
+        black()
+    {
+        if (not light.loadFromFile("assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Light.ttf")) {
+            throw std::runtime_error("Unable to load assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Light.ttf");
+        }
+        if (not medium.loadFromFile("assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Medium.ttf")) {
+            throw std::runtime_error("Unable to load assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Medium.ttf");
+        }
+        if (not black.loadFromFile("assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Black.ttf")) {
+            throw std::runtime_error("Unable to load assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Black.ttf");
+        }
+    }
+    
     SharedResources::SharedResources(Data::Preferences& p) :
         Data::HoldsPreferences(p),
         covers(),
-        fallback_cover(),
-        noto_sans_medium()
+        fallback_cover()
     {
         covers.reserve(256);
-        if (not noto_sans_medium.loadFromFile("assets/fonts/NotoSans-Medium.ttf")) {
-            throw std::runtime_error("Unable to load assets/fonts/NotoSans-Medium.ttf");
-        }
         if (not fallback_cover.loadFromFile("assets/textures/fallback_cover.png")) {
             throw std::runtime_error("Unable to load assets/textures/fallback_cover.png");
         }

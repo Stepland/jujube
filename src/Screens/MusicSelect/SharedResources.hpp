@@ -4,6 +4,7 @@
 #include <optional>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/System.hpp>
 
 #include "../../Resources/TextureCache.hpp"
@@ -25,6 +26,13 @@ namespace MusicSelect {
         bool is_first_click = true;
     };
 
+    struct FallbackFont {
+        FallbackFont();
+        sf::Font light;
+        sf::Font medium;
+        sf::Font black;
+    };
+
     // Holds everything that needs to be shared by all levels of the class hierarchy
     struct SharedResources : public Data::HoldsPreferences {
         SharedResources(Data::Preferences& p);
@@ -32,7 +40,7 @@ namespace MusicSelect {
         Textures::TextureCache covers;
         sf::Texture fallback_cover;
         
-        sf::Font noto_sans_medium;
+        FallbackFont fallback_font;
 
         MusicSelect::DensityGraphCache density_graphs;
         

@@ -43,7 +43,7 @@ namespace MusicSelect {
 
         sf::Text category_label{
             "category",
-            m_resources.noto_sans_medium,
+            m_resources.fallback_font.medium,
             static_cast<unsigned int>(get_size()*0.1f)
         };
         category_label.setFillColor(sf::Color::White);
@@ -53,7 +53,7 @@ namespace MusicSelect {
 
         sf::Text label_text{
             m_label,
-            m_resources.noto_sans_medium,
+            m_resources.fallback_font.black,
             static_cast<unsigned int>(get_size()*0.7f)
         };
         label_text.setFillColor(sf::Color::White);
@@ -144,7 +144,7 @@ namespace MusicSelect {
             auto dif = m_song->chart_levels.at(last_selected_chart);
             sf::Text dif_label{
                 std::to_string(dif),
-                m_resources.noto_sans_medium,
+                m_resources.fallback_font.black,
                 static_cast<unsigned int>(get_size()*0.15f)
             };
             dif_label.setFillColor(sf::Color::White);
@@ -153,7 +153,7 @@ namespace MusicSelect {
             target.draw(dif_label, states);
         }
         sf::Text song_title;
-        song_title.setFont(m_resources.noto_sans_medium);
+        song_title.setFont(m_resources.fallback_font.medium);
         song_title.setString(m_song->title);
         song_title.setCharacterSize(static_cast<unsigned int>(0.06875f*get_size()));
         song_title.setFillColor(sf::Color::White);
@@ -183,7 +183,7 @@ namespace MusicSelect {
         target.draw(frame, states);
 
         sf::Text message;
-        message.setFont(m_resources.noto_sans_medium);
+        message.setFont(m_resources.fallback_font.medium);
         message.setString(m_message);
         message.setCharacterSize(static_cast<unsigned int>(0.1f*get_size()));
         message.setFillColor(m_color);
