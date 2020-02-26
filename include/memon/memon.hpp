@@ -1,11 +1,8 @@
 /*
-
-88,dPYba,,adPYba,    ,adPPYba,  88,dPYba,,adPYba,    ,adPPYba,   8b,dPPYba,
-88P'   "88"    "8a  a8P_____88  88P'   "88"    "8a  a8"     "8a  88P'   `"8a  memoncpp
-88      88      88  8PP"""""""  88      88      88  8b       d8  88       88  v0.2.0
-88      88      88  "8b,   ,aa  88      88      88  "8a,   ,a8"  88       88  https://github.com/Stepland/memoncpp
-88      88      88   `"Ybbd8"'  88      88      88   `"YbbdP"'   88       88  https://github.com/Stepland/memon
-
+memoncpp □□□■——◁
+v0.2.0
+https://github.com/Stepland/memoncpp
+https://github.com/Stepland/memon
 */
 
 #ifndef MEMON_HPP_
