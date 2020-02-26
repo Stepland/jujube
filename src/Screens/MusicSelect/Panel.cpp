@@ -154,7 +154,7 @@ namespace MusicSelect {
         }
         sf::Text song_title;
         song_title.setFont(m_resources.fallback_font.medium);
-        song_title.setString(m_song->title);
+        song_title.setString(sf::String::fromUtf8(m_song->title.begin(), m_song->title.end()));
         song_title.setCharacterSize(static_cast<unsigned int>(0.06875f*get_size()));
         song_title.setFillColor(sf::Color::White);
         auto song_title_bounds = song_title.getLocalBounds();
@@ -184,7 +184,7 @@ namespace MusicSelect {
 
         sf::Text message;
         message.setFont(m_resources.fallback_font.medium);
-        message.setString(m_message);
+        message.setString(sf::String::fromUtf8(m_message.begin(), m_message.end()));
         message.setCharacterSize(static_cast<unsigned int>(0.1f*get_size()));
         message.setFillColor(m_color);
         auto bounds = message.getLocalBounds();

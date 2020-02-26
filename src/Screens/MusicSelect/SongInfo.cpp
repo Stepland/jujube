@@ -80,7 +80,7 @@ namespace MusicSelect {
         auto song_title = selected_chart->song.title;
         if (not song_title.empty()) {
             sf::Text song_title_label{
-                song_title,
+                sf::String::fromUtf8(song_title.begin(), song_title.end()),
                 m_resources.fallback_font.medium,
                 static_cast<unsigned int>(
                     0.026315789f*get_screen_width()
@@ -101,7 +101,7 @@ namespace MusicSelect {
         auto song_artist = selected_chart->song.artist;
         if (not song_artist.empty()) {
             sf::Text song_artist_label{
-                song_artist,
+                sf::String::fromUtf8(song_artist.begin(), song_artist.end()),
                 m_resources.fallback_font.medium,
                 static_cast<unsigned int>(
                     0.02f*get_screen_width()
@@ -162,7 +162,7 @@ namespace MusicSelect {
         }
 
         sf::Text chart_label{
-            full_difficulty,
+            sf::String::fromUtf8(full_difficulty.begin(), full_difficulty.end()),
             m_resources.fallback_font.medium,
             static_cast<unsigned int>(20.f/768.f*get_screen_width())
         };

@@ -30,6 +30,7 @@
 - Black frame
 - Sound
     - Music Sample
+        - Async playback
 
 ### Misc
 - Handling Resolution changes
@@ -39,11 +40,16 @@
 - Add KeyMapping to preferences
     - Make KeyMapping look nicer in json form
     - Sort by button
+- Handle JCK and special characters
+    - Japanese
+    - utf8 to sfml conversion
     
 ## TODO
 ### Misc
 - Make Drawables lazily react to resolution changes
 - Handle JCK and special characters
+    - Find a font that handles more stuff
+        - make a ttc bundle : https://fontforge.org/en-US/
 
 ### Music Select Screen
 - Sound
