@@ -16,8 +16,8 @@ namespace MusicSelect {
         if (not light.loadFromFile("assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Light.ttf")) {
             throw std::runtime_error("Unable to load assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Light.ttf");
         }
-        if (not medium.loadFromFile("assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Medium.ttf")) {
-            throw std::runtime_error("Unable to load assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Medium.ttf");
+        if (not medium.loadFromFile("assets/fonts/M_PLUS_Rounded_1c/RoundedMplus1c-Medium+NotoSansSymbols+Symbola.ttf")) {
+            throw std::runtime_error("Unable to load assets/fonts/M_PLUS_Rounded_1c/RoundedMplus1c-Medium+NotoSansSymbols+Symbola.ttf");
         }
         if (not black.loadFromFile("assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Black.ttf")) {
             throw std::runtime_error("Unable to load assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Black.ttf");
