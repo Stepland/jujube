@@ -1,7 +1,11 @@
 # v0.1.0 (MVP)
+## Misc
+- Markers
+
 ## Music Select Screen
 - Options menu
     - Controller mapping
+    - Marker Selection
 - Visible controls
     - Start Button
 
