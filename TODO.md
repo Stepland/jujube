@@ -1,6 +1,7 @@
 # v0.1.0 (MVP)
 ## Misc
 - Markers
+- Fix all executable-relative path issues
 
 ## Music Select Screen
 - Options menu
