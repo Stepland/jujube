@@ -26,8 +26,8 @@ namespace MusicSelect {
         target.draw(panel, states);
     }
 
-    void CategoryPanel::click(Ribbon& ribbon, std::size_t from_button_index) {
-        ribbon.move_to_next_category(from_button_index);
+    void CategoryPanel::click(Ribbon& ribbon, const Data::Button& button) {
+        ribbon.move_to_next_category(button);
     }
 
     void CategoryPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -66,7 +66,7 @@ namespace MusicSelect {
         target.draw(label_text, states);
     }
 
-    void SongPanel::click(Ribbon& ribbon, std::size_t from_button_index) {
+    void SongPanel::click(MusicSelectRibbon& ribbon, const Data::Button& button) {
         if (selected_chart.has_value()) {
             // The song was already selected : look for the next chart in order
             auto it = m_song->chart_levels.upper_bound(*selected_chart);

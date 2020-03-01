@@ -21,7 +21,7 @@ namespace MusicSelect {
     public:
         explicit Panel(SharedResources& resources);
         // What happens when you click on the panel
-        virtual void click(Ribbon& ribbon, std::size_t from_button_index) = 0;
+        virtual void click(Ribbon& ribbon, const Data::Button& button) = 0;
         virtual ~Panel() = default;
     protected:
         float get_size() const;
@@ -30,7 +30,7 @@ namespace MusicSelect {
     class EmptyPanel final : public Panel {
     public:
         using Panel::Panel;
-        void click(Ribbon& ribbon, std::size_t from_button_index) override {return;};
+        void click(Ribbon& ribbon, const Data::Button& button) override {return;};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override {return;};
     };
@@ -38,7 +38,7 @@ namespace MusicSelect {
     class ColoredMessagePanel final : public Panel {
     public:
         ColoredMessagePanel(SharedResources& resources, const sf::Color& color, const std::string& message) : Panel(resources), m_color(color), m_message(message) {};
-        void click(Ribbon& ribbon, std::size_t from_button_index) override {return;};
+        void click(Ribbon& ribbon, const Data::Button& button) override {return;};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         const sf::Color m_color;
@@ -48,7 +48,7 @@ namespace MusicSelect {
     class ColorPanel final : public Panel {
     public:
         ColorPanel(SharedResources& resources, const sf::Color& t_color) : Panel(resources), m_color(t_color) {};
-        void click(Ribbon& ribbon, std::size_t from_button_index) override {return;};
+        void click(Ribbon& ribbon, const Data::Button& button) override {return;};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         const sf::Color m_color;
@@ -57,7 +57,7 @@ namespace MusicSelect {
     class CategoryPanel final : public Panel {
     public:
         explicit CategoryPanel(SharedResources& resources, const std::string& t_label) : Panel(resources), m_label(t_label) {};
-        void click(Ribbon& ribbon, std::size_t from_button_index) override;
+        void click(Ribbon& ribbon, const Data::Button& button) override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         std::string m_label;
@@ -74,7 +74,7 @@ namespace MusicSelect {
     class SongPanel final : public SelectablePanel {
     public:
         explicit SongPanel(SharedResources& resources, const std::shared_ptr<const Data::Song>& t_song) : SelectablePanel(resources), m_song(t_song) {};
-        void click(Ribbon& ribbon, std::size_t from_button_index) override;
+        void click(Ribbon& ribbon, const Data::Button& button) override;
         void unselect() override;
         std::optional<SongDifficulty> get_selected_difficulty() const override;
     private:

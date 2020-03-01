@@ -5,13 +5,15 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 
+#include "../../Data/Buttons.hpp"
 #include "../../Data/Preferences.hpp"
 #include "../../Data/Song.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
 #include "../../Toolkit/Debuggable.hpp"
 #include "../../Toolkit/EasingFunctions.hpp"
-#include "Panel.hpp"
 #include "SharedResources.hpp"
+#include "Panel.hpp"
+#include "PanelLayout.hpp"
 
 namespace MusicSelect {
 
@@ -33,29 +35,23 @@ namespace MusicSelect {
         Toolkit::AffineTransform<float> create_transform(int previous_pos, int next_pos, size_t ribbon_size, Direction direction);
     };
 
-    // The Ribbon is the moving part of the Music Select Screen
-    // It can be sorted in a number of ways
-    class Ribbon final : public sf::Drawable, public sf::Transformable, public HoldsSharedResources, public Toolkit::Debuggable {
+    // A Ribbon is a visual representation of a PanelLayout,
+    // You can scroll it using the left and right buttons
+    class Ribbon : public sf::Drawable, public sf::Transformable, public HoldsSharedResources, public Toolkit::Debuggable {
     public:
-        Ribbon(SharedResources& t_resources);
-        void title_sort(const Data::SongList& song_list);
-        void test_sort();
-        void test2_sort();
-        void test_song_cover_sort();
-        const std::shared_ptr<MusicSelect::Panel>& get_panel_under_button(std::size_t button_index) const;
-        void click_on(std::size_t button_index);
+        Ribbon(PanelLayout layout, SharedResources& t_resources);
+        jbcoe::polymorphic_value<Panel>& get_panel_under_button(const Data::Button& button) const;
+        void click_on(const Data::Button& button);
         void move_right();
         void move_left();
-        void move_to_next_category(const std::size_t& from_button_index);
+        void move_to_next_category(const Data::Button& button);
         void draw_debug() override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         void draw_with_animation(sf::RenderTarget& target, sf::RenderStates states) const;
         void draw_without_animation(sf::RenderTarget& target, sf::RenderStates states) const;
-        void layout_from_category_map(const std::map<std::string,std::vector<std::shared_ptr<Panel>>>& categories);
-        void fill_layout();
-        std::size_t get_layout_column(const std::size_t& button_index) const;
-        std::vector<std::array<std::shared_ptr<Panel>,3>> m_layout;
+        std::size_t get_layout_column(const Data::Button& button) const;
+        PanelLayout m_layout;
         std::size_t m_position = 0;
         mutable std::optional<MoveAnimation> m_move_animation;
         float m_time_factor = 1.f;

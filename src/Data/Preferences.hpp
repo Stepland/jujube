@@ -54,10 +54,22 @@ namespace Data {
         }
     };
 
+    struct Options {
+        std::string marker;
+
+        template<class Archive>
+        void serialize(Archive & archive) {
+            archive(
+                CEREAL_NVP(marker),
+            ); 
+        }
+    };
+
     // RAII style class which loads preferences from the dedicated file when constructed and saves them when destructed
     struct Preferences {
         Screen screen;
         Layout layout;
+        Options options;
         KeyMapping key_mapping;
 
         Preferences() : screen(), layout() {
@@ -106,6 +118,7 @@ namespace Data {
             archive(
                 CEREAL_NVP(screen),
                 CEREAL_NVP(layout),
+                CEREAL_NVP(options),
                 cereal::make_nvp("key_mapping", key_mapping.m_button_to_key)
             ); 
         }

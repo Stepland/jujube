@@ -1,17 +1,17 @@
 #include "Ribbon.hpp"
 
-#include "imgui/imgui.h"
-#include "imgui-sfml/imgui-SFML.h"
-
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <map>
 #include <vector>
 
-#include "Panel.hpp"
+#include <imgui/imgui.h>
+#include <imgui-sfml/imgui-SFML.h>
+
 #include "../../Data/Song.hpp"
 #include "../../Toolkit/QuickRNG.hpp"
+#include "Panel.hpp"
 
 
 namespace MusicSelect {
@@ -64,126 +64,29 @@ namespace MusicSelect {
         return clock.getElapsedTime() / m_time_factor > sf::milliseconds(300);
     }
 
-    Ribbon::Ribbon(SharedResources& t_resources) : HoldsSharedResources(t_resources) {
+    Ribbon::Ribbon(PanelLayout layout, SharedResources& resources) :
+        HoldsSharedResources(resources),
+        m_layout(layout)
+    {
         std::cout << "Loaded MusicSelect::Ribbon" << std::endl;
     }
 
-    void Ribbon::title_sort(const Data::SongList &song_list) {
-        std::vector<std::shared_ptr<const Data::Song>> songs;
-        for (auto &&song : song_list.songs) {
-            songs.push_back(song);
-        }
-        std::sort(
-            songs.begin(),
-            songs.end(),
-            [](std::shared_ptr<const Data::Song> a, std::shared_ptr<const Data::Song> b){return Data::Song::sort_by_title(*a, *b);}
-        );
-        std::map<std::string, std::vector<std::shared_ptr<Panel>>> categories;
-        for (const auto &song : songs) {
-            if (song->title.size() > 0) {
-                char letter = song->title[0];
-                if ('A' <= letter and letter <= 'Z') {
-                    categories
-                    [std::string(1, letter)]
-                    .push_back(
-                        std::make_shared<SongPanel>(m_resources, song)
-                    );
-                } else if ('a' <= letter and letter <= 'z') {
-                    categories
-                    [std::string(1, 'A' + (letter - 'a'))]
-                    .push_back(
-                        std::make_shared<SongPanel>(m_resources, song)
-                    );
-                } else {
-                    categories["?"].push_back(std::make_shared<SongPanel>(m_resources, song));
-                }
-            } else {
-                categories["?"].push_back(std::make_shared<SongPanel>(m_resources, song));
-            }
-        }
-        layout_from_category_map(categories);
+
+    std::size_t Ribbon::get_layout_column(const Data::Button& button) const {
+        return (m_position + (Data::button_to_index(button) % 4)) % m_layout.size();
     }
 
-    void Ribbon::test_sort() {
-        m_layout.clear();
-        m_layout.push_back({
-            std::make_shared<EmptyPanel>(m_resources),
-            std::make_shared<CategoryPanel>(m_resources, "A"),
-            std::make_shared<CategoryPanel>(m_resources, "truc")
-        });
-        for (size_t i = 0; i < 3; i++) {
-            m_layout.push_back({
-                std::make_shared<EmptyPanel>(m_resources),
-                std::make_shared<EmptyPanel>(m_resources),
-                std::make_shared<EmptyPanel>(m_resources)
-            });
-        }
-        fill_layout();
-    }
-
-    void Ribbon::test2_sort() {
-        std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        std::map<std::string, std::vector<std::shared_ptr<Panel>>> categories;
-        Toolkit::UniformIntRNG category_size_generator{1, 10};
-        Toolkit::UniformIntRNG panel_hue_generator{0, 255};
-        for (auto &&letter : alphabet) {
-            auto category_size = category_size_generator.generate();
-            for (int i = 0; i < category_size; i++) {
-                categories[std::string(1, letter)].push_back(
-                    std::make_shared<ColorPanel>(
-                        m_resources,
-                        sf::Color(
-                            panel_hue_generator.generate(),
-                            panel_hue_generator.generate(),
-                            panel_hue_generator.generate()
-                        )
-                    )
-                );
-            }
-        }
-        layout_from_category_map(categories);
-    }
-
-
-    std::size_t Ribbon::get_layout_column(const std::size_t& button_index) const {
-        return (m_position + (button_index % 4)) % m_layout.size();
-    }
-
-    const std::shared_ptr<Panel> &Ribbon::get_panel_under_button(std::size_t button_index) const {
+    jbcoe::polymorphic_value<Panel>& Ribbon::get_panel_under_button(const Data::Button& button) const {
+        auto button_index = Data::button_to_index(button);
         return (
             m_layout
-            .at(this->get_layout_column(button_index))
+            .at(this->get_layout_column(button))
             .at(button_index / 4)
         );
     }
 
-    void Ribbon::click_on(std::size_t button_index) {
-        this->get_panel_under_button(button_index)->click(*this, button_index);
-    }
-
-    void Ribbon::layout_from_category_map(const std::map<std::string, std::vector<std::shared_ptr<Panel>>> &categories) {
-        m_layout.clear();
-        for (auto &&[category, panels] : categories) {
-            if (not panels.empty()) {
-                std::vector<std::shared_ptr<Panel>> current_column;
-                current_column.push_back(std::make_shared<CategoryPanel>(m_resources, category));
-                for (auto &&panel : panels) {
-                    if (current_column.size() == 3) {
-                        m_layout.push_back({current_column[0], current_column[1], current_column[2]});
-                        current_column.clear();
-                    } else {
-                        current_column.push_back(std::move(panel));
-                    }
-                }
-                if (not current_column.empty()) {
-                    while (current_column.size() < 3) {
-                        current_column.push_back(std::make_shared<EmptyPanel>(m_resources));
-                    }
-                    m_layout.push_back({current_column[0], current_column[1], current_column[2]});
-                }
-            }
-        }
-        fill_layout();
+    void Ribbon::click_on(const Data::Button& button) {
+        get_panel_under_button(button)->click(*this, button);
     }
 
     void Ribbon::move_right() {
@@ -202,10 +105,8 @@ namespace MusicSelect {
         m_move_animation.emplace(old_position, m_position, m_layout.size(), Direction::Left, m_time_factor);
     }
 
-    void Ribbon::move_to_next_category(const std::size_t& from_button_index) {
-        std::size_t old_position = m_position;
-        std::size_t from_column = this->get_layout_column(from_button_index);
-
+    void Ribbon::move_to_next_category(const Data::Button& button) {
+        std::size_t from_column = this->get_layout_column(button);
         bool found = false;
         size_t offset = 1;
         // Cycle through the whole ribbon once starting on the column next to
@@ -226,8 +127,10 @@ namespace MusicSelect {
         }
         if (found) {
             // we want the next category panel to land on the same column we clicked
+            auto old_position = m_position;
+            auto button_index = Data::button_to_index(button);
             auto next_category_column = from_column + offset;
-            auto onscreen_clicked_column = (from_button_index % 4);
+            auto onscreen_clicked_column = (button_index % 4);
             m_position = next_category_column - onscreen_clicked_column;
             m_move_animation.emplace(old_position, m_position, m_layout.size(), Direction::Right, m_time_factor);
         }
@@ -285,50 +188,8 @@ namespace MusicSelect {
         if (debug) {
             ImGui::Begin("Ribbon Debug", &debug); {
                 ImGui::SliderFloat("Time Slowdown Factor", &m_time_factor, 1.f, 10.f);
-                /*
-                if (ImGui::CollapsingHeader("Panels")) {
-                    auto panel_size = static_cast<int>(m_panel_size);
-                    if(ImGui::InputInt("Size", &panel_size)) {
-                        if (panel_size < 0) {
-                            panel_size = 0;
-                        }
-                        m_panel_size = static_cast<std::size_t>(panel_size);
-                    }
-                    auto panel_spacing = static_cast<int>(m_panel_spacing);
-                    if(ImGui::InputInt("Spacing", &panel_spacing)) {
-                        if (panel_spacing < 0) {
-                            panel_spacing = 0;
-                        }
-                        m_panel_spacing = static_cast<std::size_t>(panel_spacing);
-                    }
-                }
-                */
             }
             ImGui::End();
-        }
-    }
-
-    // Obligatory steps before the drawing functions can use the layout without crashing
-    void Ribbon::fill_layout() {
-        if (m_layout.empty()) {
-            m_layout.push_back({
-                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
-                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
-                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
-            });
-            m_layout.push_back({
-                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
-                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
-                std::make_shared<ColoredMessagePanel>(m_resources, sf::Color::Red, "- EMPTY -"),
-            });
-            return;
-        }
-        while (m_layout.size() < 4) {
-            m_layout.push_back({
-                std::make_shared<EmptyPanel>(m_resources),
-                std::make_shared<EmptyPanel>(m_resources),
-                std::make_shared<EmptyPanel>(m_resources),
-            });
         }
     }
 }

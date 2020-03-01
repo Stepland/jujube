@@ -7,18 +7,23 @@
 
 #include "../../Data/Buttons.hpp"
 #include "../../Data/KeyMapping.hpp"
+#include "PanelLayout.hpp"
 
-MusicSelect::Screen::Screen(const Data::SongList& t_song_list, Data::Preferences& t_preferences) :
+MusicSelect::Screen::Screen(
+    const Data::SongList& t_song_list,
+    Data::Preferences& t_preferences,
+    const Resources::Markers& t_markers
+) :
     song_list(t_song_list),
     resources(t_preferences),
-    ribbon(resources),
+    markers(t_markers),
+    ribbon(PanelLayout::title_sort(t_song_list, resources), resources),
     song_info(resources),
     selected_panel(),
     button_highlight(resources),
     black_frame(t_preferences),
     key_mapping()
 {
-    ribbon.title_sort(song_list);
     std::cout << "loaded MusicSelect::Screen" << std::endl;
 }
 
@@ -112,8 +117,7 @@ void MusicSelect::Screen::press_button(const Data::Button& button) {
     button_highlight.button_pressed(button);
     auto button_index = Data::button_to_index(button);
     if (button_index < 12) {
-        ribbon.click_on(button_index);
-        // ribbon.at(button_index)->click(ribbon);
+        ribbon.click_on(button);
     } else {
         switch (button) {
         case Data::Button::B13:

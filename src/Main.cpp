@@ -6,6 +6,7 @@
 
 #include "Data/Song.hpp"
 #include "Data/Preferences.hpp"
+#include "Resources/Marker.hpp"
 // #include "Data/Chart.hpp"
 // #include "Data/Score.hpp"
 
@@ -14,7 +15,13 @@
 // #include "Screens/Result.hpp"
 
 int main(int argc, char const *argv[]) {
+
     Data::Preferences preferences;
+    auto markers = Resources::load_markers();
+    if (markers.find(preferences.options.marker) == markers.end()) {
+        preferences.options.marker = markers.begin()->first;
+    }
+
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     sf::RenderWindow window{
@@ -27,7 +34,11 @@ int main(int argc, char const *argv[]) {
         settings
     };
     Data::SongList song_list;
-    MusicSelect::Screen music_select{song_list, preferences};
+    MusicSelect::Screen music_select{
+        song_list,
+        preferences,
+        markers,
+    };
     
     music_select.select_chart(window);
     /*
