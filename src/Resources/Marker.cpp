@@ -200,11 +200,9 @@ namespace Resources {
                 }
             }
         }
-        /*
         if (res.empty()) {
             throw std::runtime_error("No markers found in marker folder, jujube needs at least one to operate");
         }
-        */
         return res;
     }
 }
