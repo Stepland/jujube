@@ -91,7 +91,6 @@ namespace MusicSelect {
                 song_title_label.setScale(m_big_cover.get_size() / song_title_bounds.width, 1.0f);
             }
             song_title_label.setFillColor(sf::Color::White);
-            auto cover_pos = m_big_cover.getPosition();
             song_title_label.setPosition(
                 get_big_cover_x() - m_big_cover.get_size()/2.f,
                 get_big_cover_y() + m_big_cover.get_size() + 0.01f*get_screen_width()
@@ -114,7 +113,6 @@ namespace MusicSelect {
             }
             song_artist_label.setFillColor(sf::Color::White);
             song_artist_label.setFillColor(sf::Color::White);
-            auto cover_pos = m_big_cover.getPosition();
             song_artist_label.setPosition(
                 get_big_cover_x() - m_big_cover.get_size()/2.f,
                 get_big_cover_y() + m_big_cover.get_size() + 0.04f*get_screen_width()

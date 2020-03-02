@@ -101,7 +101,7 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
     }
 }
 
-void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event) {
+void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& /*mouse_button_event*/) {
     /*
     if (mouse_button_event.button == sf::Mouse::Left) {
         int clicked_panel_index = (mouse_button_event.x / m_panel_size) + 4 * (mouse_button_event.y / m_panel_size);

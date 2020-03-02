@@ -14,7 +14,7 @@
 // #include "Screens/Gameplay.hpp"
 // #include "Screens/Result.hpp"
 
-int main(int argc, char const *argv[]) {
+int main(int, char const **) {
 
     Data::Preferences preferences;
     auto markers = Resources::load_markers();

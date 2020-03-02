@@ -9,6 +9,8 @@
 
 #include <cereal/archives/json.hpp>
 
+namespace fs = ghc::filesystem;
+
 namespace Resources {
 
     Marker::Marker(const fs::path& marker_folder) :
@@ -184,21 +186,25 @@ namespace Resources {
 
     Markers load_markers() {
         Markers res;
-        for (auto& p : fs::directory_iterator("markers")) {
-            if (p.is_directory()) {
-                try {
-                    Marker m{p.path()};
-                    res.emplace(m.m_metadata.name, m);
-                } catch (const std::exception& e) {
-                    std::cerr << "Unable to load marker folder "
-                    << p.path().string() << " : "
-                    << e.what() << std::endl;
+        if (fs::exists(fs::path("markers"))) {
+            for (auto& p : fs::directory_iterator("markers")) {
+                if (p.is_directory()) {
+                    try {
+                        Marker m{p.path()};
+                        res.emplace(m.m_metadata.name, m);
+                    } catch (const std::exception& e) {
+                        std::cerr << "Unable to load marker folder "
+                        << p.path().string() << " : "
+                        << e.what() << std::endl;
+                    }
                 }
             }
         }
+        /*
         if (res.empty()) {
             throw std::runtime_error("No markers found in marker folder, jujube needs at least one to operate");
         }
+        */
         return res;
     }
 }

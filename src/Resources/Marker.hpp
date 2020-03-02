@@ -7,17 +7,7 @@
 #include <ghc/filesystem.hpp>
 #include <SFML/Graphics.hpp>
 
-namespace fs = ghc::filesystem;
-
-template <class Archive>
-std::string save_minimal(const Archive &, ghc::filesystem::path& p) {
-    return p.string();
-}
-
-template <class Archive>
-void load_minimal(const Archive &, ghc::filesystem::path& p, const std::string& value) {
-    p = fs::path{value};
-}
+#include "../Toolkit/ExtraCerealTypes/GHCFilesystemPath.hpp"
 
 namespace Resources {
     enum class MarkerAnimation {
@@ -75,7 +65,7 @@ namespace Resources {
     };
 
     struct Marker {
-        Marker(const fs::path& marker_folder);
+        Marker(const ghc::filesystem::path& marker_folder);
         std::optional<sf::Sprite> get_sprite(const MarkerAnimation& state, const float& seconds);
         std::optional<sf::Sprite> get_sprite(const MarkerAnimation& state, const std::size_t frame);
         void load_and_check(sf::Texture& spritesheet, const MarkerAnimationMetadata& metadata);

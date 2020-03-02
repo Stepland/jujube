@@ -47,7 +47,6 @@ namespace MusicSelect {
             static_cast<unsigned int>(get_size()*0.1f)
         };
         category_label.setFillColor(sf::Color::White);
-        auto bounds = category_label.getLocalBounds();
         category_label.setPosition(get_size()*0.1f, get_size()*0.1f);
         target.draw(category_label, states);
 
@@ -66,7 +65,7 @@ namespace MusicSelect {
         target.draw(label_text, states);
     }
 
-    void SongPanel::click(MusicSelectRibbon& ribbon, const Data::Button& button) {
+    void SongPanel::click(Ribbon&, const Data::Button&) {
         if (selected_chart.has_value()) {
             // The song was already selected : look for the next chart in order
             auto it = m_song->chart_levels.upper_bound(*selected_chart);

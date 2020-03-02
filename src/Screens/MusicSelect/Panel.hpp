@@ -30,15 +30,15 @@ namespace MusicSelect {
     class EmptyPanel final : public Panel {
     public:
         using Panel::Panel;
-        void click(Ribbon& ribbon, const Data::Button& button) override {return;};
+        void click(Ribbon&, const Data::Button&) override {return;};
     private:
-        void draw(sf::RenderTarget& target, sf::RenderStates states) const override {return;};
+        void draw(sf::RenderTarget&, sf::RenderStates) const override {return;};
     };
 
     class ColoredMessagePanel final : public Panel {
     public:
         ColoredMessagePanel(SharedResources& resources, const sf::Color& color, const std::string& message) : Panel(resources), m_color(color), m_message(message) {};
-        void click(Ribbon& ribbon, const Data::Button& button) override {return;};
+        void click(Ribbon&, const Data::Button&) override {return;};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         const sf::Color m_color;
@@ -48,7 +48,7 @@ namespace MusicSelect {
     class ColorPanel final : public Panel {
     public:
         ColorPanel(SharedResources& resources, const sf::Color& t_color) : Panel(resources), m_color(t_color) {};
-        void click(Ribbon& ribbon, const Data::Button& button) override {return;};
+        void click(Ribbon&, const Data::Button&) override {return;};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         const sf::Color m_color;

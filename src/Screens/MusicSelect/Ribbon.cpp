@@ -117,7 +117,7 @@ namespace MusicSelect {
                 column.begin(),
                 column.end(),
                 [](jbcoe::polymorphic_value<Panel> panel) -> bool {
-                    return (std::dynamic_pointer_cast<CategoryPanel>(panel).get() != nullptr);
+                    return dynamic_cast<CategoryPanel*>(&*panel) != nullptr;
                 }
             )) {
                 found = true;
