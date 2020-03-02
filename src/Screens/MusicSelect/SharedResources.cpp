@@ -4,7 +4,8 @@
 
 #include "../../Toolkit/HSL.hpp"
 
-#include "Panel.hpp"
+#include "OptionPage.hpp"
+#include "Panels/Panel.hpp"
 
 namespace MusicSelect {
 
@@ -24,10 +25,9 @@ namespace MusicSelect {
         }
     }
     
-    SharedResources::SharedResources(Data::Preferences& p) :
+    SharedResources::SharedResources(Data::Preferences& p, const Resources::Markers& m) :
         Data::HoldsPreferences(p),
-        covers(),
-        fallback_cover()
+        markers(m)
     {
         covers.reserve(256);
         if (not fallback_cover.loadFromFile("assets/textures/fallback_cover.png")) {

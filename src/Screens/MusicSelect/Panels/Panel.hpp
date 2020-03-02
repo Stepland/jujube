@@ -6,10 +6,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "../../Data/Song.hpp"
-#include "../../Toolkit/AffineTransform.hpp"
-#include "DensityGraph.hpp"
-#include "SharedResources.hpp"
+#include "../../../Data/Song.hpp"
+#include "../../../Toolkit/AffineTransform.hpp"
+#include "../DensityGraph.hpp"
+#include "../SharedResources.hpp"
 
 namespace MusicSelect {
 
@@ -56,7 +56,7 @@ namespace MusicSelect {
 
     class CategoryPanel final : public Panel {
     public:
-        explicit CategoryPanel(SharedResources& resources, const std::string& t_label) : Panel(resources), m_label(t_label) {};
+        CategoryPanel(SharedResources& resources, const std::string& t_label) : Panel(resources), m_label(t_label) {};
         void click(Ribbon& ribbon, const Data::Button& button) override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

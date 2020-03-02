@@ -3,6 +3,7 @@
 #include <map>
 #include <stack>
 
+#include <jbcoe/polymorphic_value.h>
 #include <SFML/Window.hpp>
 
 #include "../../Data/Song.hpp"
@@ -15,10 +16,11 @@
 #include "SongInfo.hpp"
 #include "SharedResources.hpp"
 #include "ButtonHighlight.hpp"
-#include "OptionMenu.hpp"
+#include "OptionPage.hpp"
 
 namespace MusicSelect {
 
+    class SongPanel;
     // The music select screen is created only once
     // it loads a cache of available songs in the song_list attribute
     class Screen {
@@ -43,7 +45,6 @@ namespace MusicSelect {
         SongInfo song_info;
         std::optional<std::reference_wrapper<SongPanel>> selected_panel;
         ButtonHighlight button_highlight;
-        std::stack<OptionMenu> options_state;
 
         Drawables::BlackFrame black_frame;
     

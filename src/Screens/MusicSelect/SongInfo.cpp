@@ -8,7 +8,7 @@
 #include "../../Toolkit/EasingFunctions.hpp"
 #include "../../Toolkit/NormalizedOrigin.hpp"
 
-#include "Panel.hpp"
+#include "Panels/Panel.hpp"
 
 namespace MusicSelect {
 

@@ -12,10 +12,11 @@
 #include "../../Toolkit/Debuggable.hpp"
 #include "../../Toolkit/EasingFunctions.hpp"
 #include "SharedResources.hpp"
-#include "Panel.hpp"
 #include "PanelLayout.hpp"
 
 namespace MusicSelect {
+
+    class Panel;
 
     enum class Direction {
         Right,

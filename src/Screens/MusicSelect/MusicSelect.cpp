@@ -7,6 +7,7 @@
 
 #include "../../Data/Buttons.hpp"
 #include "../../Data/KeyMapping.hpp"
+#include "Panels/Panel.hpp"
 #include "PanelLayout.hpp"
 
 MusicSelect::Screen::Screen(
@@ -15,7 +16,7 @@ MusicSelect::Screen::Screen(
     const Resources::Markers& t_markers
 ) :
     song_list(t_song_list),
-    resources(t_preferences),
+    resources(t_preferences, t_markers),
     markers(t_markers),
     ribbon(PanelLayout::title_sort(t_song_list, resources), resources),
     song_info(resources),

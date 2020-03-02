@@ -4,11 +4,11 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../../Toolkit/HSL.hpp"
-#include "../../Toolkit/NormalizedOrigin.hpp"
+#include "../../../Toolkit/HSL.hpp"
+#include "../../../Toolkit/NormalizedOrigin.hpp"
 
-#include "MusicSelect.hpp"
-#include "SharedResources.hpp"
+#include "../Ribbon.hpp"
+#include "../SharedResources.hpp"
 
 namespace MusicSelect {
     Panel::Panel(SharedResources& resources) : HoldsSharedResources(resources) {

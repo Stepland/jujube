@@ -3,10 +3,12 @@
 #include <cstddef>
 #include <optional>
 
+#include <jbcoe/polymorphic_value.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/System.hpp>
 
+#include "../../Resources/Marker.hpp"
 #include "../../Resources/TextureCache.hpp"
 #include "../../Data/Preferences.hpp"
 #include "../../Data/Song.hpp"
@@ -17,6 +19,7 @@
 namespace MusicSelect {
 
     class SelectablePanel;
+    class OptionPage;
 
     struct TimedSelectedPanel {
         TimedSelectedPanel(SelectablePanel& s) : panel(s), first_click(), last_click() {};
@@ -35,7 +38,7 @@ namespace MusicSelect {
 
     // Holds everything that needs to be shared by all levels of the class hierarchy
     struct SharedResources : public Data::HoldsPreferences {
-        SharedResources(Data::Preferences& p);
+        SharedResources(Data::Preferences& p, const Resources::Markers& m);
 
         Textures::TextureCache covers;
         sf::Texture fallback_cover;
@@ -55,6 +58,10 @@ namespace MusicSelect {
         sf::Color get_chart_color(const std::string& chart);
 
         MusicPreview music_preview;
+
+        std::stack<jbcoe::polymorphic_value<OptionPage>> options_state;
+
+        const Resources::Markers& markers;
     };
 
     // Proxy for HoldsPreferences

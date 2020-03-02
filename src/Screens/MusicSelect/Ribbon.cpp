@@ -11,7 +11,7 @@
 
 #include "../../Data/Song.hpp"
 #include "../../Toolkit/QuickRNG.hpp"
-#include "Panel.hpp"
+#include "Panels/Panel.hpp"
 
 
 namespace MusicSelect {

@@ -66,11 +66,11 @@ namespace Resources {
 
     struct Marker {
         Marker(const ghc::filesystem::path& marker_folder);
-        std::optional<sf::Sprite> get_sprite(const MarkerAnimation& state, const float& seconds);
-        std::optional<sf::Sprite> get_sprite(const MarkerAnimation& state, const std::size_t frame);
+        std::optional<sf::Sprite> get_sprite(const MarkerAnimation& state, float seconds) const;
+        std::optional<sf::Sprite> get_sprite(const MarkerAnimation& state, const std::size_t frame) const;
         void load_and_check(sf::Texture& spritesheet, const MarkerAnimationMetadata& metadata);
-        sf::Texture& get_sprite_sheet_from_enum(const MarkerAnimation& state);
-        MarkerAnimationMetadata& get_metadata_from_enum(const MarkerAnimation& state);
+        const sf::Texture& get_sprite_sheet_from_enum(const MarkerAnimation& state) const;
+        const MarkerAnimationMetadata& get_metadata_from_enum(const MarkerAnimation& state) const;
         
         ghc::filesystem::path m_folder;
         MarkerMetadata m_metadata;

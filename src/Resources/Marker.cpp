@@ -78,12 +78,12 @@ namespace Resources {
 
         // Duration check
         // We do not allow any marker animation to take longer than the jubeat standard of 16 frames at 30 fps
-        // For that we check that :
+        // For that we make sure that :
         //     count/fps <= 16/30
         // Which is mathematically equivalent to checking that :
         //     count*30 <= 16*fps
         // Which allows us to avoid having to cast to float
-        if (metadata.count*30 <= 16*m_metadata.fps) {
+        if (metadata.count*30 > 16*m_metadata.fps) {
             std::stringstream ss;
             ss << "Marker animation for sprite sheet ";
             ss << (m_folder/metadata.sprite_sheet).string();
@@ -95,7 +95,7 @@ namespace Resources {
         }
     }
 
-    sf::Texture& Marker::get_sprite_sheet_from_enum(const MarkerAnimation& state) {
+    const sf::Texture& Marker::get_sprite_sheet_from_enum(const MarkerAnimation& state) const {
         switch (state) {
         case MarkerAnimation::APPROACH:
             return m_approach;
@@ -120,7 +120,7 @@ namespace Resources {
         }
     }
 
-    MarkerAnimationMetadata& Marker::get_metadata_from_enum(const MarkerAnimation& state) {
+    const MarkerAnimationMetadata& Marker::get_metadata_from_enum(const MarkerAnimation& state) const {
         switch (state) {
         case MarkerAnimation::APPROACH:
             return m_metadata.approach;
@@ -145,7 +145,7 @@ namespace Resources {
         }
     }
 
-    std::optional<sf::Sprite> Marker::get_sprite(const MarkerAnimation& state, const float& seconds) {
+    std::optional<sf::Sprite> Marker::get_sprite(const MarkerAnimation& state, float seconds) const {
         auto raw_frame = static_cast<int>(std::floor(seconds*m_metadata.fps));
         if (raw_frame >= 0) {
             if (state == MarkerAnimation::APPROACH) {
@@ -162,7 +162,7 @@ namespace Resources {
         }
     }
 
-    std::optional<sf::Sprite> Marker::get_sprite(const MarkerAnimation& state, const std::size_t frame) {
+    std::optional<sf::Sprite> Marker::get_sprite(const MarkerAnimation& state, const std::size_t frame) const {
         auto& meta = get_metadata_from_enum(state);
         if (frame >= meta.count) {
             return {};

@@ -1,5 +1,7 @@
 #include "PanelLayout.hpp"
 
+#include "Panels/Panel.hpp"
+
 namespace MusicSelect {
     PanelLayout::PanelLayout(
         const std::map<std::string,std::vector<jbcoe::polymorphic_value<Panel>>>& categories,
@@ -29,7 +31,7 @@ namespace MusicSelect {
     }
 
     PanelLayout::PanelLayout(
-        const std::vector<jbcoe::polymorphic_value<Panel>> panels,
+        const std::vector<jbcoe::polymorphic_value<Panel>>& panels,
         SharedResources& resources
     ) {
         std::vector<jbcoe::polymorphic_value<Panel>> current_column;
