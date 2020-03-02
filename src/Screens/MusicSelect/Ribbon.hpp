@@ -47,8 +47,10 @@ namespace MusicSelect {
         void move_left();
         void move_to_next_category(const Data::Button& button);
         void draw_debug() override;
-    private:
+        virtual ~Ribbon() = default;
+    protected:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    private:
         void draw_with_animation(sf::RenderTarget& target, sf::RenderStates states) const;
         void draw_without_animation(sf::RenderTarget& target, sf::RenderStates states) const;
         std::size_t get_layout_column(const Data::Button& button) const;

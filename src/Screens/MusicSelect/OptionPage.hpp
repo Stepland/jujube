@@ -17,9 +17,11 @@ namespace MusicSelect {
         OptionPage(SharedResources& resources) : HoldsSharedResources(resources) {};
         virtual void click(const Data::Button& button) = 0;
         virtual ~OptionPage() = default;
+    private:
+    
     };
 
-    class MainOptionPage final : public OptionPage, public Ribbon {
+    class MainOptionPage final : virtual public OptionPage, public Ribbon {
     public:
         MainOptionPage(SharedResources& resources);
         void click(const Data::Button& button) override;
@@ -28,7 +30,7 @@ namespace MusicSelect {
         static PanelLayout create_layout(SharedResources& resources);
     };
 
-    class MarkerSelect final : public OptionPage, public Ribbon {
+    class MarkerSelect final : virtual public OptionPage, public Ribbon {
     public:
         MarkerSelect(SharedResources& resources);
         void click(const Data::Button& button) override;

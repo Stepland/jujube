@@ -10,7 +10,7 @@
 namespace MusicSelect {
     class MarkerPanel final : public Panel {
     public:
-        MarkerPanel(SharedResources& resources, const Resources::Marker& marker) : Panel(resources), m_marker(marker) {};
+        MarkerPanel(SharedResources& resources, const Resources::Marker& marker);
         void click(Ribbon&, const Data::Button&) override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

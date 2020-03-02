@@ -23,9 +23,9 @@ namespace MusicSelect {
         states.transform *= getTransform();
         float animation_time = 0.f;
         if (selected_since) {
-            auto animation_time = std::fmodf(selected_since->getElapsedTime().asSeconds(), 2.f) - 1.f;
+            animation_time = std::fmodf(selected_since->getElapsedTime().asSeconds(), 2.f) - 1.f;
         }
-        auto sprite = m_marker.get_sprite(Resources::MarkerAnimation::APPROACH, 0.f);
+        auto sprite = m_marker.get_sprite(Resources::MarkerAnimation::APPROACH, animation_time);
         if (sprite) {
             target.draw(*sprite, states);
         }
