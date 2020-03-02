@@ -36,8 +36,8 @@ namespace Data {
 
     Button convert_memon_tail(Button note, unsigned int tail_position) {
         auto note_position = button_to_index(note);
-        assert((note_position >= 0 and note_position <= 15));
-        assert((tail_position >= 0 and tail_position <= 11));
+        assert((note_position <= 15));
+        assert((tail_position <= 11));
         int x = note_position%4;
         int y = note_position/4;
         int dx = 0;

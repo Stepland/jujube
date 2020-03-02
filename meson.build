@@ -90,7 +90,7 @@ subdir('test')
 executable(
     'jujube',
     sources,
-    dependencies: [sfml, thread_dep, m_dep, gl_dep],
+    dependencies: [sfml, thread_dep, gl_dep, m_dep],
     include_directories : include_directories('include', 'include/imgui', 'include/imgui-sfml'), 
     cpp_args : [
         '-Wall',
