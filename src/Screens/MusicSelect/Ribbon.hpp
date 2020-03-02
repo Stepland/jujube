@@ -40,7 +40,7 @@ namespace MusicSelect {
     class Ribbon : public sf::Drawable, public sf::Transformable, public HoldsSharedResources, public Toolkit::Debuggable {
     public:
         Ribbon(PanelLayout layout, SharedResources& t_resources);
-        jbcoe::polymorphic_value<Panel>& get_panel_under_button(const Data::Button& button) const;
+        jbcoe::polymorphic_value<Panel>& get_panel_under_button(const Data::Button& button);
         void click_on(const Data::Button& button);
         void move_right();
         void move_left();

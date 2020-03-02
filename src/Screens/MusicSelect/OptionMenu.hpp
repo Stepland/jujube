@@ -18,5 +18,5 @@ namespace MusicSelect {
         void click(const Data::Button& button);
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states);
-    }
+    };
 }

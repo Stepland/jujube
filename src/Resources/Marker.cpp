@@ -9,10 +9,6 @@
 
 #include <cereal/archives/json.hpp>
 
-#include "../Toolkit/GHCFilesystemPathHash.hpp"
-
-namespace fs = ghc::filesystem;
-
 namespace Resources {
 
     Marker::Marker(const fs::path& marker_folder) :
@@ -92,7 +88,7 @@ namespace Resources {
             ss << " lasts " << metadata.count/static_cast<float>(m_metadata.fps)*1000.f << "ms";
             ss << " (" << metadata.count << "f @ " << m_metadata.fps << "fps)";
             ss << " which is more than the maximum of " << 16.f/30.f*1000.f << "ms";
-            ss << ' (16f @ 30fps)';
+            ss << " (16f @ 30fps)";
             throw std::invalid_argument(ss.str());
         }
     }
@@ -117,6 +113,8 @@ namespace Resources {
         case MarkerAnimation::PERFECT:
             return m_perfect;
             break;
+        default:
+            throw std::runtime_error("wtf ?");
         }
     }
 
@@ -140,6 +138,8 @@ namespace Resources {
         case MarkerAnimation::PERFECT:
             return m_metadata.perfect;
             break;
+        default:
+            throw std::runtime_error("wtf ?");
         }
     }
 

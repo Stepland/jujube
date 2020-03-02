@@ -7,7 +7,17 @@
 #include <ghc/filesystem.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "../Toolkit/ExtraCerealTypes/GHCFilesystemPath.hpp"
+namespace fs = ghc::filesystem;
+
+template <class Archive>
+std::string save_minimal(const Archive &, ghc::filesystem::path& p) {
+    return p.string();
+}
+
+template <class Archive>
+void load_minimal(const Archive &, ghc::filesystem::path& p, const std::string& value) {
+    p = fs::path{value};
+}
 
 namespace Resources {
     enum class MarkerAnimation {
@@ -26,11 +36,11 @@ namespace Resources {
         std::size_t rows;  // how many vertically
 
         template<class Archive>
-        void serialize(Archive & archive) const {
+        void serialize(Archive& archive) {
             archive(
                 CEREAL_NVP(sprite_sheet),
                 CEREAL_NVP(count),
-                CEREAL_NVP(column),
+                CEREAL_NVP(columns),
                 CEREAL_NVP(rows)
             );
         }
@@ -49,7 +59,7 @@ namespace Resources {
         MarkerAnimationMetadata perfect;
 
         template<class Archive>
-        void serialize(Archive & archive) const {
+        void serialize(Archive & archive) {
             archive(
                 CEREAL_NVP(name),
                 CEREAL_NVP(size),
@@ -65,7 +75,7 @@ namespace Resources {
     };
 
     struct Marker {
-        explicit Marker(const ghc::filesystem::path& marker_folder);
+        Marker(const fs::path& marker_folder);
         std::optional<sf::Sprite> get_sprite(const MarkerAnimation& state, const float& seconds);
         std::optional<sf::Sprite> get_sprite(const MarkerAnimation& state, const std::size_t frame);
         void load_and_check(sf::Texture& spritesheet, const MarkerAnimationMetadata& metadata);

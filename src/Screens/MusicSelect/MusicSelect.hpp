@@ -11,7 +11,7 @@
 #include "../../Drawables/BlackFrame.hpp"
 #include "../../Resources/Marker.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
-#include "SongListRibbon.hpp"
+#include "Ribbon.hpp"
 #include "SongInfo.hpp"
 #include "SharedResources.hpp"
 #include "ButtonHighlight.hpp"
@@ -39,7 +39,7 @@ namespace MusicSelect {
         Resources::Markers markers;
 
         // State
-        SongListRibbon ribbon;
+        Ribbon ribbon;
         SongInfo song_info;
         std::optional<std::reference_wrapper<SongPanel>> selected_panel;
         ButtonHighlight button_highlight;

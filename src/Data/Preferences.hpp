@@ -1,11 +1,12 @@
 #pragma once
 
 #include <cstddef>
-#include <ghc/filesystem.hpp>
 #include <fstream>
 
 #include <cereal/archives/json.hpp>
+#include <cereal/types/string.hpp>
 #include <cereal/types/unordered_map.hpp>
+#include <ghc/filesystem.hpp>
 #include <SFML/System.hpp>
 
 #include "Buttons.hpp"
@@ -60,8 +61,8 @@ namespace Data {
         template<class Archive>
         void serialize(Archive & archive) {
             archive(
-                CEREAL_NVP(marker),
-            ); 
+                CEREAL_NVP(marker)
+            );
         }
     };
 

@@ -2,13 +2,12 @@
 
 #include <string>
 
-#include <cereal/cereal.hpp>
-#include <cereal/types/string.hpp>
+#include <cereal/details/traits.hpp>
 #include <ghc/filesystem.hpp>
 
 
 template <class Archive>
-std::string save_minimal(const Archive &, const ghc::filesystem::path & p) {
+std::string save_minimal(const Archive &, ghc::filesystem::path& p) {
     return p.string();
 }
 

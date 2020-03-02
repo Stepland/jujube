@@ -76,7 +76,7 @@ namespace MusicSelect {
         return (m_position + (Data::button_to_index(button) % 4)) % m_layout.size();
     }
 
-    jbcoe::polymorphic_value<Panel>& Ribbon::get_panel_under_button(const Data::Button& button) const {
+    jbcoe::polymorphic_value<Panel>& Ribbon::get_panel_under_button(const Data::Button& button) {
         auto button_index = Data::button_to_index(button);
         return (
             m_layout
@@ -116,7 +116,7 @@ namespace MusicSelect {
             if (std::any_of(
                 column.begin(),
                 column.end(),
-                [](std::shared_ptr<Panel> panel) -> bool {
+                [](jbcoe::polymorphic_value<Panel> panel) -> bool {
                     return (std::dynamic_pointer_cast<CategoryPanel>(panel).get() != nullptr);
                 }
             )) {
