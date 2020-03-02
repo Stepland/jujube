@@ -39,12 +39,12 @@ def convert_folder(src: Path, dst: Path):
     sprite_size = sprite_sizes.pop()
     assert(sprite_size[0] == sprite_size[1])
     size = sprite_size[0]
-    marker_json = copy.deepcopy(METADATA)
-    marker_json.update(
-        name=src.name,
-        size=size,
-        fps=30
-    )
+    marker_json = {
+        "name": src.name,
+        "size": size,
+        "fps": 30
+    }
+    marker_json.update(**METADATA)
     for anim in MarkerAnimation:
         meta = METADATA[anim]
         sprite_sheet = Image.new('RGBA', (size*meta["columns"], size*meta["rows"]), (0,0,0,0))
