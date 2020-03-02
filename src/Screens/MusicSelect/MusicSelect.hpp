@@ -47,6 +47,7 @@ namespace MusicSelect {
         ButtonHighlight button_highlight;
 
         Drawables::BlackFrame black_frame;
+        sf::RectangleShape panel_filter;
     
         Data::KeyMapping key_mapping;
         // converts a key press into a button press

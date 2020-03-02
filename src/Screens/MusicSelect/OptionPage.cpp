@@ -7,20 +7,47 @@
 #include "Panels/MarkerPanel.hpp"
 
 namespace MusicSelect {
-    MainOptionPage::MainOptionPage(SharedResources& resources) :
+
+    void OptionPage::update() {
+        this->setPosition(get_ribbon_x(), get_ribbon_y());
+    }
+
+    RibbonPage::RibbonPage(const PanelLayout& layout, SharedResources& resources) :
         OptionPage(resources),
-        Ribbon(MainOptionPage::create_layout(resources), resources)
+        m_ribbon(layout, resources)
     {
-        
+        update();
     }
 
-    void MainOptionPage::click(const Data::Button& button) {
-        click_on(button);
+    void RibbonPage::click(const Data::Button& button) {
+        auto button_index = Data::button_to_index(button);
+        if (button_index < 12) {
+            m_ribbon.click_on(button);
+        } else {
+            switch (button) {
+            case Data::Button::B13:
+                m_ribbon.move_left();
+                break;
+            case Data::Button::B14:
+                m_ribbon.move_right();
+                break;
+            default:
+                break;
+            }
+        }
     }
 
-    void MainOptionPage::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-        this->Ribbon::draw(target, states);
+    void RibbonPage::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+        states.transform *= getTransform();
+        target.draw(m_ribbon, states);
     }
+
+    MainOptionPage::MainOptionPage(SharedResources& resources) :
+        RibbonPage(MainOptionPage::create_layout(resources), resources)
+    {
+        update();
+    }
+
 
     PanelLayout MainOptionPage::create_layout(SharedResources& resources) {
         std::vector<jbcoe::polymorphic_value<Panel>> subpages;
@@ -30,18 +57,9 @@ namespace MusicSelect {
     }
 
     MarkerSelect::MarkerSelect(SharedResources& resources) :
-        OptionPage(resources),
-        Ribbon(MarkerSelect::create_layout(resources), resources)
+        RibbonPage(MarkerSelect::create_layout(resources), resources)
     {
-
-    }
-
-    void MarkerSelect::click(const Data::Button& button) {
-        click_on(button);
-    }
-
-    void MarkerSelect::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-        this->Ribbon::draw(target, states);
+        update();
     }
 
     PanelLayout MarkerSelect::create_layout(SharedResources& resources) {

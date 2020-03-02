@@ -7,6 +7,7 @@
 
 #include "../../Data/Buttons.hpp"
 #include "../../Data/KeyMapping.hpp"
+#include "../../Toolkit/NormalizedOrigin.hpp"
 #include "Panels/Panel.hpp"
 #include "PanelLayout.hpp"
 
@@ -25,6 +26,12 @@ MusicSelect::Screen::Screen(
     black_frame(t_preferences),
     key_mapping()
 {
+    panel_filter.setSize(sf::Vector2f(
+        resources.m_preferences.layout.panel_step()*resources.m_preferences.screen.width*4.f,
+        resources.m_preferences.layout.panel_step()*resources.m_preferences.screen.width*4.f
+    ));
+    Toolkit::set_origin_normalized(panel_filter, 0.5f, 0.5f);
+    panel_filter.setFillColor(sf::Color(0,0,0,128));
     std::cout << "loaded MusicSelect::Screen" << std::endl;
 }
 
@@ -40,6 +47,16 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
     button_highlight.setPosition(
         resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
         resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
+    );
+    panel_filter.setPosition(
+        sf::Vector2f{resources.m_preferences.layout.ribbon_x + (
+            3.f*resources.m_preferences.layout.panel_spacing + 
+            4.f*resources.m_preferences.layout.panel_size
+        ) / 2.f,
+        resources.m_preferences.layout.ribbon_y + (
+            3.f*resources.m_preferences.layout.panel_spacing + 
+            4.f*resources.m_preferences.layout.panel_size
+        ) / 2.f}*static_cast<float>(resources.m_preferences.screen.width)
     );
     while ((not chart_selected) and window.isOpen()) {
         sf::Event event;
@@ -68,6 +85,19 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                     resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
                     resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
                 );
+                panel_filter.setPosition(
+                    resources.m_preferences.layout.ribbon_x + (
+                        3.f*resources.m_preferences.layout.panel_spacing + 
+                        4.f*resources.m_preferences.layout.panel_size
+                    ) / 2.f,
+                    resources.m_preferences.layout.ribbon_y + (
+                        3.f*resources.m_preferences.layout.panel_spacing + 
+                        4.f*resources.m_preferences.layout.panel_size
+                    ) / 2.f
+                );
+                if (not resources.options_state.empty()) {
+                    resources.options_state.top()->update();
+                }
                 break;
             default:
                 break;
@@ -77,6 +107,10 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         window.clear(sf::Color(7, 23, 53));
         ribbon.draw_debug();
         window.draw(ribbon);
+        if (not resources.options_state.empty()) {
+            window.draw(panel_filter);
+            window.draw(*resources.options_state.top());
+        }
         window.draw(button_highlight);
         window.draw(song_info);
         window.draw(black_frame);
@@ -117,17 +151,39 @@ void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& 
 void MusicSelect::Screen::press_button(const Data::Button& button) {
     button_highlight.button_pressed(button);
     auto button_index = Data::button_to_index(button);
-    if (button_index < 12) {
-        ribbon.click_on(button);
+    // Are we displaying the options menu ?
+    if (not resources.options_state.empty()) {
+        if (button_index < 14) {
+            resources.options_state.top()->click(button);
+        } else {
+            if (button == Data::Button::B15) {
+                resources.options_state.pop();
+                if (not resources.options_state.empty()) {
+                    resources.options_state.top()->update();
+                }
+            }
+        }
     } else {
-        switch (button) {
-        case Data::Button::B13:
-            ribbon.move_left();
-            break;
-        case Data::Button::B14:
-            ribbon.move_right();
-        default:
-            break;
+        if (button_index < 12) {
+            ribbon.click_on(button);
+        } else {
+            switch (button) {
+            case Data::Button::B13: // Left Arrow
+                ribbon.move_left();
+                break;
+            case Data::Button::B14: // Right Arrow
+                ribbon.move_right();
+                break;
+            case Data::Button::B15: // Options Menu
+                resources.options_state.push(
+                    jbcoe::polymorphic_value<OptionPage>(
+                        MainOptionPage{resources}
+                    )
+                );
+                break;
+            default:
+                break;
+            }
         }
     }
 }

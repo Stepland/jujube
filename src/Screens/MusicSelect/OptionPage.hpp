@@ -15,27 +15,34 @@ namespace MusicSelect {
     class OptionPage : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
     public:
         OptionPage(SharedResources& resources) : HoldsSharedResources(resources) {};
+        // An option page should only every recive button presses ranging for 1 to 14
+        // Going back a menu should be handled by the MusicSelect screen to avoid destroying the menu
+        // while still being in a click() call on it
         virtual void click(const Data::Button& button) = 0;
         virtual ~OptionPage() = default;
-    private:
-    
+        void update();
     };
 
-    class MainOptionPage final : virtual public OptionPage, public Ribbon {
+    class RibbonPage : public OptionPage {
     public:
-        MainOptionPage(SharedResources& resources);
+        RibbonPage(const PanelLayout& layout, SharedResources& resources);
         void click(const Data::Button& button) override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+        Ribbon m_ribbon;
+    };
+
+    class MainOptionPage final : public RibbonPage {
+    public:
+        MainOptionPage(SharedResources& resources);
+    private:
         static PanelLayout create_layout(SharedResources& resources);
     };
 
-    class MarkerSelect final : virtual public OptionPage, public Ribbon {
+    class MarkerSelect final : public RibbonPage {
     public:
         MarkerSelect(SharedResources& resources);
-        void click(const Data::Button& button) override;
     private:
-        void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         static PanelLayout create_layout(SharedResources& resources);
     };
 }
