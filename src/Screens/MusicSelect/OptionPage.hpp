@@ -14,7 +14,7 @@ namespace MusicSelect {
 
     class OptionPage : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
     public:
-        OptionPage(SharedResources& resources) : HoldsSharedResources(resources) {};
+        OptionPage(SharedResources& resources) : HoldsSharedResources(resources) {update();};
         // An option page should only every recive button presses ranging for 1 to 14
         // Going back a menu should be handled by the MusicSelect screen to avoid destroying the menu
         // while still being in a click() call on it

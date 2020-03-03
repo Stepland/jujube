@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <jbcoe/polymorphic_value.h>
 #include <SFML/Graphics.hpp>
 
@@ -13,17 +15,17 @@ namespace MusicSelect {
     public:
         SubpagePanel(
             SharedResources& resources,
-            const jbcoe::polymorphic_value<OptionPage>& subpage,
+            std::shared_ptr<OptionPage> subpage,
             const std::string& name
         ) :
             Panel(resources),
-            m_subpage(subpage),
+            m_subpage(std::move(subpage)),
             m_name(name)
         {};
         void click(Ribbon& ribbon, const Data::Button& button) override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-        jbcoe::polymorphic_value<OptionPage> m_subpage;
+        std::shared_ptr<OptionPage> m_subpage;
         std::string m_name;
     };
 }

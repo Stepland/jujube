@@ -4,13 +4,13 @@
 
 namespace MusicSelect {
     PanelLayout::PanelLayout(
-        const std::map<std::string,std::vector<std::unique_ptr<Panel>>>& categories,
+        const std::map<std::string,std::vector<std::shared_ptr<Panel>>>& categories,
         SharedResources& resources
     ) {
         for (auto &&[category, panels] : categories) {
             if (not panels.empty()) {
-                std::vector<std::unique_ptr<Panel>> current_column;
-                current_column.emplace_back(CategoryPanel{resources, category});
+                std::vector<std::shared_ptr<Panel>> current_column;
+                current_column.emplace_back(std::make_shared<CategoryPanel>(resources, category));
                 for (auto& panel : panels) {
                     if (current_column.size() == 3) {
                         push_back({
@@ -20,11 +20,11 @@ namespace MusicSelect {
                         });
                         current_column.clear();
                     }
-                    current_column.push_back(std::move(panel));
+                    current_column.push_back(panel);
                 }
                 if (not current_column.empty()) {
                     while (current_column.size() < 3) {
-                        current_column.emplace_back(EmptyPanel{resources});
+                        current_column.emplace_back(std::make_shared<EmptyPanel>(resources));
                     }
                     push_back({
                         std::move(current_column[0]),
@@ -38,10 +38,10 @@ namespace MusicSelect {
     }
 
     PanelLayout::PanelLayout(
-        const std::vector<std::unique_ptr<Panel>>& panels,
+        const std::vector<std::shared_ptr<Panel>>& panels,
         SharedResources& resources
     ) {
-        std::vector<std::unique_ptr<Panel>> current_column;
+        std::vector<std::shared_ptr<Panel>> current_column;
         for (auto& panel : panels) {
             if (current_column.size() == 3) {
                 push_back({
@@ -51,11 +51,11 @@ namespace MusicSelect {
                 });
                 current_column.clear();
             }
-            current_column.push_back(std::move(panel));
+            current_column.push_back(panel);
         }
         if (not current_column.empty()) {
             while (current_column.size() < 3) {
-                current_column.emplace_back(EmptyPanel{resources});
+                current_column.emplace_back(std::make_shared<EmptyPanel>(resources));
             }
             push_back({
                 std::move(current_column[0]),
@@ -67,9 +67,9 @@ namespace MusicSelect {
     }
 
     PanelLayout PanelLayout::red_empty_layout(SharedResources& resources) {
-        std::vector<std::unique_ptr<Panel>> panels;
+        std::vector<std::shared_ptr<Panel>> panels;
         for (size_t i = 0; i < 3*4; i++) {
-            panels.emplace(std::make_unique<ColoredMessagePanel>(resources, sf::Color::Red, "- EMPTY -"));
+            panels.emplace_back(std::make_shared<ColoredMessagePanel>(resources, sf::Color::Red, "- EMPTY -"));
         }
         return PanelLayout{panels, resources};
     }
@@ -84,38 +84,34 @@ namespace MusicSelect {
             songs.end(),
             [](std::shared_ptr<const Data::Song> a, std::shared_ptr<const Data::Song> b){return Data::Song::sort_by_title(*a, *b);}
         );
-        std::map<std::string, std::vector<std::unique_ptr<Panel>>> categories;
+        std::map<std::string, std::vector<std::shared_ptr<Panel>>> categories;
         for (const auto &song : songs) {
             if (song->title.size() > 0) {
                 char letter = song->title[0];
                 if ('A' <= letter and letter <= 'Z') {
                     categories
                     [std::string(1, letter)]
-                    .emplace_back(SongPanel{resources, song});
+                    .emplace_back(std::make_shared<SongPanel>(resources, song));
                 } else if ('a' <= letter and letter <= 'z') {
                     categories
                     [std::string(1, 'A' + (letter - 'a'))]
-                    .emplace_back(SongPanel{resources, song});
+                    .emplace_back(std::make_shared<SongPanel>(resources, song));
                 } else {
-                    categories["?"].emplace_back(SongPanel{resources, song});
+                    categories["?"].emplace_back(std::make_shared<SongPanel>(resources, song));
                 }
             } else {
-                categories["?"].emplace_back(SongPanel{resources, song});
+                categories["?"].emplace_back(std::make_shared<SongPanel>(resources, song));
             }
         }
         return PanelLayout{categories, resources};
-    }
-
-    void PanelLayout::PanelLayout::push_vector(const std::vector<std::unique_ptr<Panel>>& panels) {
-        
     }
     
     void PanelLayout::fill_layout(SharedResources& resources) {
         while (size() < 4) {
             push_back({
-                std::unique_ptr<Panel>{EmptyPanel{resources}},
-                std::unique_ptr<Panel>{EmptyPanel{resources}},
-                std::unique_ptr<Panel>{EmptyPanel{resources}}
+                std::make_shared<EmptyPanel>(resources),
+                std::make_shared<EmptyPanel>(resources),
+                std::make_shared<EmptyPanel>(resources)
             });
         }
     }

@@ -1,6 +1,7 @@
 #include "OptionPage.hpp"
 
 #include <iostream>
+#include <memory>
 #include <vector>
 
 #include "Ribbon.hpp"
@@ -17,7 +18,6 @@ namespace MusicSelect {
         OptionPage(resources),
         m_ribbon(layout, resources)
     {
-        update();
     }
 
     void RibbonPage::click(const Data::Button& button) {
@@ -46,21 +46,19 @@ namespace MusicSelect {
     MainOptionPage::MainOptionPage(SharedResources& resources) :
         RibbonPage(MainOptionPage::create_layout(resources), resources)
     {
-        update();
     }
 
 
     PanelLayout MainOptionPage::create_layout(SharedResources& resources) {
-        std::vector<std::unique_ptr<Panel>> subpages;
-        jbcoe::polymorphic_value<OptionPage> marker_select{MarkerSelect{resources}};
-        subpages.emplace_back(SubpagePanel{resources, marker_select, "markers"});
+        std::vector<std::shared_ptr<Panel>> subpages;
+        auto marker_select = std::make_shared<MarkerSelect>(MarkerSelect{resources});
+        subpages.emplace_back(std::make_shared<SubpagePanel>(resources, marker_select, "markers"));
         return PanelLayout{subpages, resources};
     }
 
     MarkerSelect::MarkerSelect(SharedResources& resources) :
         RibbonPage(MarkerSelect::create_layout(resources), resources)
     {
-        update();
     }
 
     MarkerSelect::~MarkerSelect() {
@@ -68,9 +66,9 @@ namespace MusicSelect {
     }
 
     PanelLayout MarkerSelect::create_layout(SharedResources& resources) {
-        std::vector<std::unique_ptr<Panel>> markers;
+        std::vector<std::shared_ptr<Panel>> markers;
         for (const auto &[name, marker] : resources.markers) {
-            markers.emplace_back(MarkerPanel{resources, marker});
+            markers.emplace_back(std::make_shared<MarkerPanel>(resources, marker));
         }
         return PanelLayout{markers, resources};
     }
