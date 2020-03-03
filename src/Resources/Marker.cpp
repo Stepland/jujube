@@ -51,6 +51,7 @@ namespace Resources {
                 +(m_folder/metadata.sprite_sheet).string()
             );
         }
+        sprite_sheet.setSmooth(true);
         
         // Sprite sheet size check
         // throw if the texture size does not match what's announced by the metadata
