@@ -4,7 +4,7 @@
 
 namespace MusicSelect {
     void SubpagePanel::click(Ribbon&, const Data::Button&) {
-        m_resources.options_state.push(m_subpage);
+        m_resources.options_state.push(*m_subpage);
     }
 
     void SubpagePanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {

@@ -44,8 +44,8 @@ namespace MusicSelect {
         // State
         Ribbon ribbon;
         SongInfo song_info;
-        std::optional<std::reference_wrapper<SongPanel>> selected_panel;
         ButtonHighlight button_highlight;
+        MainOptionPage main_option_page;
 
         Drawables::BlackFrame black_frame;
         sf::RectangleShape panel_filter;

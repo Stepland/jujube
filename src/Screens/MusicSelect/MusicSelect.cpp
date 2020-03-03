@@ -1,10 +1,11 @@
 #include "MusicSelect.hpp"
 
+#include <functional>
+#include <iostream>
+
 #include <imgui/imgui.h>
 #include <imgui/misc/cpp/imgui_stdlib.h>
 #include <imgui-sfml/imgui-SFML.h>
-
-#include <iostream>
 
 #include "../../Data/Buttons.hpp"
 #include "../../Data/KeyMapping.hpp"
@@ -22,8 +23,8 @@ MusicSelect::Screen::Screen(
     markers(t_markers),
     ribbon(PanelLayout::title_sort(t_song_list, resources), resources),
     song_info(resources),
-    selected_panel(),
     button_highlight(resources),
+    main_option_page(resources),
     black_frame(t_preferences),
     key_mapping()
 {
@@ -97,7 +98,7 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                     ) / 2.f}*static_cast<float>(resources.m_preferences.screen.width)
                 );
                 if (not resources.options_state.empty()) {
-                    resources.options_state.top()->update();
+                    resources.options_state.top().get().update();
                 }
                 break;
             default:
@@ -110,7 +111,7 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         window.draw(ribbon);
         if (not resources.options_state.empty()) {
             window.draw(panel_filter);
-            window.draw(*resources.options_state.top());
+            window.draw(resources.options_state.top());
         }
         window.draw(button_highlight);
         window.draw(song_info);
@@ -185,12 +186,12 @@ void MusicSelect::Screen::press_button(const Data::Button& button) {
     // Are we displaying the options menu ?
     if (not resources.options_state.empty()) {
         if (button_index < 14) {
-            resources.options_state.top()->click(button);
+            resources.options_state.top().get().click(button);
         } else {
             if (button == Data::Button::B15) {
                 resources.options_state.pop();
                 if (not resources.options_state.empty()) {
-                    resources.options_state.top()->update();
+                    resources.options_state.top().get().update();
                 }
             }
         }
@@ -206,11 +207,7 @@ void MusicSelect::Screen::press_button(const Data::Button& button) {
                 ribbon.move_right();
                 break;
             case Data::Button::B15: // Options Menu
-                resources.options_state.push(
-                    jbcoe::polymorphic_value<OptionPage>(
-                        MainOptionPage{resources}
-                    )
-                );
+                resources.options_state.push(main_option_page);
                 break;
             default:
                 break;

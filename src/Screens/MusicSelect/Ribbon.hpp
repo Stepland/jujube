@@ -54,7 +54,7 @@ namespace MusicSelect {
         void draw_with_animation(sf::RenderTarget& target, sf::RenderStates states) const;
         void draw_without_animation(sf::RenderTarget& target, sf::RenderStates states) const;
         std::size_t get_layout_column(const Data::Button& button) const;
-        PanelLayout m_layout;
+        mutable PanelLayout m_layout;
         std::size_t m_position = 0;
         mutable std::optional<MoveAnimation> m_move_animation;
         float m_time_factor = 1.f;

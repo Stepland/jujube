@@ -1,5 +1,6 @@
 #include "OptionPage.hpp"
 
+#include <iostream>
 #include <vector>
 
 #include "Ribbon.hpp"
@@ -63,7 +64,7 @@ namespace MusicSelect {
     }
 
     MarkerSelect::~MarkerSelect() {
-        m_resources.selected_marker.reset();    
+        m_resources.selected_marker.reset();
     }
 
     PanelLayout MarkerSelect::create_layout(SharedResources& resources) {

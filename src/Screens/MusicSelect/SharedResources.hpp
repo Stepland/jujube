@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <functional>
 #include <optional>
 
 #include <jbcoe/polymorphic_value.h>
@@ -61,7 +62,7 @@ namespace MusicSelect {
 
         MusicPreview music_preview;
 
-        std::stack<jbcoe::polymorphic_value<OptionPage>> options_state;
+        std::stack<std::reference_wrapper<OptionPage>> options_state;
 
         const Resources::Markers& markers;
 
