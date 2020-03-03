@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 
+#include <cereal/types/string.hpp>
 #include <cereal/archives/json.hpp>
 
 namespace fs = ghc::filesystem;
@@ -32,7 +33,7 @@ namespace Resources {
         std::ifstream marker_json{m_folder/"marker.json"};
         {
             cereal::JSONInputArchive archive{marker_json};
-            archive(m_metadata);
+            m_metadata.serialize(archive);
         }
         load_and_check(m_approach, m_metadata.approach);
         load_and_check(m_miss, m_metadata.miss);
@@ -194,7 +195,7 @@ namespace Resources {
                         res.emplace(m.m_metadata.name, m);
                     } catch (const std::exception& e) {
                         std::cerr << "Unable to load marker folder "
-                        << p.path().string() << " : "
+                        << p.path().filename().string() << " : "
                         << e.what() << std::endl;
                     }
                 }
