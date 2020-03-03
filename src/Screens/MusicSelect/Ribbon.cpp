@@ -118,7 +118,7 @@ namespace MusicSelect {
                 column.begin(),
                 column.end(),
                 [](const std::shared_ptr<Panel>& panel) -> bool {
-                    return std::dynamic_cast<CategoryPanel*>(panel.get()) != nullptr;
+                    return std::dynamic_pointer_cast<CategoryPanel>(panel) != nullptr;
                 }
             )) {
                 found = true;
