@@ -30,6 +30,8 @@
 - Sound
     - Music Sample
         - Async playback
+- Options menu
+    - Marker Selection
 
 ## Misc
 - Handling Resolution changes
@@ -43,3 +45,6 @@
     - Japanese
     - utf8 to sfml conversion
     - Handle more stuff via ttf merging (omg the cops)
+- Markers
+    - Eager Loading
+    - Marker Selection Menu
