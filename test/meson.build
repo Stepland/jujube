@@ -1,6 +1,7 @@
 test_files = [
     'cereal_specialize_enums.cpp',
-    'cereal_unordered_map.cpp'
+    'cereal_unordered_map.cpp',
+    'cereal_specialize_path.cpp'
 ]
 
 foreach test_file : test_files
