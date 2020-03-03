@@ -28,7 +28,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return;
         }
-        auto selected_chart = selected_panel->panel.get_selected_difficulty();
+        auto selected_chart = selected_panel->obj.get_selected_difficulty();
         if (not selected_chart.has_value()) {
             return;
         }
@@ -73,7 +73,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return;
         }
-        auto selected_chart = selected_panel->panel.get_selected_difficulty();
+        auto selected_chart = selected_panel->obj.get_selected_difficulty();
         if (not selected_chart.has_value()) {
             return;
         }
@@ -126,7 +126,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return;
         }
-        auto selected_chart = selected_panel->panel.get_selected_difficulty();
+        auto selected_chart = selected_panel->obj.get_selected_difficulty();
         if (not selected_chart.has_value()) {
             return;
         }
@@ -175,7 +175,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return;
         }
-        auto selected_chart = selected_panel->panel.get_selected_difficulty();
+        auto selected_chart = selected_panel->obj.get_selected_difficulty();
         if (not selected_chart.has_value()) {
             return;
         }
@@ -225,7 +225,7 @@ namespace MusicSelect {
         if (not selected_panel.has_value()) {
             return;
         }
-        auto selected_difficulty = selected_panel->panel.get_selected_difficulty();
+        auto selected_difficulty = selected_panel->obj.get_selected_difficulty();
         if (not selected_difficulty.has_value()) {
             return;
         }

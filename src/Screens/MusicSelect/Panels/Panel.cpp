@@ -87,9 +87,9 @@ namespace MusicSelect {
             }
             // The song was not selected before : first unselect the last one
             if (m_resources.selected_panel.has_value()) {
-                m_resources.selected_panel->panel.unselect();
+                m_resources.selected_panel->obj.unselect();
             }
-            m_resources.selected_panel.emplace(TimedSelectedPanel{*this});
+            m_resources.selected_panel.emplace(*this);
             m_resources.music_preview.play(m_song->full_audio_path(), m_song->preview);
         }
     }

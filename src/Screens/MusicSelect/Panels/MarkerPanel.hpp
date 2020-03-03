@@ -14,7 +14,9 @@ namespace MusicSelect {
         void click(Ribbon&, const Data::Button&) override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+        void select();
+        void unselect();
         const Resources::Marker& m_marker;
-        mutable std::optional<sf::Clock> selected_since;
+        bool selected = false;
     };
 }

@@ -82,6 +82,6 @@ namespace Resources {
         sf::Texture m_perfect;
     };
 
-    using Markers = std::multimap<std::string, Marker>;
+    using Markers = std::map<std::string, Marker>;
     Markers load_markers();
 }

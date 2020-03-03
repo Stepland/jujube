@@ -19,11 +19,13 @@
 namespace MusicSelect {
 
     class SelectablePanel;
+    class MarkerPanel;
     class OptionPage;
 
-    struct TimedSelectedPanel {
-        TimedSelectedPanel(SelectablePanel& s) : panel(s), first_click(), last_click() {};
-        SelectablePanel& panel;
+    template<class Object>
+    struct Timed {
+        Timed(Object& t_obj) : obj(t_obj), first_click(), last_click() {};
+        Object& obj;
         sf::Clock first_click;
         sf::Clock last_click;
         bool is_first_click = true;
@@ -47,7 +49,7 @@ namespace MusicSelect {
 
         MusicSelect::DensityGraphCache density_graphs;
         
-        std::optional<TimedSelectedPanel> selected_panel;
+        std::optional<Timed<SelectablePanel>> selected_panel;
         std::string get_last_selected_difficulty();
         std::optional<std::string> get_selected_difficulty();
         std::optional<std::reference_wrapper<const Data::Song>> get_selected_song();
@@ -62,6 +64,8 @@ namespace MusicSelect {
         std::stack<jbcoe::polymorphic_value<OptionPage>> options_state;
 
         const Resources::Markers& markers;
+
+        std::optional<Timed<MarkerPanel>> selected_marker;
     };
 
     // Proxy for HoldsPreferences

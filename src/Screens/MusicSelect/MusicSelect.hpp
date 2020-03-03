@@ -12,6 +12,7 @@
 #include "../../Drawables/BlackFrame.hpp"
 #include "../../Resources/Marker.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
+#include "../../Toolkit/Debuggable.hpp"
 #include "Ribbon.hpp"
 #include "SongInfo.hpp"
 #include "SharedResources.hpp"
@@ -23,7 +24,7 @@ namespace MusicSelect {
     class SongPanel;
     // The music select screen is created only once
     // it loads a cache of available songs in the song_list attribute
-    class Screen {
+    class Screen : public Toolkit::Debuggable {
     public:
         Screen(
             const Data::SongList& t_song_list,
@@ -31,7 +32,7 @@ namespace MusicSelect {
             const Resources::Markers& t_markers
         );
         void select_chart(sf::RenderWindow& window);
-
+        void draw_debug() override;
     private:
         // Data
         const Data::SongList song_list;

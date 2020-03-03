@@ -1,7 +1,8 @@
 #include "MusicSelect.hpp"
 
-#include "imgui/imgui.h"
-#include "imgui-sfml/imgui-SFML.h"
+#include <imgui/imgui.h>
+#include <imgui/misc/cpp/imgui_stdlib.h>
+#include <imgui-sfml/imgui-SFML.h>
 
 #include <iostream>
 
@@ -31,6 +32,9 @@ MusicSelect::Screen::Screen(
         resources.m_preferences.layout.panel_step()*resources.m_preferences.screen.width*4.f
     ));
     Toolkit::set_origin_normalized(panel_filter, 0.5f, 0.5f);
+    if (resources.m_preferences.options.marker.empty()) {
+        resources.m_preferences.options.marker = markers.begin()->second.m_metadata.name;
+    }
     panel_filter.setFillColor(sf::Color(0,0,0,128));
     std::cout << "loaded MusicSelect::Screen" << std::endl;
 }
@@ -114,11 +118,40 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         window.draw(button_highlight);
         window.draw(song_info);
         window.draw(black_frame);
+        draw_debug();
         ImGui::SFML::Render(window);
         window.display();
         resources.music_preview.update();
     }
     ImGui::SFML::Shutdown();
+}
+
+void MusicSelect::Screen::draw_debug() {
+    if (debug) {
+        if (ImGui::Begin("MusicSelect::Screen")) {
+            if (ImGui::CollapsingHeader("Preferences")) {
+                if (ImGui::TreeNode("screen")) {
+                    ImGui::TextUnformatted("width : "); ImGui::SameLine();
+                    ImGui::Text("%s", std::to_string(resources.m_preferences.screen.width).c_str());
+                    ImGui::TextUnformatted("height : "); ImGui::SameLine();
+                    ImGui::Text("%s", std::to_string(resources.m_preferences.screen.height).c_str());
+                    ImGui::TextUnformatted("fullscreen : "); ImGui::SameLine();
+                    ImGui::Text("%s", resources.m_preferences.screen.fullscreen ? "true" : "false");
+                    ImGui::TreePop();
+                }
+                if (ImGui::TreeNode("layout")) {
+                    
+                    ImGui::TreePop();
+                }
+                if (ImGui::TreeNode("options")) {
+                    ImGui::TextUnformatted("marker : "); ImGui::SameLine();
+                    ImGui::Text("%s", resources.m_preferences.options.marker.c_str());
+                    ImGui::TreePop();
+                }
+            }
+        }
+        ImGui::End();
+    }
 }
 
 void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event) {
@@ -129,6 +162,7 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
         switch (key_event.code){
         case sf::Keyboard::F12:
             ribbon.debug = not ribbon.debug;
+            debug = not debug;
             break;
         default:
             break;
