@@ -13,11 +13,7 @@ namespace MusicSelect {
                 current_column.emplace_back(std::make_shared<CategoryPanel>(resources, category));
                 for (auto& panel : panels) {
                     if (current_column.size() == 3) {
-                        push_back({
-                            std::move(current_column[0]),
-                            std::move(current_column[1]),
-                            std::move(current_column[2]),
-                        });
+                        push_back({current_column[0],current_column[1],current_column[2]});
                         current_column.clear();
                     }
                     current_column.push_back(panel);
@@ -26,11 +22,7 @@ namespace MusicSelect {
                     while (current_column.size() < 3) {
                         current_column.emplace_back(std::make_shared<EmptyPanel>(resources));
                     }
-                    push_back({
-                        std::move(current_column[0]),
-                        std::move(current_column[1]),
-                        std::move(current_column[2]),
-                    });
+                    push_back({current_column[0],current_column[1],current_column[2]});
                 }
             }
         }
@@ -44,11 +36,7 @@ namespace MusicSelect {
         std::vector<std::shared_ptr<Panel>> current_column;
         for (auto& panel : panels) {
             if (current_column.size() == 3) {
-                push_back({
-                    std::move(current_column[0]),
-                    std::move(current_column[1]),
-                    std::move(current_column[2]),
-                });
+                push_back({current_column[0],current_column[1],current_column[2]});
                 current_column.clear();
             }
             current_column.push_back(panel);
@@ -57,11 +45,7 @@ namespace MusicSelect {
             while (current_column.size() < 3) {
                 current_column.emplace_back(std::make_shared<EmptyPanel>(resources));
             }
-            push_back({
-                std::move(current_column[0]),
-                std::move(current_column[1]),
-                std::move(current_column[2]),
-            });
+            push_back({current_column[0],current_column[1],current_column[2]});
         }
         fill_layout(resources);
     }
