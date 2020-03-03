@@ -51,8 +51,8 @@ namespace MusicSelect {
 
     PanelLayout MainOptionPage::create_layout(SharedResources& resources) {
         std::vector<std::shared_ptr<Panel>> subpages;
-        auto marker_select = std::make_shared<MarkerSelect>(MarkerSelect{resources});
-        subpages.emplace_back(std::make_shared<SubpagePanel>(resources, marker_select, "markers"));
+        auto marker_select = std::make_shared<MarkerSelect>(resources);
+        subpages.emplace_back(std::make_shared<SubpagePanel>(resources, std::move(marker_select), "markers"));
         return PanelLayout{subpages, resources};
     }
 
