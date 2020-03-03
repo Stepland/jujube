@@ -7,7 +7,7 @@ namespace MusicSelect {
         Panel(resources),
         m_marker(marker)
     {
-        if (m_resources.m_preferences.options.marker == marker.m_metadata.name) {
+        if (m_resources.m_preferences.options.marker == m_marker.m_metadata.name) {
             select();
         }
     }
@@ -40,7 +40,7 @@ namespace MusicSelect {
             m_resources.selected_marker->obj.unselect();
         }
         m_resources.selected_marker.emplace(*this);
-        m_resources.m_preferences.options.marker == m_marker.m_metadata.name;
+        m_resources.m_preferences.options.marker = m_marker.m_metadata.name;
         this->selected = true;
     }
 
