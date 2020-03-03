@@ -15,6 +15,6 @@ namespace MusicSelect {
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         const Resources::Marker& m_marker;
-        std::optional<sf::Clock> selected_since;
+        mutable std::optional<sf::Clock> selected_since;
     };
 }

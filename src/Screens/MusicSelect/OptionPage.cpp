@@ -69,5 +69,4 @@ namespace MusicSelect {
         }
         return PanelLayout{markers, resources};
     }
-    
 }
