@@ -62,6 +62,10 @@ namespace MusicSelect {
         update();
     }
 
+    MarkerSelect::~MarkerSelect() {
+        m_resources.selected_marker.reset();    
+    }
+
     PanelLayout MarkerSelect::create_layout(SharedResources& resources) {
         std::vector<jbcoe::polymorphic_value<Panel>> markers;
         for (const auto &[name, marker] : resources.markers) {

@@ -42,6 +42,7 @@ namespace MusicSelect {
     class MarkerSelect final : public RibbonPage {
     public:
         MarkerSelect(SharedResources& resources);
+        ~MarkerSelect();
     private:
         static PanelLayout create_layout(SharedResources& resources);
     };
