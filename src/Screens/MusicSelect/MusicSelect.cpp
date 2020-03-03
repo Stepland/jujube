@@ -32,9 +32,6 @@ MusicSelect::Screen::Screen(
         resources.m_preferences.layout.panel_step()*resources.m_preferences.screen.width*4.f
     ));
     Toolkit::set_origin_normalized(panel_filter, 0.5f, 0.5f);
-    if (resources.m_preferences.options.marker.empty()) {
-        resources.m_preferences.options.marker = markers.begin()->second.m_metadata.name;
-    }
     panel_filter.setFillColor(sf::Color(0,0,0,128));
     std::cout << "loaded MusicSelect::Screen" << std::endl;
 }
