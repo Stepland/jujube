@@ -86,14 +86,14 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                     resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
                 );
                 panel_filter.setPosition(
-                    resources.m_preferences.layout.ribbon_x + (
+                    sf::Vector2f{resources.m_preferences.layout.ribbon_x + (
                         3.f*resources.m_preferences.layout.panel_spacing + 
                         4.f*resources.m_preferences.layout.panel_size
                     ) / 2.f,
                     resources.m_preferences.layout.ribbon_y + (
                         3.f*resources.m_preferences.layout.panel_spacing + 
                         4.f*resources.m_preferences.layout.panel_size
-                    ) / 2.f
+                    ) / 2.f}*static_cast<float>(resources.m_preferences.screen.width)
                 );
                 if (not resources.options_state.empty()) {
                     resources.options_state.top()->update();
