@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <vector>
 
 #include <imgui/imgui.h>
@@ -76,7 +77,7 @@ namespace MusicSelect {
         return (m_position + (Data::button_to_index(button) % 4)) % m_layout.size();
     }
 
-    jbcoe::polymorphic_value<Panel>& Ribbon::get_panel_under_button(const Data::Button& button) {
+    std::unique_ptr<Panel>& Ribbon::get_panel_under_button(const Data::Button& button) {
         auto button_index = Data::button_to_index(button);
         return (
             m_layout
@@ -116,8 +117,8 @@ namespace MusicSelect {
             if (std::any_of(
                 column.begin(),
                 column.end(),
-                [](jbcoe::polymorphic_value<Panel> panel) -> bool {
-                    return dynamic_cast<CategoryPanel*>(&*panel) != nullptr;
+                [](const std::unique_ptr<Panel> panel) -> bool {
+                    return std::dynamic_pointer_cast<CategoryPanel>(panel) != nullptr;
                 }
             )) {
                 found = true;

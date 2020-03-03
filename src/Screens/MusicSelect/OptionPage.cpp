@@ -51,7 +51,7 @@ namespace MusicSelect {
 
 
     PanelLayout MainOptionPage::create_layout(SharedResources& resources) {
-        std::vector<jbcoe::polymorphic_value<Panel>> subpages;
+        std::vector<std::unique_ptr<Panel>> subpages;
         jbcoe::polymorphic_value<OptionPage> marker_select{MarkerSelect{resources}};
         subpages.emplace_back(SubpagePanel{resources, marker_select, "markers"});
         return PanelLayout{subpages, resources};
@@ -68,7 +68,7 @@ namespace MusicSelect {
     }
 
     PanelLayout MarkerSelect::create_layout(SharedResources& resources) {
-        std::vector<jbcoe::polymorphic_value<Panel>> markers;
+        std::vector<std::unique_ptr<Panel>> markers;
         for (const auto &[name, marker] : resources.markers) {
             markers.emplace_back(MarkerPanel{resources, marker});
         }

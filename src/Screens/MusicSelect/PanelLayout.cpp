@@ -4,25 +4,33 @@
 
 namespace MusicSelect {
     PanelLayout::PanelLayout(
-        const std::map<std::string,std::vector<jbcoe::polymorphic_value<Panel>>>& categories,
+        const std::map<std::string,std::vector<std::unique_ptr<Panel>>>& categories,
         SharedResources& resources
     ) {
         for (auto &&[category, panels] : categories) {
             if (not panels.empty()) {
-                std::vector<jbcoe::polymorphic_value<Panel>> current_column;
+                std::vector<std::unique_ptr<Panel>> current_column;
                 current_column.emplace_back(CategoryPanel{resources, category});
                 for (auto& panel : panels) {
                     if (current_column.size() == 3) {
-                        push_back({current_column[0], current_column[1], current_column[2]});
+                        push_back({
+                            std::move(current_column[0]),
+                            std::move(current_column[1]),
+                            std::move(current_column[2]),
+                        });
                         current_column.clear();
                     }
-                    current_column.push_back(panel);
+                    current_column.push_back(std::move(panel));
                 }
                 if (not current_column.empty()) {
                     while (current_column.size() < 3) {
                         current_column.emplace_back(EmptyPanel{resources});
                     }
-                    push_back({current_column[0], current_column[1], current_column[2]});
+                    push_back({
+                        std::move(current_column[0]),
+                        std::move(current_column[1]),
+                        std::move(current_column[2]),
+                    });
                 }
             }
         }
@@ -30,30 +38,38 @@ namespace MusicSelect {
     }
 
     PanelLayout::PanelLayout(
-        const std::vector<jbcoe::polymorphic_value<Panel>>& panels,
+        const std::vector<std::unique_ptr<Panel>>& panels,
         SharedResources& resources
     ) {
-        std::vector<jbcoe::polymorphic_value<Panel>> current_column;
+        std::vector<std::unique_ptr<Panel>> current_column;
         for (auto& panel : panels) {
             if (current_column.size() == 3) {
-                push_back({current_column[0], current_column[1], current_column[2]});
+                push_back({
+                    std::move(current_column[0]),
+                    std::move(current_column[1]),
+                    std::move(current_column[2]),
+                });
                 current_column.clear();
             }
-            current_column.push_back(panel);
+            current_column.push_back(std::move(panel));
         }
         if (not current_column.empty()) {
             while (current_column.size() < 3) {
                 current_column.emplace_back(EmptyPanel{resources});
             }
-            push_back({current_column[0], current_column[1], current_column[2]});
+            push_back({
+                std::move(current_column[0]),
+                std::move(current_column[1]),
+                std::move(current_column[2]),
+            });
         }
         fill_layout(resources);
     }
 
     PanelLayout PanelLayout::red_empty_layout(SharedResources& resources) {
-        std::vector<jbcoe::polymorphic_value<Panel>> panels;
+        std::vector<std::unique_ptr<Panel>> panels;
         for (size_t i = 0; i < 3*4; i++) {
-            panels.emplace_back(ColoredMessagePanel{resources, sf::Color::Red, "- EMPTY -"});
+            panels.emplace(std::make_unique<ColoredMessagePanel>(resources, sf::Color::Red, "- EMPTY -"));
         }
         return PanelLayout{panels, resources};
     }
@@ -68,7 +84,7 @@ namespace MusicSelect {
             songs.end(),
             [](std::shared_ptr<const Data::Song> a, std::shared_ptr<const Data::Song> b){return Data::Song::sort_by_title(*a, *b);}
         );
-        std::map<std::string, std::vector<jbcoe::polymorphic_value<Panel>>> categories;
+        std::map<std::string, std::vector<std::unique_ptr<Panel>>> categories;
         for (const auto &song : songs) {
             if (song->title.size() > 0) {
                 char letter = song->title[0];
@@ -90,12 +106,16 @@ namespace MusicSelect {
         return PanelLayout{categories, resources};
     }
 
+    void PanelLayout::PanelLayout::push_vector(const std::vector<std::unique_ptr<Panel>>& panels) {
+        
+    }
+    
     void PanelLayout::fill_layout(SharedResources& resources) {
         while (size() < 4) {
             push_back({
-                jbcoe::polymorphic_value<Panel>{EmptyPanel{resources}},
-                jbcoe::polymorphic_value<Panel>{EmptyPanel{resources}},
-                jbcoe::polymorphic_value<Panel>{EmptyPanel{resources}}
+                std::unique_ptr<Panel>{EmptyPanel{resources}},
+                std::unique_ptr<Panel>{EmptyPanel{resources}},
+                std::unique_ptr<Panel>{EmptyPanel{resources}}
             });
         }
     }
