@@ -35,13 +35,12 @@ namespace MusicSelect {
         SharedResources& resources
     ) {
         std::vector<jbcoe::polymorphic_value<Panel>> current_column;
-        for (auto &&panel : panels) {
+        for (auto& panel : panels) {
             if (current_column.size() == 3) {
                 push_back({current_column[0], current_column[1], current_column[2]});
                 current_column.clear();
-            } else {
-                current_column.push_back(std::move(panel));
             }
+            current_column.push_back(panel);
         }
         if (not current_column.empty()) {
             while (current_column.size() < 3) {
