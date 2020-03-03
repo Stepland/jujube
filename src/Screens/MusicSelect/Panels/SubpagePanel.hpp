@@ -19,7 +19,7 @@ namespace MusicSelect {
             const std::string& name
         ) :
             Panel(resources),
-            m_subpage(std::move(subpage)),
+            m_subpage(subpage),
             m_name(name)
         {};
         void click(Ribbon& ribbon, const Data::Button& button) override;
