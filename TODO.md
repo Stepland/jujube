@@ -1,6 +1,5 @@
 # v0.1.0 (MVP)
 ## Misc
-- Bring back mouse support
 
 ## Music Select Screen
 - Options menu

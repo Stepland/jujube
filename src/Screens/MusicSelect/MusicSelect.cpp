@@ -168,16 +168,36 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
     }
 }
 
-void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& /*mouse_button_event*/) {
-    /*
-    if (mouse_button_event.button == sf::Mouse::Left) {
-        int clicked_panel_index = (mouse_button_event.x / m_panel_size) + 4 * (mouse_button_event.y / m_panel_size);
-        auto button = fromIndex(clicked_panel_index);
-        if (button) {
-            press_button(*button);
-        }
+void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event) {
+    if (mouse_button_event.button != sf::Mouse::Left) {
+        return;
     }
-    */
+
+    sf::Vector2i mouse_position{mouse_button_event.x, mouse_button_event.y};
+    sf::Vector2i ribbon_origin{
+        static_cast<int>(resources.get_ribbon_x()),
+        static_cast<int>(resources.get_ribbon_y())
+    };
+    auto panels_area_size = static_cast<int>(
+        resources.get_panel_size() * 4.f + resources.get_panel_spacing() * 3.f
+    );
+    sf::IntRect panels_area{ribbon_origin, sf::Vector2i{panels_area_size, panels_area_size}};
+    if (not panels_area.contains(mouse_position)) {
+        return;
+    }
+
+    sf::Vector2i relative_mouse_pos = mouse_position - ribbon_origin;
+    int clicked_panel_index = (
+        (relative_mouse_pos.x / (panels_area_size/4))
+        + 4 * (relative_mouse_pos.y / (panels_area_size/4))
+    );
+    if (clicked_panel_index < 0) {
+        return;
+    }
+    auto button = Data::index_to_button(static_cast<std::size_t>(clicked_panel_index));
+    if (button) {
+        press_button(*button);
+    }
 }
 
 void MusicSelect::Screen::press_button(const Data::Button& button) {
@@ -208,6 +228,7 @@ void MusicSelect::Screen::press_button(const Data::Button& button) {
                 break;
             case Data::Button::B15: // Options Menu
                 resources.options_state.push(main_option_page);
+                resources.options_state.top().get().update();
                 break;
             default:
                 break;
