@@ -72,8 +72,13 @@ namespace Data {
         Layout layout;
         Options options;
         KeyMapping key_mapping;
+        ghc::filesystem::path jujube_path;
 
-        Preferences() : screen(), layout() {
+        Preferences(const ghc::filesystem::path& t_jujube_path) :
+            screen(),
+            layout(),
+            jujube_path(t_jujube_path)
+        {
             load_from_file();
         }
         
@@ -82,7 +87,7 @@ namespace Data {
         }
 
         void load_from_file() {
-            auto path = ghc::filesystem::path("data/preferences.json");
+            auto path = jujube_path/"data"/"preferences.json";
             if (ghc::filesystem::exists(path)) {
                 std::ifstream prefs_file;
                 prefs_file.open(path);
@@ -99,7 +104,7 @@ namespace Data {
         };
 
         void save_to_file() {
-            auto data_folder = ghc::filesystem::path("data");
+            auto data_folder = jujube_path/"data";
             if (not ghc::filesystem::exists(data_folder)) {
                 ghc::filesystem::create_directory(data_folder);
             }
@@ -107,7 +112,7 @@ namespace Data {
                 std::cerr << "Can't create data folder to save preferences, a file named 'data' exists" << std::endl;
             }
             std::ofstream preferences_file;
-            preferences_file.open(data_folder / "preferences.json", std::ofstream::trunc | std::ofstream::out);
+            preferences_file.open(data_folder/"preferences.json", std::ofstream::trunc | std::ofstream::out);
             {
                 cereal::JSONOutputArchive archive{preferences_file};
                 serialize(archive);

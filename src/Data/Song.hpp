@@ -68,7 +68,7 @@ namespace Data {
     // Class holding all the necessary song data to run the Music Select screen
     class SongList {
     public:
-        SongList();
+        SongList(const fs::path& jujube_path);
         std::list<std::shared_ptr<Song>> songs;
     };
 

@@ -6,14 +6,6 @@
 
 namespace fs = ghc::filesystem;
 
-Textures::CoverAltas::CoverAltas() :
-    path_to_index(),
-    index_to_path(),
-    textures()
-{
-    this->emplace_back("assets/textures/fallback_cover.png");
-}
-
 sf::Sprite Textures::CoverAltas::at(const fs::path& path) const {
     
     std::size_t index;

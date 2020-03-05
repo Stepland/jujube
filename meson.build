@@ -1,6 +1,6 @@
 project(
     'jujube',
-    'cpp',
+    ['cpp', 'c'],
     default_options : ['cpp_std=c++17'],
     version : '0.1.0-alpha'
 )
@@ -23,6 +23,8 @@ sources = [
     'include/imgui/imgui_draw.cpp',
     'include/imgui/imgui_widgets.cpp',
     'include/imgui-sfml/imgui-SFML.cpp',
+    'include/whereami/whereami.c',
+    'include/whereami/whereami++.cpp',
     'src/Data/Buttons.hpp',
     'src/Data/Buttons.cpp',
     'src/Data/Chart.cpp',

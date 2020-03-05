@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <cereal/archives/json.hpp>
+#include <whereami/whereami++.hpp>
 
 #include "Data/Song.hpp"
 #include "Data/Preferences.hpp"
@@ -16,8 +17,9 @@
 
 int main(int, char const **) {
 
-    Data::Preferences preferences;
-    auto markers = Resources::load_markers();
+    const std::string jujube_path = whereami::executable_dir();
+    Data::Preferences preferences{jujube_path};
+    auto markers = Resources::load_markers(jujube_path);
     if (markers.find(preferences.options.marker) == markers.end()) {
         preferences.options.marker = markers.begin()->first;
     }
@@ -33,7 +35,7 @@ int main(int, char const **) {
         preferences.screen.fullscreen ? sf::Style::Fullscreen : sf::Style::Default,
         settings
     };
-    Data::SongList song_list;
+    Data::SongList song_list{jujube_path};
     MusicSelect::Screen music_select{
         song_list,
         preferences,

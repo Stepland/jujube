@@ -186,10 +186,11 @@ namespace Resources {
         }
     }
 
-    Markers load_markers() {
+    Markers load_markers(const fs::path& jujube_path) {
         Markers res;
-        if (fs::exists(fs::path("markers"))) {
-            for (auto& p : fs::directory_iterator("markers")) {
+        auto markers_folder = jujube_path/"markers";
+        if (fs::exists(markers_folder)) {
+            for (auto& p : fs::directory_iterator(markers_folder)) {
                 if (p.is_directory()) {
                     try {
                         Marker m{p.path()};

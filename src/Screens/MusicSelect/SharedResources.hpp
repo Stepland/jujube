@@ -4,6 +4,7 @@
 #include <functional>
 #include <optional>
 
+#include <ghc/filesystem.hpp>
 #include <jbcoe/polymorphic_value.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Font.hpp>
@@ -33,7 +34,7 @@ namespace MusicSelect {
     };
 
     struct FallbackFont {
-        FallbackFont();
+        FallbackFont(const ghc::filesystem::path& jujube_path);
         sf::Font light;
         sf::Font medium;
         sf::Font black;
@@ -44,7 +45,6 @@ namespace MusicSelect {
         SharedResources(Data::Preferences& p, const Resources::Markers& m);
 
         Textures::TextureCache covers;
-        sf::Texture fallback_cover;
         
         FallbackFont fallback_font;
 

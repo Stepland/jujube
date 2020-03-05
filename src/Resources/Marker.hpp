@@ -65,7 +65,7 @@ namespace Resources {
     };
 
     struct Marker {
-        Marker(const ghc::filesystem::path& marker_folder);
+        explicit Marker(const ghc::filesystem::path& marker_folder);
         std::optional<sf::Sprite> get_sprite(const MarkerAnimation& state, float seconds) const;
         std::optional<sf::Sprite> get_sprite(const MarkerAnimation& state, const std::size_t frame) const;
         void load_and_check(sf::Texture& spritesheet, const MarkerAnimationMetadata& metadata);
@@ -83,5 +83,5 @@ namespace Resources {
     };
 
     using Markers = std::map<std::string, Marker>;
-    Markers load_markers();
+    Markers load_markers(const ghc::filesystem::path& jujube_path);
 }

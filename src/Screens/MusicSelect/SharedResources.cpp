@@ -9,30 +9,29 @@
 
 namespace MusicSelect {
 
-    FallbackFont::FallbackFont() :
+    FallbackFont::FallbackFont(const ghc::filesystem::path& jujube_path) :
         light(),
         medium(),
         black()
     {
-        if (not light.loadFromFile("assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Light.ttf")) {
-            throw std::runtime_error("Unable to load assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Light.ttf");
+        auto fallback_font_folder = jujube_path/"assets"/"fonts"/"M_PLUS_Rounded_1c";
+        if (not light.loadFromFile(fallback_font_folder/"MPLUSRounded1c-Light.ttf")) {
+            throw std::runtime_error("Unable to load MPLUSRounded1c-Light.ttf");
         }
-        if (not medium.loadFromFile("assets/fonts/M_PLUS_Rounded_1c/RoundedMplus1c-Medium+NotoSansSymbols+Symbola.ttf")) {
-            throw std::runtime_error("Unable to load assets/fonts/M_PLUS_Rounded_1c/RoundedMplus1c-Medium+NotoSansSymbols+Symbola.ttf");
+        if (not medium.loadFromFile(fallback_font_folder/"RoundedMplus1c-Medium+NotoSansSymbols+Symbola.ttf")) {
+            throw std::runtime_error("Unable to load RoundedMplus1c-Medium+NotoSansSymbols+Symbola.ttf");
         }
-        if (not black.loadFromFile("assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Black.ttf")) {
-            throw std::runtime_error("Unable to load assets/fonts/M_PLUS_Rounded_1c/MPLUSRounded1c-Black.ttf");
+        if (not black.loadFromFile(fallback_font_folder/"MPLUSRounded1c-Black.ttf")) {
+            throw std::runtime_error("Unable to load MPLUSRounded1c-Black.ttf");
         }
     }
     
     SharedResources::SharedResources(Data::Preferences& p, const Resources::Markers& m) :
         Data::HoldsPreferences(p),
-        markers(m)
+        markers(m),
+        fallback_font(p.jujube_path)
     {
         covers.reserve(256);
-        if (not fallback_cover.loadFromFile("assets/textures/fallback_cover.png")) {
-            throw std::runtime_error("Unable to load assets/textures/fallback_cover.png");
-        }
         std::cout << "Loaded MusicSelect::SharedResources" << std::endl;
     }
 
