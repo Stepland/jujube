@@ -28,8 +28,8 @@ namespace MusicSelect {
     
     SharedResources::SharedResources(Data::Preferences& p, const Resources::Markers& m) :
         Data::HoldsPreferences(p),
-        markers(m),
-        fallback_font(p.jujube_path)
+        fallback_font(p.jujube_path),
+        markers(m)
     {
         covers.reserve(256);
         std::cout << "Loaded MusicSelect::SharedResources" << std::endl;
