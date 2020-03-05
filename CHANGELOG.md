@@ -48,3 +48,4 @@
 - Markers
     - Eager Loading
     - Marker Selection Menu
+- Fix all executable-relative path issues

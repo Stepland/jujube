@@ -1,6 +1,5 @@
 # v0.1.0 (MVP)
 ## Misc
-- Fix all executable-relative path issues
 - Bring back mouse support
 
 ## Music Select Screen
