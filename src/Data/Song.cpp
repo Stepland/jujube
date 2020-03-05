@@ -49,7 +49,7 @@ namespace Data {
         fs::path song_folder = jujube_path/"songs";
 
         if (fs::exists(song_folder) and fs::is_directory(song_folder)) {
-            for (const auto& dir_item : fs::directory_iterator("songs/")) {
+            for (const auto& dir_item : fs::directory_iterator(song_folder)) {
                 if (dir_item.is_directory()) {
                     songs.splice(songs.end(), recursiveSongSearch(dir_item.path()));
                 }
