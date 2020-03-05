@@ -30,7 +30,7 @@ You need at least gcc `9.0.0`
 
 The meson install is pretty straightforward.
 
-For SFML, If you want to use another compiler than the one shipped with your system you may need to re-build SFML yourself using the compiler you chose. [Here's](https://www.sfml-dev.org/tutorials/2.5/compile-with-cmake.php) their docs. Don't forget to manually specify the compiler (and maybe the library install path) at the configuration step.
+For SFML, If you want to use another compiler than the one shipped with your system you may need to re-build SFML yourself using the compiler you chose. [Here's](https://www.sfml-dev.org/tutorials/2.5/compile-with-cmake.php) their docs. Don't forget to manually specify the compiler (and maybe the library install path) at the configuration step (when you run `meson build`).
 
 ## Windows
 
