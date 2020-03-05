@@ -4,6 +4,7 @@
 ## Music Select Screen
 - Options menu
     - Controller mapping
+    - fix screen filter not resizing properly
 - Visible controls
     - Start Button
 
