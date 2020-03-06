@@ -4,7 +4,7 @@
 ## Music Select Screen
 - Options menu
     - Controller mapping
-    - fix screen filter not resizing properly
+    - Global Offset
 - Visible controls
     - Start Button
 
@@ -19,7 +19,7 @@
 - bound memory usage of Toolkit::Cache
 - Chart Panel
 - Sort menu
-    - Differenciate Sort / Folder
+    - Differenciate Sort / Selection
 - Song Panel click
     - animation
     - cd

@@ -28,11 +28,6 @@ MusicSelect::Screen::Screen(
     black_frame(t_preferences),
     key_mapping()
 {
-    panel_filter.setSize(sf::Vector2f(
-        resources.m_preferences.layout.panel_step()*resources.m_preferences.screen.width*4.f,
-        resources.m_preferences.layout.panel_step()*resources.m_preferences.screen.width*4.f
-    ));
-    Toolkit::set_origin_normalized(panel_filter, 0.5f, 0.5f);
     panel_filter.setFillColor(sf::Color(0,0,0,128));
     std::cout << "loaded MusicSelect::Screen" << std::endl;
 }
@@ -50,16 +45,7 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
         resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
     );
-    panel_filter.setPosition(
-        sf::Vector2f{resources.m_preferences.layout.ribbon_x + (
-            3.f*resources.m_preferences.layout.panel_spacing + 
-            4.f*resources.m_preferences.layout.panel_size
-        ) / 2.f,
-        resources.m_preferences.layout.ribbon_y + (
-            3.f*resources.m_preferences.layout.panel_spacing + 
-            4.f*resources.m_preferences.layout.panel_size
-        ) / 2.f}*static_cast<float>(resources.m_preferences.screen.width)
-    );
+    panel_filter.setSize(sf::Vector2f{window.getSize()});
     while ((not chart_selected) and window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -87,16 +73,7 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                     resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
                     resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
                 );
-                panel_filter.setPosition(
-                    sf::Vector2f{resources.m_preferences.layout.ribbon_x + (
-                        3.f*resources.m_preferences.layout.panel_spacing + 
-                        4.f*resources.m_preferences.layout.panel_size
-                    ) / 2.f,
-                    resources.m_preferences.layout.ribbon_y + (
-                        3.f*resources.m_preferences.layout.panel_spacing + 
-                        4.f*resources.m_preferences.layout.panel_size
-                    ) / 2.f}*static_cast<float>(resources.m_preferences.screen.width)
-                );
+                panel_filter.setSize(sf::Vector2f{window.getSize()});
                 if (not resources.options_state.empty()) {
                     resources.options_state.top().get().update();
                 }
@@ -107,15 +84,15 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         }
         ImGui::SFML::Update(window, imguiClock.restart());
         window.clear(sf::Color(7, 23, 53));
-        ribbon.draw_debug();
         window.draw(ribbon);
+        window.draw(song_info);
         if (not resources.options_state.empty()) {
             window.draw(panel_filter);
             window.draw(resources.options_state.top());
         }
         window.draw(button_highlight);
-        window.draw(song_info);
         window.draw(black_frame);
+        ribbon.draw_debug();
         draw_debug();
         ImGui::SFML::Render(window);
         window.display();

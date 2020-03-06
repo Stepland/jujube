@@ -32,6 +32,7 @@
         - Async playback
 - Options menu
     - Marker Selection
+    - Fix screen filter not resizing properly
 
 ## Misc
 - Handling Resolution changes
