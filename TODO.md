@@ -4,7 +4,6 @@
 ## Music Select Screen
 - Options menu
     - Controller mapping
-    - Global Offset
 - Visible controls
     - Start Button
 
@@ -25,6 +24,9 @@
     - cd
 - Sound
     - Sound Effects
+- Options menu
+    - Global Offset
+    - Volume Settings
 
 ## memo Compatibility
 
