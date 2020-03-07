@@ -34,6 +34,7 @@ namespace MusicSelect {
     }
 
     void RibbonPage::button_click(const Data::Button& button) {
+        resources.button_highlight.button_pressed(button);
         auto button_index = Data::button_to_index(button);
         if (button_index < 12) {
             m_ribbon.click_on(button);
