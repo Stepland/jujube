@@ -16,7 +16,6 @@
 #include "Ribbon.hpp"
 #include "SongInfo.hpp"
 #include "SharedResources.hpp"
-#include "ButtonHighlight.hpp"
 #include "OptionPage.hpp"
 
 namespace MusicSelect {
@@ -24,12 +23,11 @@ namespace MusicSelect {
     class SongPanel;
     // The music select screen is created only once
     // it loads a cache of available songs in the song_list attribute
-    class Screen : public Toolkit::Debuggable {
+    class Screen : public Toolkit::Debuggable, public HoldsSharedResources {
     public:
         Screen(
             const Data::SongList& t_song_list,
-            Data::Preferences& t_preferences,
-            const Resources::Markers& t_markers
+            SharedResources& t_resources
         );
         void select_chart(sf::RenderWindow& window);
         void draw_debug() override;
@@ -37,14 +35,9 @@ namespace MusicSelect {
         // Data
         const Data::SongList song_list;
 
-        // Resources
-        SharedResources resources;
-        Resources::Markers markers;
-
         // State
         Ribbon ribbon;
         SongInfo song_info;
-        ButtonHighlight button_highlight;
         MainOptionPage main_option_page;
 
         Drawables::BlackFrame black_frame;

@@ -3,19 +3,19 @@
 #include <cmath>
 
 namespace MusicSelect {
-    MarkerPanel::MarkerPanel(SharedResources& resources, const Resources::Marker& marker) :
-        Panel(resources),
+    MarkerPanel::MarkerPanel(SharedResources& t_resources, const Resources::Marker& marker) :
+        Panel(t_resources),
         m_marker(marker)
     {
-        if (m_resources.m_preferences.options.marker == m_marker.m_metadata.name) {
+        if (resources.preferences.options.marker == m_marker.m_metadata.name) {
             select();
         }
     }
 
     void MarkerPanel::click(Ribbon&, const Data::Button&) {
         if (selected) {
-            m_resources.selected_marker->last_click.restart();
-            m_resources.selected_marker->is_first_click = false;
+            resources.selected_marker->last_click.restart();
+            resources.selected_marker->is_first_click = false;
         } else {
             select();
         }
@@ -25,7 +25,7 @@ namespace MusicSelect {
         states.transform *= getTransform();
         float animation_time = 0.f;
         if (selected) {
-            animation_time = std::fmod(m_resources.selected_marker->last_click.getElapsedTime().asSeconds(), 2.f) - 1.f;
+            animation_time = std::fmod(resources.selected_marker->last_click.getElapsedTime().asSeconds(), 2.f) - 1.f;
         }
         auto sprite = m_marker.get_sprite(Resources::MarkerAnimation::APPROACH, animation_time);
         if (sprite) {
@@ -36,11 +36,11 @@ namespace MusicSelect {
     }
 
     void MarkerPanel::select() {
-        if (m_resources.selected_marker) {
-            m_resources.selected_marker->obj.unselect();
+        if (resources.selected_marker) {
+            resources.selected_marker->obj.unselect();
         }
-        m_resources.selected_marker.emplace(*this);
-        m_resources.m_preferences.options.marker = m_marker.m_metadata.name;
+        resources.selected_marker.emplace(*this);
+        resources.preferences.options.marker = m_marker.m_metadata.name;
         this->selected = true;
     }
 

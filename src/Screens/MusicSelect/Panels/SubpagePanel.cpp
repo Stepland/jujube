@@ -4,8 +4,8 @@
 
 namespace MusicSelect {
     void SubpagePanel::click(Ribbon&, const Data::Button&) {
-        m_resources.options_state.push(*m_subpage);
-        m_resources.options_state.top().get().update();
+        resources.options_state.push_back(*m_subpage);
+        resources.options_state.back().get().update();
     }
 
     void SubpagePanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -19,7 +19,7 @@ namespace MusicSelect {
         target.draw(frame, states);
 
         sf::Text message;
-        message.setFont(m_resources.fallback_font.medium);
+        message.setFont(resources.fallback_font.medium);
         message.setString(sf::String::fromUtf8(m_name.begin(), m_name.end()));
         message.setCharacterSize(static_cast<unsigned int>(0.1f*get_size()));
         message.setFillColor(sf::Color::White);

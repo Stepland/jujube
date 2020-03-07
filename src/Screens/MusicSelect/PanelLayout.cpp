@@ -5,12 +5,12 @@
 namespace MusicSelect {
     PanelLayout::PanelLayout(
         const std::map<std::string,std::vector<std::shared_ptr<Panel>>>& categories,
-        SharedResources& resources
+        SharedResources& t_resources
     ) {
         for (auto &&[category, panels] : categories) {
             if (not panels.empty()) {
                 std::vector<std::shared_ptr<Panel>> current_column;
-                current_column.emplace_back(std::make_shared<CategoryPanel>(resources, category));
+                current_column.emplace_back(std::make_shared<CategoryPanel>(t_resources, category));
                 for (auto& panel : panels) {
                     if (current_column.size() == 3) {
                         push_back({current_column[0],current_column[1],current_column[2]});
@@ -20,18 +20,18 @@ namespace MusicSelect {
                 }
                 if (not current_column.empty()) {
                     while (current_column.size() < 3) {
-                        current_column.emplace_back(std::make_shared<EmptyPanel>(resources));
+                        current_column.emplace_back(std::make_shared<EmptyPanel>(t_resources));
                     }
                     push_back({current_column[0],current_column[1],current_column[2]});
                 }
             }
         }
-        fill_layout(resources);
+        fill_layout(t_resources);
     }
 
     PanelLayout::PanelLayout(
         const std::vector<std::shared_ptr<Panel>>& panels,
-        SharedResources& resources
+        SharedResources& t_resources
     ) {
         std::vector<std::shared_ptr<Panel>> current_column;
         for (auto& panel : panels) {
@@ -43,22 +43,22 @@ namespace MusicSelect {
         }
         if (not current_column.empty()) {
             while (current_column.size() < 3) {
-                current_column.emplace_back(std::make_shared<EmptyPanel>(resources));
+                current_column.emplace_back(std::make_shared<EmptyPanel>(t_resources));
             }
             push_back({current_column[0],current_column[1],current_column[2]});
         }
-        fill_layout(resources);
+        fill_layout(t_resources);
     }
 
-    PanelLayout PanelLayout::red_empty_layout(SharedResources& resources) {
+    PanelLayout PanelLayout::red_empty_layout(SharedResources& t_resources) {
         std::vector<std::shared_ptr<Panel>> panels;
         for (size_t i = 0; i < 3*4; i++) {
-            panels.emplace_back(std::make_shared<ColoredMessagePanel>(resources, sf::Color::Red, "- EMPTY -"));
+            panels.emplace_back(std::make_shared<ColoredMessagePanel>(t_resources, sf::Color::Red, "- EMPTY -"));
         }
-        return PanelLayout{panels, resources};
+        return PanelLayout{panels, t_resources};
     }
 
-    PanelLayout PanelLayout::title_sort(const Data::SongList& song_list, SharedResources& resources) {
+    PanelLayout PanelLayout::title_sort(const Data::SongList& song_list, SharedResources& t_resources) {
         std::vector<std::shared_ptr<const Data::Song>> songs;
         for (auto &&song : song_list.songs) {
             songs.push_back(song);
@@ -75,27 +75,27 @@ namespace MusicSelect {
                 if ('A' <= letter and letter <= 'Z') {
                     categories
                     [std::string(1, letter)]
-                    .emplace_back(std::make_shared<SongPanel>(resources, song));
+                    .emplace_back(std::make_shared<SongPanel>(t_resources, song));
                 } else if ('a' <= letter and letter <= 'z') {
                     categories
                     [std::string(1, 'A' + (letter - 'a'))]
-                    .emplace_back(std::make_shared<SongPanel>(resources, song));
+                    .emplace_back(std::make_shared<SongPanel>(t_resources, song));
                 } else {
-                    categories["?"].emplace_back(std::make_shared<SongPanel>(resources, song));
+                    categories["?"].emplace_back(std::make_shared<SongPanel>(t_resources, song));
                 }
             } else {
-                categories["?"].emplace_back(std::make_shared<SongPanel>(resources, song));
+                categories["?"].emplace_back(std::make_shared<SongPanel>(t_resources, song));
             }
         }
-        return PanelLayout{categories, resources};
+        return PanelLayout{categories, t_resources};
     }
     
-    void PanelLayout::fill_layout(SharedResources& resources) {
+    void PanelLayout::fill_layout(SharedResources& t_resources) {
         while (size() < 4) {
             push_back({
-                std::make_shared<EmptyPanel>(resources),
-                std::make_shared<EmptyPanel>(resources),
-                std::make_shared<EmptyPanel>(resources)
+                std::make_shared<EmptyPanel>(t_resources),
+                std::make_shared<EmptyPanel>(t_resources),
+                std::make_shared<EmptyPanel>(t_resources)
             });
         }
     }

@@ -11,7 +11,7 @@
 #include "../SharedResources.hpp"
 
 namespace MusicSelect {
-    Panel::Panel(SharedResources& resources) : HoldsSharedResources(resources) {
+    Panel::Panel(SharedResources& t_resources) : HoldsSharedResources(t_resources) {
         
     }
 
@@ -43,7 +43,7 @@ namespace MusicSelect {
 
         sf::Text category_label{
             "category",
-            m_resources.fallback_font.medium,
+            resources.fallback_font.medium,
             static_cast<unsigned int>(get_size()*0.1f)
         };
         category_label.setFillColor(sf::Color::White);
@@ -52,7 +52,7 @@ namespace MusicSelect {
 
         sf::Text label_text{
             m_label,
-            m_resources.fallback_font.black,
+            resources.fallback_font.black,
             static_cast<unsigned int>(get_size()*0.7f)
         };
         label_text.setFillColor(sf::Color::White);
@@ -74,23 +74,23 @@ namespace MusicSelect {
             } else {
                 selected_chart = m_song->chart_levels.cbegin()->first;
             }
-            m_resources.selected_panel->last_click.restart();
-            m_resources.selected_panel->is_first_click = false;
+            resources.selected_panel->last_click.restart();
+            resources.selected_panel->is_first_click = false;
         } else {
             // Look for the first chart with dif greater or equal to the last select one
             // or else select the first chart
-            auto it = m_song->chart_levels.lower_bound(m_resources.get_last_selected_difficulty());
+            auto it = m_song->chart_levels.lower_bound(resources.get_last_selected_difficulty());
             if (it != m_song->chart_levels.cend()) {
                 selected_chart = it->first;
             } else {
                 selected_chart = m_song->chart_levels.cbegin()->first;
             }
             // The song was not selected before : first unselect the last one
-            if (m_resources.selected_panel.has_value()) {
-                m_resources.selected_panel->obj.unselect();
+            if (resources.selected_panel.has_value()) {
+                resources.selected_panel->obj.unselect();
             }
-            m_resources.selected_panel.emplace(*this);
-            m_resources.music_preview.play(m_song->full_audio_path(), m_song->preview);
+            resources.selected_panel.emplace(*this);
+            resources.music_preview.play(m_song->full_audio_path(), m_song->preview);
         }
     }
 
@@ -108,11 +108,11 @@ namespace MusicSelect {
 
     void SongPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
-        auto last_selected_chart = m_resources.get_last_selected_difficulty();
+        auto last_selected_chart = resources.get_last_selected_difficulty();
         // We should gray out the panel if the currently selected difficulty doesn't exist for this song
         bool should_be_grayed_out = m_song->chart_levels.find(last_selected_chart) == m_song->chart_levels.end();
         if (m_song->cover) {
-            auto loaded_texture = m_resources.covers.async_get(m_song->folder/m_song->cover.value());
+            auto loaded_texture = resources.covers.async_get(m_song->folder/m_song->cover.value());
             if (loaded_texture) {
                 sf::Sprite cover{*(loaded_texture->texture)};
                 auto alpha = static_cast<std::uint8_t>(
@@ -135,7 +135,7 @@ namespace MusicSelect {
             chart_dif_badge.setFillColor(sf::Color(128,128,128));
         } else {
             chart_dif_badge.setFillColor(
-                m_resources.get_chart_color(last_selected_chart)
+                resources.get_chart_color(last_selected_chart)
             );
         }
         target.draw(chart_dif_badge, states);
@@ -143,7 +143,7 @@ namespace MusicSelect {
             auto dif = m_song->chart_levels.at(last_selected_chart);
             sf::Text dif_label{
                 std::to_string(dif),
-                m_resources.fallback_font.black,
+                resources.fallback_font.black,
                 static_cast<unsigned int>(get_size()*0.15f)
             };
             dif_label.setFillColor(sf::Color::White);
@@ -152,7 +152,7 @@ namespace MusicSelect {
             target.draw(dif_label, states);
         }
         sf::Text song_title;
-        song_title.setFont(m_resources.fallback_font.medium);
+        song_title.setFont(resources.fallback_font.medium);
         song_title.setString(sf::String::fromUtf8(m_song->title.begin(), m_song->title.end()));
         song_title.setCharacterSize(static_cast<unsigned int>(0.06875f*get_size()));
         song_title.setFillColor(sf::Color::White);
@@ -182,7 +182,7 @@ namespace MusicSelect {
         target.draw(frame, states);
 
         sf::Text message;
-        message.setFont(m_resources.fallback_font.medium);
+        message.setFont(resources.fallback_font.medium);
         message.setString(sf::String::fromUtf8(m_message.begin(), m_message.end()));
         message.setCharacterSize(static_cast<unsigned int>(0.1f*get_size()));
         message.setFillColor(m_color);

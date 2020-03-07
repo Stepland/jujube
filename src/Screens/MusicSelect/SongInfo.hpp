@@ -11,8 +11,8 @@ namespace MusicSelect {
 
     class BigCover : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
     public:
-        BigCover(SharedResources& resources);
-        float get_size() const {return m_preferences.layout.big_cover_size*get_screen_width();};
+        BigCover(SharedResources& t_resources);
+        float get_size() const {return preferences.layout.big_cover_size*get_screen_width();};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         mutable sf::RectangleShape m_cover_fallback;
@@ -22,7 +22,7 @@ namespace MusicSelect {
     // Displays the song info on the top part of the screen
     class SongInfo : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
     public:
-        SongInfo(SharedResources& resources);
+        SongInfo(SharedResources& t_resources);
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         void draw_song_title(sf::RenderTarget& target, sf::RenderStates states) const;

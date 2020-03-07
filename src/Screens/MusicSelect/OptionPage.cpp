@@ -14,19 +14,19 @@ namespace MusicSelect {
         this->setPosition(get_ribbon_x(), get_ribbon_y());
     }
 
-    RibbonPage::RibbonPage(const PanelLayout& layout, SharedResources& resources) :
-        OptionPage(resources),
-        m_ribbon(layout, resources)
+    RibbonPage::RibbonPage(const PanelLayout& layout, SharedResources& t_resources) :
+        OptionPage(t_resources),
+        m_ribbon(layout, t_resources)
     {
     }
 
     bool MusicSelect::RibbonPage::handle_raw_input(const sf::Event::KeyEvent& key_event) {
-        auto button = m_preferences.key_mapping.key_to_button(key_event.code);
+        auto button = preferences.key_mapping.key_to_button(key_event.code);
         if (not button) {
             return false;
         }
         auto button_index = Data::button_to_index(*button);
-        if (button_index > 12) {
+        if (button_index > 13) {
             return false;
         }
         button_click(*button);
@@ -56,33 +56,33 @@ namespace MusicSelect {
         target.draw(m_ribbon, states);
     }
 
-    MainOptionPage::MainOptionPage(SharedResources& resources) :
-        RibbonPage(MainOptionPage::create_layout(resources), resources)
+    MainOptionPage::MainOptionPage(SharedResources& t_resources) :
+        RibbonPage(MainOptionPage::create_layout(t_resources), t_resources)
     {
     }
 
 
-    PanelLayout MainOptionPage::create_layout(SharedResources& resources) {
+    PanelLayout MainOptionPage::create_layout(SharedResources& t_resources) {
         std::vector<std::shared_ptr<Panel>> subpages;
-        auto marker_select = std::make_shared<MarkerSelect>(resources);
-        subpages.emplace_back(std::make_shared<SubpagePanel>(resources, std::move(marker_select), "markers"));
-        return PanelLayout{subpages, resources};
+        auto marker_select = std::make_shared<MarkerSelect>(t_resources);
+        subpages.emplace_back(std::make_shared<SubpagePanel>(t_resources, std::move(marker_select), "markers"));
+        return PanelLayout{subpages, t_resources};
     }
 
-    MarkerSelect::MarkerSelect(SharedResources& resources) :
-        RibbonPage(MarkerSelect::create_layout(resources), resources)
+    MarkerSelect::MarkerSelect(SharedResources& t_resources) :
+        RibbonPage(MarkerSelect::create_layout(t_resources), t_resources)
     {
     }
 
     MarkerSelect::~MarkerSelect() {
-        m_resources.selected_marker.reset();
+        resources.selected_marker.reset();
     }
 
-    PanelLayout MarkerSelect::create_layout(SharedResources& resources) {
+    PanelLayout MarkerSelect::create_layout(SharedResources& t_resources) {
         std::vector<std::shared_ptr<Panel>> markers;
-        for (const auto &[name, marker] : resources.markers) {
-            markers.emplace_back(std::make_shared<MarkerPanel>(resources, marker));
+        for (const auto &[name, marker] : t_resources.markers) {
+            markers.emplace_back(std::make_shared<MarkerPanel>(t_resources, marker));
         }
-        return PanelLayout{markers, resources};
+        return PanelLayout{markers, t_resources};
     }
 }

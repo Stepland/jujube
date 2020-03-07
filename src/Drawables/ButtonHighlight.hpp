@@ -5,15 +5,14 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "../../Data/Buttons.hpp"
-#include "../../Toolkit/AffineTransform.hpp"
+#include "../Data/Buttons.hpp"
+#include "../Data/Preferences.hpp"
+#include "../Toolkit/AffineTransform.hpp"
 
-#include "SharedResources.hpp"
-
-namespace MusicSelect {
-    class ButtonHighlight : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
+namespace Drawables {
+    class ButtonHighlight : public sf::Drawable, public sf::Transformable, public Data::HoldsPreferences {
     public:
-        ButtonHighlight(SharedResources& resources);
+        ButtonHighlight(Data::Preferences& t_preferences);
         void button_pressed(Data::Button button);
     private:
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

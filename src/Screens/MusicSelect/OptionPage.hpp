@@ -15,7 +15,7 @@ namespace MusicSelect {
 
     class OptionPage : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
     public:
-        OptionPage(SharedResources& resources) : HoldsSharedResources(resources) {update();};
+        OptionPage(SharedResources& t_resources) : HoldsSharedResources(t_resources) {update();};
         // Returns true if input was used
         virtual bool handle_raw_input(const sf::Event::KeyEvent& event) = 0;
         virtual ~OptionPage() = default;
@@ -24,7 +24,7 @@ namespace MusicSelect {
 
     class RibbonPage : public OptionPage {
     public:
-        RibbonPage(const PanelLayout& layout, SharedResources& resources);
+        RibbonPage(const PanelLayout& layout, SharedResources& t_resources);
         bool handle_raw_input(const sf::Event::KeyEvent& event) override;
         void button_click(const Data::Button& button);
     private:
@@ -34,16 +34,16 @@ namespace MusicSelect {
 
     class MainOptionPage final : public RibbonPage {
     public:
-        MainOptionPage(SharedResources& resources);
+        MainOptionPage(SharedResources& t_resources);
     private:
-        static PanelLayout create_layout(SharedResources& resources);
+        static PanelLayout create_layout(SharedResources& t_resources);
     };
 
     class MarkerSelect final : public RibbonPage {
     public:
-        MarkerSelect(SharedResources& resources);
+        MarkerSelect(SharedResources& t_resources);
         ~MarkerSelect();
     private:
-        static PanelLayout create_layout(SharedResources& resources);
+        static PanelLayout create_layout(SharedResources& t_resources);
     };
 }

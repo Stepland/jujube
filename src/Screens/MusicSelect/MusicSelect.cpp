@@ -13,20 +13,13 @@
 #include "Panels/Panel.hpp"
 #include "PanelLayout.hpp"
 
-MusicSelect::Screen::Screen(
-    const Data::SongList& t_song_list,
-    Data::Preferences& t_preferences,
-    const Resources::Markers& t_markers
-) :
+MusicSelect::Screen::Screen(const Data::SongList& t_song_list, SharedResources& t_resources) :
+    HoldsSharedResources(t_resources),
     song_list(t_song_list),
-    resources(t_preferences, t_markers),
-    markers(t_markers),
-    ribbon(PanelLayout::title_sort(t_song_list, resources), resources),
-    song_info(resources),
-    button_highlight(resources),
-    main_option_page(resources),
-    black_frame(t_preferences),
-    key_mapping()
+    ribbon(PanelLayout::title_sort(t_song_list, t_resources), t_resources),
+    song_info(t_resources),
+    main_option_page(t_resources),
+    black_frame(t_resources.preferences)
 {
     panel_filter.setFillColor(sf::Color(0,0,0,128));
     std::cout << "loaded MusicSelect::Screen" << std::endl;
@@ -37,14 +30,8 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
     ImGui::SFML::Init(window);
     bool chart_selected = false;
     sf::Clock imguiClock;
-    ribbon.setPosition(
-        resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
-        resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
-    );
-    button_highlight.setPosition(
-        resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
-        resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
-    );
+    ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
+    resources.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
     panel_filter.setSize(sf::Vector2f{window.getSize()});
     while ((not chart_selected) and window.isOpen()) {
         sf::Event event;
@@ -63,19 +50,13 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
             case sf::Event::Resized:
                 // update the view to the new size of the window
                 window.setView(sf::View({0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)}));
-                resources.m_preferences.screen.height = event.size.height;
-                resources.m_preferences.screen.width = event.size.width;
-                ribbon.setPosition(
-                    resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
-                    resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
-                );
-                button_highlight.setPosition(
-                    resources.m_preferences.layout.ribbon_x*resources.m_preferences.screen.width,
-                    resources.m_preferences.layout.ribbon_y*resources.m_preferences.screen.width
-                );
+                resources.preferences.screen.height = event.size.height;
+                resources.preferences.screen.width = event.size.width;
+                ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
+                resources.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
                 panel_filter.setSize(sf::Vector2f{window.getSize()});
                 if (not resources.options_state.empty()) {
-                    resources.options_state.top().get().update();
+                    resources.options_state.back().get().update();
                 }
                 break;
             default:
@@ -88,9 +69,9 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         window.draw(song_info);
         if (not resources.options_state.empty()) {
             window.draw(panel_filter);
-            window.draw(resources.options_state.top());
+            window.draw(resources.options_state.back());
         }
-        window.draw(button_highlight);
+        window.draw(resources.button_highlight);
         window.draw(black_frame);
         ribbon.draw_debug();
         draw_debug();
@@ -107,11 +88,11 @@ void MusicSelect::Screen::draw_debug() {
             if (ImGui::CollapsingHeader("Preferences")) {
                 if (ImGui::TreeNode("screen")) {
                     ImGui::TextUnformatted("width : "); ImGui::SameLine();
-                    ImGui::Text("%s", std::to_string(resources.m_preferences.screen.width).c_str());
+                    ImGui::Text("%s", std::to_string(resources.preferences.screen.width).c_str());
                     ImGui::TextUnformatted("height : "); ImGui::SameLine();
-                    ImGui::Text("%s", std::to_string(resources.m_preferences.screen.height).c_str());
+                    ImGui::Text("%s", std::to_string(resources.preferences.screen.height).c_str());
                     ImGui::TextUnformatted("fullscreen : "); ImGui::SameLine();
-                    ImGui::Text("%s", resources.m_preferences.screen.fullscreen ? "true" : "false");
+                    ImGui::Text("%s", resources.preferences.screen.fullscreen ? "true" : "false");
                     ImGui::TreePop();
                 }
                 if (ImGui::TreeNode("layout")) {
@@ -120,8 +101,17 @@ void MusicSelect::Screen::draw_debug() {
                 }
                 if (ImGui::TreeNode("options")) {
                     ImGui::TextUnformatted("marker : "); ImGui::SameLine();
-                    ImGui::Text("%s", resources.m_preferences.options.marker.c_str());
+                    ImGui::Text("%s", resources.preferences.options.marker.c_str());
                     ImGui::TreePop();
+                }
+            }
+            if (ImGui::CollapsingHeader("Options Menu Stack")) {
+                if (resources.options_state.empty()) {
+                    ImGui::TextUnformatted("- empty -");
+                } else {
+                    for (auto &&i : resources.options_state) {
+                        ImGui::Text("%s", typeid(i.get()).name());
+                    }
                 }
             }
         }
@@ -135,13 +125,13 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
     if (not resources.options_state.empty()) {
         // Safety measure, pressing escape will alway pop the menu page
         if (key_event.code == sf::Keyboard::Escape) {
-            resources.options_state.pop();
+            resources.options_state.pop_back();
             if (not resources.options_state.empty()) {
-                resources.options_state.top().get().update();
+                resources.options_state.back().get().update();
             }
             output_used = true;
         } else {
-            output_used = resources.options_state.top().get().handle_raw_input(key_event);
+            output_used = resources.options_state.back().get().handle_raw_input(key_event);
         }
     }
     if (output_used) {
@@ -169,12 +159,10 @@ void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& 
 
     sf::Vector2i mouse_position{mouse_button_event.x, mouse_button_event.y};
     sf::Vector2i ribbon_origin{
-        static_cast<int>(resources.get_ribbon_x()),
-        static_cast<int>(resources.get_ribbon_y())
+        static_cast<int>(get_ribbon_x()),
+        static_cast<int>(get_ribbon_y())
     };
-    auto panels_area_size = static_cast<int>(
-        resources.get_panel_size() * 4.f + resources.get_panel_spacing() * 3.f
-    );
+    auto panels_area_size = static_cast<int>(get_panel_size() * 4.f + get_panel_spacing() * 3.f);
     sf::IntRect panels_area{ribbon_origin, sf::Vector2i{panels_area_size, panels_area_size}};
     if (not panels_area.contains(mouse_position)) {
         return;
@@ -195,7 +183,7 @@ void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& 
 }
 
 void MusicSelect::Screen::press_button(const Data::Button& button) {
-    button_highlight.button_pressed(button);
+    resources.button_highlight.button_pressed(button);
     auto button_index = Data::button_to_index(button);
     if (button_index < 12) {
         ribbon.click_on(button);
@@ -208,8 +196,15 @@ void MusicSelect::Screen::press_button(const Data::Button& button) {
             ribbon.move_right();
             break;
         case Data::Button::B15: // Options Menu
-            resources.options_state.push(main_option_page);
-            resources.options_state.top().get().update();
+            if (resources.options_state.empty()) {
+                resources.options_state.push_back(main_option_page);
+                resources.options_state.back().get().update();
+            } else {
+                resources.options_state.pop_back();
+                if (not resources.options_state.empty()) {
+                    resources.options_state.back().get().update();
+                }
+            }
             break;
         default:
             break;

@@ -19,11 +19,6 @@ int main(int, char const **) {
 
     const std::string jujube_path = whereami::executable_dir();
     Data::Preferences preferences{jujube_path};
-    auto markers = Resources::load_markers(jujube_path);
-    if (markers.find(preferences.options.marker) == markers.end()) {
-        preferences.options.marker = markers.begin()->first;
-    }
-
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     sf::RenderWindow window{
@@ -36,12 +31,11 @@ int main(int, char const **) {
         settings
     };
     Data::SongList song_list{jujube_path};
-    MusicSelect::Screen music_select{
-        song_list,
-        preferences,
-        markers,
-    };
-    
+    MusicSelect::SharedResources music_select_resources{preferences};
+    if (music_select_resources.markers.find(preferences.options.marker) == music_select_resources.markers.end()) {
+        preferences.options.marker = music_select_resources.markers.begin()->first;
+    }
+    MusicSelect::Screen music_select{song_list, music_select_resources};    
     music_select.select_chart(window);
     /*
     while (true) {

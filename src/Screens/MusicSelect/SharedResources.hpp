@@ -10,10 +10,11 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/System.hpp>
 
-#include "../../Resources/Marker.hpp"
-#include "../../Resources/TextureCache.hpp"
 #include "../../Data/Preferences.hpp"
 #include "../../Data/Song.hpp"
+#include "../../Drawables/ButtonHighlight.hpp"
+#include "../../Resources/Marker.hpp"
+#include "../../Resources/TextureCache.hpp"
 
 #include "DensityGraph.hpp"
 #include "MusicPreview.hpp"
@@ -42,7 +43,7 @@ namespace MusicSelect {
 
     // Holds everything that needs to be shared by all levels of the class hierarchy
     struct SharedResources : public Data::HoldsPreferences {
-        SharedResources(Data::Preferences& p, const Resources::Markers& m);
+        SharedResources(Data::Preferences& p);
 
         Textures::TextureCache covers;
         
@@ -62,17 +63,18 @@ namespace MusicSelect {
 
         MusicPreview music_preview;
 
-        std::stack<std::reference_wrapper<OptionPage>> options_state;
+        std::vector<std::reference_wrapper<OptionPage>> options_state;
 
-        const Resources::Markers& markers;
-
+        Resources::Markers markers;
         std::optional<Timed<MarkerPanel>> selected_marker;
+
+        Drawables::ButtonHighlight button_highlight;
     };
 
     // Proxy for HoldsPreferences
     struct HoldsSharedResources : public Data::HoldsPreferences {
-        HoldsSharedResources(SharedResources& resources) : Data::HoldsPreferences(resources.m_preferences), m_resources(resources) {};
+        HoldsSharedResources(SharedResources& t_resources) : Data::HoldsPreferences(t_resources.preferences), resources(t_resources) {};
     protected:
-        SharedResources& m_resources;
+        SharedResources& resources;
     };
 }

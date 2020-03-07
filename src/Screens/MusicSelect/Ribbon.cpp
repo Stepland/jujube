@@ -65,8 +65,8 @@ namespace MusicSelect {
         return clock.getElapsedTime() / m_time_factor > sf::milliseconds(300);
     }
 
-    Ribbon::Ribbon(PanelLayout layout, SharedResources& resources) :
-        HoldsSharedResources(resources),
+    Ribbon::Ribbon(PanelLayout layout, SharedResources& t_resources) :
+        HoldsSharedResources(t_resources),
         m_layout(layout)
     {
         std::cout << "Loaded MusicSelect::Ribbon" << std::endl;

@@ -1,8 +1,8 @@
 #include "ButtonHighlight.hpp"
 
-namespace MusicSelect {
-    ButtonHighlight::ButtonHighlight(SharedResources& resources) :
-        HoldsSharedResources(resources),
+namespace Drawables {
+    ButtonHighlight::ButtonHighlight(Data::Preferences& t_preferences) :
+        Data::HoldsPreferences(t_preferences),
         m_highlight(),
         m_time_to_alpha(0.f, 0.25f, 255.f, 0.f)
     {
