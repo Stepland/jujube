@@ -24,9 +24,11 @@
     - cd
 - Sound
     - Sound Effects
-- Options menu
-    - Global Offset
-    - Volume Settings
+### Options menu
+- Global Offset
+- Volume Settings
+- Give marker selection the timing check feature when your re-click on the same panel
+    
 
 ## memo Compatibility
 

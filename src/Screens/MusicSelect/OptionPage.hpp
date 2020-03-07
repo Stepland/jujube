@@ -2,6 +2,7 @@
 
 #include <jbcoe/polymorphic_value.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window/Event.hpp>
 
 #include "../../Data/Buttons.hpp"
 #include "Ribbon.hpp"
@@ -15,10 +16,8 @@ namespace MusicSelect {
     class OptionPage : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
     public:
         OptionPage(SharedResources& resources) : HoldsSharedResources(resources) {update();};
-        // An option page should only every recive button presses ranging for 1 to 14
-        // Going back a menu should be handled by the MusicSelect screen to avoid destroying the menu
-        // while still being in a click() call on it
-        virtual void click(const Data::Button& button) = 0;
+        // Returns true if input was used
+        virtual bool handle_raw_input(const sf::Event::KeyEvent& event) = 0;
         virtual ~OptionPage() = default;
         void update();
     };
@@ -26,7 +25,8 @@ namespace MusicSelect {
     class RibbonPage : public OptionPage {
     public:
         RibbonPage(const PanelLayout& layout, SharedResources& resources);
-        void click(const Data::Button& button) override;
+        bool handle_raw_input(const sf::Event::KeyEvent& event) override;
+        void button_click(const Data::Button& button);
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         Ribbon m_ribbon;

@@ -20,7 +20,20 @@ namespace MusicSelect {
     {
     }
 
-    void RibbonPage::click(const Data::Button& button) {
+    bool MusicSelect::RibbonPage::handle_raw_input(const sf::Event::KeyEvent& key_event) {
+        auto button = m_preferences.key_mapping.key_to_button(key_event.code);
+        if (not button) {
+            return false;
+        }
+        auto button_index = Data::button_to_index(*button);
+        if (button_index > 12) {
+            return false;
+        }
+        button_click(*button);
+        return true;
+    }
+
+    void RibbonPage::button_click(const Data::Button& button) {
         auto button_index = Data::button_to_index(button);
         if (button_index < 12) {
             m_ribbon.click_on(button);
