@@ -1,9 +1,6 @@
 # v0.1.0 (MVP)
 ## Misc
 
-## Music Select Screen
-- Start Button Action
-
 ## Gameplay Screen
 
 ## Results Screen
