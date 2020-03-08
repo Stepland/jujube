@@ -2,8 +2,6 @@
 ## Misc
 
 ## Music Select Screen
-- Options menu
-    - Controller mapping
 - Visible controls
     - Start Button
 

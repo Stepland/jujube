@@ -30,7 +30,14 @@ namespace Data {
         for (auto &&[button, key] : m_button_to_key) {
             m_key_to_button[key] = button;
         }
-        
+        assert((m_button_to_key.size() == m_key_to_button.size()));
+    }
+
+    KeyMapping::KeyMapping(std::unordered_map<sf::Keyboard::Key, Button> key_to_button) : m_key_to_button(key_to_button) {
+        for (auto &&[key, button] : m_key_to_button) {
+            m_button_to_key[button] = key;
+        }
+        assert((m_button_to_key.size() == m_key_to_button.size()));
     }
 
     void KeyMapping::set_button_to_key(const Button& button, const sf::Keyboard::Key& key) {

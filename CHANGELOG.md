@@ -33,6 +33,7 @@
 - Options menu
     - Marker Selection
     - Fix screen filter not resizing properly
+    - Controller mapping
 
 ## Misc
 - Handling Resolution changes

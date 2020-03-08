@@ -4,9 +4,10 @@
 #include <memory>
 #include <vector>
 
-#include "Ribbon.hpp"
-#include "Panels/SubpagePanel.hpp"
-#include "Panels/MarkerPanel.hpp"
+#include "../Ribbon.hpp"
+#include "../Panels/SubpagePanel.hpp"
+#include "../Panels/MarkerPanel.hpp"
+#include "InputRemap.hpp"
 
 namespace MusicSelect {
 
@@ -62,11 +63,24 @@ namespace MusicSelect {
     {
     }
 
-
     PanelLayout MainOptionPage::create_layout(SharedResources& t_resources) {
         std::vector<std::shared_ptr<Panel>> subpages;
         auto marker_select = std::make_shared<MarkerSelect>(t_resources);
         subpages.emplace_back(std::make_shared<SubpagePanel>(t_resources, std::move(marker_select), "markers"));
+        auto input_page = std::make_shared<InputOptionPage>(t_resources);
+        subpages.emplace_back(std::make_shared<SubpagePanel>(t_resources, std::move(input_page), "input"));
+        return PanelLayout{subpages, t_resources};
+    }
+
+    InputOptionPage::InputOptionPage(SharedResources& t_resources) :
+        RibbonPage(InputOptionPage::create_layout(t_resources), t_resources)
+    {
+    }
+
+    PanelLayout InputOptionPage::create_layout(SharedResources& t_resources) {
+        std::vector<std::shared_ptr<Panel>> subpages;
+        auto input_remap = std::make_shared<InputRemap>(t_resources);
+        subpages.emplace_back(std::make_shared<SubpagePanel>(t_resources, std::move(input_remap), "remap\nbuttons"));
         return PanelLayout{subpages, t_resources};
     }
 

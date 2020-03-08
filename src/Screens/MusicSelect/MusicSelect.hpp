@@ -16,7 +16,7 @@
 #include "Ribbon.hpp"
 #include "SongInfo.hpp"
 #include "SharedResources.hpp"
-#include "OptionPage.hpp"
+#include "Options/OptionPage.hpp"
 
 namespace MusicSelect {
 
@@ -43,7 +43,6 @@ namespace MusicSelect {
         Drawables::BlackFrame black_frame;
         sf::RectangleShape panel_filter;
     
-        Data::KeyMapping key_mapping;
         // converts a key press into a button press
         void handle_key_press(const sf::Event::KeyEvent& key_event);
         // converts a mouse click into a button press

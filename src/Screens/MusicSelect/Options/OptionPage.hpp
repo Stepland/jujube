@@ -4,9 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
 
-#include "../../Data/Buttons.hpp"
-#include "Ribbon.hpp"
-#include "SharedResources.hpp"
+#include "../../../Data/Buttons.hpp"
+#include "../Ribbon.hpp"
+#include "../SharedResources.hpp"
 
 
 namespace MusicSelect {
@@ -20,6 +20,12 @@ namespace MusicSelect {
         virtual bool handle_raw_input(const sf::Event::KeyEvent& event) = 0;
         virtual ~OptionPage() = default;
         void update();
+        virtual bool should_exit() {return false;};
+        virtual void exit() {return;};
+        const std::string name;
+    };
+
+    class ButtonRemapping : public OptionPage {
     };
 
     class RibbonPage : public OptionPage {
@@ -35,6 +41,15 @@ namespace MusicSelect {
     class MainOptionPage final : public RibbonPage {
     public:
         MainOptionPage(SharedResources& t_resources);
+        const std::string name = "Options";
+    private:
+        static PanelLayout create_layout(SharedResources& t_resources);
+    };
+
+    class InputOptionPage final : public RibbonPage {
+    public:
+        InputOptionPage(SharedResources& t_resources);
+        const std::string name = "Input";
     private:
         static PanelLayout create_layout(SharedResources& t_resources);
     };
@@ -43,6 +58,7 @@ namespace MusicSelect {
     public:
         MarkerSelect(SharedResources& t_resources);
         ~MarkerSelect();
+        const std::string name = "Marker Select";
     private:
         static PanelLayout create_layout(SharedResources& t_resources);
     };

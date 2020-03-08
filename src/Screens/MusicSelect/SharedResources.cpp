@@ -4,7 +4,7 @@
 
 #include "../../Toolkit/HSL.hpp"
 
-#include "OptionPage.hpp"
+#include "Options/OptionPage.hpp"
 #include "Panels/Panel.hpp"
 
 namespace MusicSelect {

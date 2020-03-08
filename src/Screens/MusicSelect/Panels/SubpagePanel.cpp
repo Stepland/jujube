@@ -1,6 +1,6 @@
 #include "SubpagePanel.hpp"
 
-#include "../OptionPage.hpp"
+#include "../Options/OptionPage.hpp"
 
 namespace MusicSelect {
     void SubpagePanel::click(Ribbon&, const Data::Button&) {

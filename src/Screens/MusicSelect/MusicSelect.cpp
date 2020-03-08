@@ -70,6 +70,13 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         if (not resources.options_state.empty()) {
             window.draw(panel_filter);
             window.draw(resources.options_state.back());
+            if (resources.options_state.back().get().should_exit()) {
+                resources.options_state.back().get().exit();
+                resources.options_state.pop_back();
+                if (not resources.options_state.empty()) {
+                    resources.options_state.back().get().update();
+                }
+            }
         }
         window.draw(resources.button_highlight);
         window.draw(black_frame);
@@ -125,6 +132,7 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
     if (not resources.options_state.empty()) {
         // Safety measure, pressing escape will alway pop the menu page
         if (key_event.code == sf::Keyboard::Escape) {
+            resources.options_state.back().get().exit();
             resources.options_state.pop_back();
             if (not resources.options_state.empty()) {
                 resources.options_state.back().get().update();
@@ -137,7 +145,7 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
     if (output_used) {
         return;
     }
-    auto button = key_mapping.key_to_button(key_event.code);
+    auto button = resources.preferences.key_mapping.key_to_button(key_event.code);
     if (button) {
         press_button(*button);
     } else {
@@ -200,6 +208,7 @@ void MusicSelect::Screen::press_button(const Data::Button& button) {
                 resources.options_state.push_back(main_option_page);
                 resources.options_state.back().get().update();
             } else {
+                resources.options_state.back().get().exit();
                 resources.options_state.pop_back();
                 if (not resources.options_state.empty()) {
                     resources.options_state.back().get().update();

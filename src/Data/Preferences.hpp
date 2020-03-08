@@ -136,9 +136,10 @@ namespace Data {
         float get_screen_height() const {return static_cast<float>(preferences.screen.height);};
         float get_panel_size() const {return preferences.layout.panel_size*get_screen_width();};
         float get_panel_spacing() const {return preferences.layout.panel_spacing*get_screen_width();};
+        float get_panel_step() const {return preferences.layout.panel_step()*get_screen_width();};
         float get_ribbon_x() const {return preferences.layout.ribbon_x*get_screen_width();};
         float get_ribbon_y() const {return preferences.layout.ribbon_y*get_screen_width();};
-        float get_panel_step() const {return preferences.layout.panel_step()*get_screen_width();};
+        float get_ribbon_size() const {return 3*get_panel_spacing()+4*get_panel_size();};
         float get_big_cover_x() const {return preferences.layout.big_cover_x*get_screen_width();};
         float get_big_cover_y() const {return preferences.layout.big_cover_y*get_screen_width();};
         float get_big_level_x() const {return preferences.layout.big_level_x*get_screen_width();};
