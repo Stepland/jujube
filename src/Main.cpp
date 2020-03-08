@@ -1,5 +1,4 @@
 #include <iostream>
-#include <sstream>
 
 #include <SFML/Graphics.hpp>
 #include <cereal/archives/json.hpp>
@@ -39,7 +38,8 @@ int main(int, char const **) {
         preferences.screen.fullscreen ? sf::Style::Fullscreen : sf::Style::Default,
         settings
     };
-    music_select.select_chart(window);
+    auto chart = music_select.select_chart(window);
+    std::cout << "Selected Chart : " << chart.song.title << " [" << chart.difficulty << "]" << std::endl;
     /*
     while (true) {
         

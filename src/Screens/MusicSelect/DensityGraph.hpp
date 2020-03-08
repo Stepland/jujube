@@ -20,29 +20,17 @@ namespace MusicSelect {
         sf::VertexArray m_vertex_array;
     };
 
-    struct SongDifficulty {
-        const Data::Song& song;
-        const std::string& difficulty;
-
-        bool operator==(const SongDifficulty &other) const {
-            return (
-                song.folder == other.song.folder and
-                difficulty == other.difficulty
-            );
-        }
-    };
-
-    DensityGraph compute_density_graph_from_struct(const SongDifficulty& sd);
+    DensityGraph compute_density_graph_from_struct(const Data::SongDifficulty& sd);
     DensityGraph compute_density_graph_from_song_difficulty(const Data::Song& song, const std::string& difficulty);
     DensityGraph compute_density_graph_from_chart(const Data::Chart& chart, long start, long end);
 
-    using DensityGraphCache = Toolkit::Cache<SongDifficulty, DensityGraph, &compute_density_graph_from_struct>;
+    using DensityGraphCache = Toolkit::Cache<Data::SongDifficulty, DensityGraph, &compute_density_graph_from_struct>;
 }
 
 namespace std {
     template <>
-    struct hash<MusicSelect::SongDifficulty> {
-        std::size_t operator()(const MusicSelect::SongDifficulty& sd) const {
+    struct hash<Data::SongDifficulty> {
+        std::size_t operator()(const Data::SongDifficulty& sd) const {
             auto song_hash = std::hash<std::string>()(sd.song.folder.string());
             song_hash ^= std::hash<std::string>()(sd.difficulty) + 0x9e3779b9 + (song_hash<<6) + (song_hash>>2);
             return song_hash;

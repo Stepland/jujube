@@ -69,7 +69,7 @@ namespace MusicSelect {
         using Panel::Panel;
         virtual ~SelectablePanel() = default;
         virtual void unselect() = 0;
-        virtual std::optional<SongDifficulty> get_selected_difficulty() const = 0;
+        virtual std::optional<Data::SongDifficulty> get_selected_difficulty() const = 0;
     };
 
     class SongPanel final : public SelectablePanel {
@@ -77,7 +77,7 @@ namespace MusicSelect {
         explicit SongPanel(SharedResources& t_resources, const std::shared_ptr<const Data::Song>& t_song) : SelectablePanel(t_resources), m_song(t_song) {};
         void click(Ribbon& ribbon, const Data::Button& button) override;
         void unselect() override;
-        std::optional<SongDifficulty> get_selected_difficulty() const override;
+        std::optional<Data::SongDifficulty> get_selected_difficulty() const override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         std::shared_ptr<const Data::Song> m_song;

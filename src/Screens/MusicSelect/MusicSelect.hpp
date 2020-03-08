@@ -30,7 +30,7 @@ namespace MusicSelect {
             const Data::SongList& t_song_list,
             SharedResources& t_resources
         );
-        void select_chart(sf::RenderWindow& window);
+        Data::SongDifficulty select_chart(sf::RenderWindow& window);
         void draw_debug() override;
     private:
         const Data::SongList song_list;
@@ -40,6 +40,7 @@ namespace MusicSelect {
         MainOptionPage main_option_page;
         OptionsButton options_button;
         StartButton start_button;
+        bool chart_selected = false;
 
         Drawables::BlackFrame black_frame;
         sf::RectangleShape panel_filter;

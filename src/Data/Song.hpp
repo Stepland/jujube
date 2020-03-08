@@ -50,6 +50,18 @@ namespace Data {
         virtual ~Song() = default;
     };
 
+    struct SongDifficulty {
+        const Data::Song& song;
+        const std::string& difficulty;
+
+        bool operator==(const SongDifficulty &other) const {
+            return (
+                song.folder == other.song.folder and
+                difficulty == other.difficulty
+            );
+        }
+    };
+
     struct MemonSong : public Song {
         explicit MemonSong(const fs::path& memon_path);
         std::optional<Chart> get_chart(const std::string& difficulty) const;

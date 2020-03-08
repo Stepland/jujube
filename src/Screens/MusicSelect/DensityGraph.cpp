@@ -43,7 +43,7 @@ namespace MusicSelect {
         target.draw(m_vertex_array, states);
     }
 
-    DensityGraph compute_density_graph_from_struct(const SongDifficulty& sd) {
+    DensityGraph compute_density_graph_from_struct(const Data::SongDifficulty& sd) {
         return compute_density_graph_from_song_difficulty(sd.song, sd.difficulty);
     }
 

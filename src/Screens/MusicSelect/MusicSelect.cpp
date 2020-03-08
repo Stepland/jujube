@@ -27,10 +27,9 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list, SharedResources& 
     std::cout << "loaded MusicSelect::Screen" << std::endl;
 }
 
-void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
+Data::SongDifficulty MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
-    bool chart_selected = false;
     sf::Clock imguiClock;
     ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
     resources.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
@@ -95,6 +94,8 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         resources.music_preview.update();
     }
     ImGui::SFML::Shutdown();
+    assert((resources.selected_panel.has_value()));
+    return *resources.selected_panel->obj.get_selected_difficulty();
 }
 
 void MusicSelect::Screen::draw_debug() {
@@ -215,6 +216,11 @@ void MusicSelect::Screen::press_button(const Data::Button& button) {
                 if (not resources.options_state.empty()) {
                     resources.options_state.back().get().update();
                 }
+            }
+            break;
+        case Data::Button::B16: // Start Button
+            if (resources.selected_panel) {
+                chart_selected = true;
             }
             break;
         default:

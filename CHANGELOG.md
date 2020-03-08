@@ -39,6 +39,7 @@
     - Options
     - Left / Right
     - Back
+- Start Button Action
 
 ## Misc
 - Handling Resolution changes
