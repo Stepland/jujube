@@ -17,6 +17,7 @@
 #include "SongInfo.hpp"
 #include "SharedResources.hpp"
 #include "Options/OptionPage.hpp"
+#include "Drawables/ControlPanels.hpp"
 
 namespace MusicSelect {
 
@@ -32,13 +33,13 @@ namespace MusicSelect {
         void select_chart(sf::RenderWindow& window);
         void draw_debug() override;
     private:
-        // Data
         const Data::SongList song_list;
 
-        // State
         Ribbon ribbon;
         SongInfo song_info;
         MainOptionPage main_option_page;
+        OptionsButton options_button;
+        StartButton start_button;
 
         Drawables::BlackFrame black_frame;
         sf::RectangleShape panel_filter;

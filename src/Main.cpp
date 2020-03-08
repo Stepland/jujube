@@ -17,8 +17,17 @@
 
 int main(int, char const **) {
 
+    // Load prefs, music, markers
     const std::string jujube_path = whereami::executable_dir();
     Data::Preferences preferences{jujube_path};
+    Data::SongList song_list{jujube_path};
+    MusicSelect::SharedResources music_select_resources{preferences};
+    if (music_select_resources.markers.find(preferences.options.marker) == music_select_resources.markers.end()) {
+        preferences.options.marker = music_select_resources.markers.begin()->first;
+    }
+    MusicSelect::Screen music_select{song_list, music_select_resources};    
+    
+    // Create the window
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     sf::RenderWindow window{
@@ -30,12 +39,6 @@ int main(int, char const **) {
         preferences.screen.fullscreen ? sf::Style::Fullscreen : sf::Style::Default,
         settings
     };
-    Data::SongList song_list{jujube_path};
-    MusicSelect::SharedResources music_select_resources{preferences};
-    if (music_select_resources.markers.find(preferences.options.marker) == music_select_resources.markers.end()) {
-        preferences.options.marker = music_select_resources.markers.begin()->first;
-    }
-    MusicSelect::Screen music_select{song_list, music_select_resources};    
     music_select.select_chart(window);
     /*
     while (true) {

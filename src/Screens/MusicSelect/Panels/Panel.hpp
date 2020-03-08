@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+#include "../../../Data/Buttons.hpp"
 #include "../../../Data/Song.hpp"
 #include "../../../Toolkit/AffineTransform.hpp"
 #include "../DensityGraph.hpp"

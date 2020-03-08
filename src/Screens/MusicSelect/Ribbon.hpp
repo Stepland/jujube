@@ -13,6 +13,7 @@
 #include "../../Toolkit/EasingFunctions.hpp"
 #include "SharedResources.hpp"
 #include "PanelLayout.hpp"
+#include "Drawables/ControlPanels.hpp"
 
 namespace MusicSelect {
 
@@ -58,5 +59,7 @@ namespace MusicSelect {
         std::size_t m_position = 0;
         mutable std::optional<MoveAnimation> m_move_animation;
         float m_time_factor = 1.f;
+        mutable LeftButton left_button;
+        mutable RightButton right_button;
     };
 }

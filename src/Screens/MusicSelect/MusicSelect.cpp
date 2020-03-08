@@ -19,9 +19,11 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list, SharedResources& 
     ribbon(PanelLayout::title_sort(t_song_list, t_resources), t_resources),
     song_info(t_resources),
     main_option_page(t_resources),
+    options_button(t_resources),
+    start_button(t_resources),
     black_frame(t_resources.preferences)
 {
-    panel_filter.setFillColor(sf::Color(0,0,0,128));
+    panel_filter.setFillColor(sf::Color(0,0,0,200));
     std::cout << "loaded MusicSelect::Screen" << std::endl;
 }
 
@@ -33,6 +35,8 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
     ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
     resources.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
     panel_filter.setSize(sf::Vector2f{window.getSize()});
+    options_button.setPosition(get_ribbon_x()+2.f*get_panel_step(), get_ribbon_y()+3.f*get_panel_step());
+    start_button.setPosition(get_ribbon_x()+3.f*get_panel_step(), get_ribbon_y()+3.f*get_panel_step());
     while ((not chart_selected) and window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -58,6 +62,8 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
                 if (not resources.options_state.empty()) {
                     resources.options_state.back().get().update();
                 }
+                options_button.setPosition(get_ribbon_x()+2.f*get_panel_step(), get_ribbon_y()+3.f*get_panel_step());
+                start_button.setPosition(get_ribbon_x()+3.f*get_panel_step(), get_ribbon_y()+3.f*get_panel_step());
                 break;
             default:
                 break;
@@ -66,6 +72,8 @@ void MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
         ImGui::SFML::Update(window, imguiClock.restart());
         window.clear(sf::Color(7, 23, 53));
         window.draw(ribbon);
+        window.draw(options_button);
+        window.draw(start_button);
         window.draw(song_info);
         if (not resources.options_state.empty()) {
             window.draw(panel_filter);
@@ -193,16 +201,10 @@ void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& 
 void MusicSelect::Screen::press_button(const Data::Button& button) {
     resources.button_highlight.button_pressed(button);
     auto button_index = Data::button_to_index(button);
-    if (button_index < 12) {
+    if (button_index < 14) {
         ribbon.click_on(button);
     } else {
         switch (button) {
-        case Data::Button::B13: // Left Arrow
-            ribbon.move_left();
-            break;
-        case Data::Button::B14: // Right Arrow
-            ribbon.move_right();
-            break;
         case Data::Button::B15: // Options Menu
             if (resources.options_state.empty()) {
                 resources.options_state.push_back(main_option_page);

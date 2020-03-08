@@ -17,7 +17,8 @@ namespace MusicSelect {
 
     RibbonPage::RibbonPage(const PanelLayout& layout, SharedResources& t_resources) :
         OptionPage(t_resources),
-        m_ribbon(layout, t_resources)
+        m_ribbon(layout, t_resources),
+        back_button(t_resources)
     {
     }
 
@@ -56,6 +57,8 @@ namespace MusicSelect {
     void RibbonPage::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
         target.draw(m_ribbon, states);
+        back_button.setPosition(2.f*get_panel_step(), 3.f*get_panel_step());
+        target.draw(back_button, states);
     }
 
     MainOptionPage::MainOptionPage(SharedResources& t_resources) :

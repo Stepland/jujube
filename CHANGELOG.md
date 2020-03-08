@@ -34,6 +34,11 @@
     - Marker Selection
     - Fix screen filter not resizing properly
     - Controller mapping
+- Visible controls
+    - Start
+    - Options
+    - Left / Right
+    - Back
 
 ## Misc
 - Handling Resolution changes

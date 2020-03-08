@@ -5,6 +5,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include "../../../Data/Buttons.hpp"
+#include "../Drawables/ControlPanels.hpp"
 #include "../Ribbon.hpp"
 #include "../SharedResources.hpp"
 
@@ -25,9 +26,6 @@ namespace MusicSelect {
         const std::string name;
     };
 
-    class ButtonRemapping : public OptionPage {
-    };
-
     class RibbonPage : public OptionPage {
     public:
         RibbonPage(const PanelLayout& layout, SharedResources& t_resources);
@@ -36,6 +34,7 @@ namespace MusicSelect {
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         Ribbon m_ribbon;
+        mutable BackButton back_button;
     };
 
     class MainOptionPage final : public RibbonPage {

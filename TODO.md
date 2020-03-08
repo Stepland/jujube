@@ -2,8 +2,7 @@
 ## Misc
 
 ## Music Select Screen
-- Visible controls
-    - Start Button
+- Start Button Action
 
 ## Gameplay Screen
 

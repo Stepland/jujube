@@ -178,15 +178,15 @@ namespace MusicSelect {
         mapping_preview.setPosition(get_big_cover_x(), get_big_cover_y());
         target.draw(mapping_preview);
         if (confirm_clock) {
-            if (confirm_clock->getElapsedTime() > sf::seconds(5)) {
-                preferences.key_mapping = Data::KeyMapping{m_key_to_button};
+            auto countdown_time = confirm_clock->getElapsedTime();
+            if (countdown_time < sf::seconds(5)) {
+                std::string seconds = std::to_string(5 - static_cast<int>(countdown_time.asSeconds()));
+                big_number.setString(seconds);
+                big_number.setCharacterSize(static_cast<unsigned int>(3*get_panel_step()));
+                Toolkit::set_local_origin_normalized(big_number, 0.5f, 0.5f);
+                big_number.setPosition(get_ribbon_size()*0.5f, get_ribbon_size()*0.5f);
+                target.draw(big_number, states);
             }
-            std::string seconds = std::to_string(5 - static_cast<int>(confirm_clock->getElapsedTime().asSeconds()));
-            big_number.setString(seconds);
-            big_number.setCharacterSize(static_cast<unsigned int>(3*get_panel_step()));
-            Toolkit::set_local_origin_normalized(big_number, 0.5f, 0.5f);
-            big_number.setPosition(get_ribbon_size()*0.5f, get_ribbon_size()*0.5f);
-            target.draw(big_number, states);
             auto text_size = 0.1f*grid_size;
             confirm_text_top.setCharacterSize(static_cast<unsigned int>(text_size));
             confirm_text_bottom.setCharacterSize(static_cast<unsigned int>(text_size));

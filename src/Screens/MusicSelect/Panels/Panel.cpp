@@ -6,7 +6,6 @@
 
 #include "../../../Toolkit/HSL.hpp"
 #include "../../../Toolkit/NormalizedOrigin.hpp"
-
 #include "../Ribbon.hpp"
 #include "../SharedResources.hpp"
 

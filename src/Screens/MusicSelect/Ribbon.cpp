@@ -67,7 +67,9 @@ namespace MusicSelect {
 
     Ribbon::Ribbon(PanelLayout layout, SharedResources& t_resources) :
         HoldsSharedResources(t_resources),
-        m_layout(layout)
+        m_layout(layout),
+        left_button(t_resources),
+        right_button(t_resources)
     {
         std::cout << "Loaded MusicSelect::Ribbon" << std::endl;
     }
@@ -87,7 +89,17 @@ namespace MusicSelect {
     }
 
     void Ribbon::click_on(const Data::Button& button) {
-        get_panel_under_button(button)->click(*this, button);
+        switch (button) {
+        case Data::Button::B13: // Left Arrow
+            move_left();
+            break;
+        case Data::Button::B14: // Right Arrow
+            move_right();
+            break;
+        default:
+            get_panel_under_button(button)->click(*this, button);
+            break;
+        }
     }
 
     void Ribbon::move_right() {
@@ -139,6 +151,12 @@ namespace MusicSelect {
 
     void Ribbon::draw(sf::RenderTarget &target, sf::RenderStates states) const {
         states.transform *= getTransform();
+
+        left_button.setPosition(0.f, 3.f*get_panel_step());
+        target.draw(left_button, states);
+        right_button.setPosition(get_panel_step(), 3.f*get_panel_step());
+        target.draw(right_button, states);
+        
         if (m_move_animation) {
             if (not m_move_animation->ended()) {
                 return draw_with_animation(target, states);
