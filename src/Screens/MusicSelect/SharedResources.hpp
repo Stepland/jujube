@@ -5,7 +5,6 @@
 #include <optional>
 
 #include <ghc/filesystem.hpp>
-#include <jbcoe/polymorphic_value.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/System.hpp>

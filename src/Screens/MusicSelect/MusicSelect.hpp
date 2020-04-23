@@ -3,7 +3,6 @@
 #include <map>
 #include <stack>
 
-#include <jbcoe/polymorphic_value.h>
 #include <SFML/Window.hpp>
 
 #include "../../Data/Song.hpp"

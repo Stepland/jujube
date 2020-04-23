@@ -1,6 +1,5 @@
 #pragma once
 
-#include <jbcoe/polymorphic_value.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
 

@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include <jbcoe/polymorphic_value.h>
 #include <SFML/Graphics.hpp>
 
 #include "Panel.hpp"
