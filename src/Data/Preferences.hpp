@@ -1,12 +1,9 @@
 #pragma once
 
 #include <cstddef>
-#include <fstream>
 
-#include <cereal/archives/json.hpp>
-#include <cereal/types/string.hpp>
-#include <cereal/types/unordered_map.hpp>
 #include <ghc/filesystem.hpp>
+#include <nlohmann/json.hpp>
 #include <SFML/System.hpp>
 
 #include "Buttons.hpp"
@@ -19,16 +16,10 @@ namespace Data {
         std::size_t width = 768;
         std::size_t height = 1360;
         bool fullscreen = false;
-
-        template<class Archive>
-        void serialize(Archive & archive) {
-            archive(
-                CEREAL_NVP(width),
-                CEREAL_NVP(height),
-                CEREAL_NVP(fullscreen) 
-            ); 
-        }
     };
+
+    void to_json(nlohmann::json& j, const Screen& s);
+    void from_json(const nlohmann::json& j, Screen& s);
 
     struct Layout {
         float panel_size = 160.f / 768.f;
@@ -42,29 +33,17 @@ namespace Data {
         float big_level_x = 656.f / 768.f;
         float big_level_y = 30.f / 768.f;
         float upper_part_height = 464.f / 768.f;
-
-        template<class Archive>
-        void serialize(Archive & archive) {
-            archive(
-                CEREAL_NVP(panel_size),
-                CEREAL_NVP(panel_spacing),
-                CEREAL_NVP(ribbon_x),
-                CEREAL_NVP(ribbon_y),
-                CEREAL_NVP(upper_part_height)
-            ); 
-        }
     };
+
+    void to_json(nlohmann::json& j, const Layout& l);
+    void from_json(const nlohmann::json& j, Layout& l);
 
     struct Options {
         std::string marker;
-
-        template<class Archive>
-        void serialize(Archive & archive) {
-            archive(
-                CEREAL_NVP(marker)
-            );
-        }
     };
+
+    void to_json(nlohmann::json& j, const Options& o);
+    void from_json(const nlohmann::json& j, Options& o);
 
     // RAII style class which loads preferences from the dedicated file when constructed and saves them when destructed
     struct Preferences {
@@ -74,61 +53,12 @@ namespace Data {
         KeyMapping key_mapping;
         ghc::filesystem::path jujube_path;
 
-        Preferences(const ghc::filesystem::path& t_jujube_path) :
-            screen(),
-            layout(),
-            jujube_path(t_jujube_path)
-        {
-            load_from_file();
-        }
-        
-        ~Preferences() {
-            save_to_file();
-        }
-
-        void load_from_file() {
-            auto path = jujube_path/"data"/"preferences.json";
-            if (ghc::filesystem::exists(path)) {
-                std::ifstream prefs_file;
-                prefs_file.open(path);
-                try {
-                    cereal::JSONInputArchive archive{prefs_file};
-                    serialize(archive);
-                    key_mapping = KeyMapping{key_mapping.m_button_to_key};
-                } catch (const std::exception& e) {
-                    std::cerr << "Error while loading data/preferences.json : " << e.what() << std::endl;
-                    std::cerr << "Using fallback preferences instead" << std::endl;
-                }
-                
-            }
-        };
-
-        void save_to_file() {
-            auto data_folder = jujube_path/"data";
-            if (not ghc::filesystem::exists(data_folder)) {
-                ghc::filesystem::create_directory(data_folder);
-            }
-            if (not ghc::filesystem::is_directory(data_folder)) {
-                std::cerr << "Can't create data folder to save preferences, a file named 'data' exists" << std::endl;
-            }
-            std::ofstream preferences_file;
-            preferences_file.open(data_folder/"preferences.json", std::ofstream::trunc | std::ofstream::out);
-            {
-                cereal::JSONOutputArchive archive{preferences_file};
-                serialize(archive);
-            }            
-        }
-        
-        template<class Archive>
-        void serialize(Archive & archive) {
-            archive(
-                CEREAL_NVP(screen),
-                CEREAL_NVP(layout),
-                CEREAL_NVP(options),
-                cereal::make_nvp("key_mapping", key_mapping.m_button_to_key)
-            ); 
-        }
+        Preferences(const ghc::filesystem::path& t_jujube_path);
+        ~Preferences();
     };
+
+    void to_json(nlohmann::json& j, const Preferences& p);
+    void from_json(const nlohmann::json& j, Preferences& p);
 
     struct HoldsPreferences {
         HoldsPreferences(Preferences& t_preferences) : preferences(t_preferences) {};

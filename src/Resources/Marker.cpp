@@ -7,12 +7,51 @@
 #include <iostream>
 #include <sstream>
 
-#include <cereal/types/string.hpp>
-#include <cereal/archives/json.hpp>
-
 namespace fs = ghc::filesystem;
 
 namespace Resources {
+
+    void to_json(nlohmann::json& j, const MarkerAnimationMetadata& mam) {
+        j = nlohmann::json{
+            {"sprite_sheet", mam.sprite_sheet.string()},
+            {"count", mam.count},
+            {"columns", mam.columns},
+            {"rows", mam.rows}
+        };
+    }
+
+    void from_json(const nlohmann::json& j, MarkerAnimationMetadata& mam) {
+        mam.sprite_sheet = ghc::filesystem::path{j.at("sprite_sheet").get<std::string>()};
+        j.at("count").get_to(mam.count);
+        j.at("columns").get_to(mam.columns);
+        j.at("rows").get_to(mam.rows);
+    }
+
+    void to_json(nlohmann::json& j, const MarkerMetadata& mm) {
+        j = nlohmann::json{
+            {"name", mm.name},
+            {"size", mm.size},
+            {"fps", mm.fps},
+            {"approach", mm.approach},
+            {"miss", mm.miss},
+            {"early", mm.early},
+            {"good", mm.good},
+            {"great", mm.great},
+            {"perfect", mm.perfect}
+        };
+    }
+
+    void from_json(const nlohmann::json& j, MarkerMetadata& mm) {
+        j.at("name").get_to(mm.name);
+        j.at("size").get_to(mm.size);
+        j.at("fps").get_to(mm.fps);
+        j.at("approach").get_to(mm.approach);
+        j.at("miss").get_to(mm.miss);
+        j.at("early").get_to(mm.early);
+        j.at("good").get_to(mm.good);
+        j.at("great").get_to(mm.great);
+        j.at("perfect").get_to(mm.perfect);
+    }
 
     Marker::Marker(const fs::path& marker_folder) :
         m_folder(marker_folder),
@@ -31,10 +70,9 @@ namespace Resources {
             throw std::invalid_argument("Marker folder ( "+m_folder.string()+" ) has no marker.json file");
         }
         std::ifstream marker_json{m_folder/"marker.json"};
-        {
-            cereal::JSONInputArchive archive{marker_json};
-            m_metadata.serialize(archive);
-        }
+        nlohmann::json j;
+        marker_json >> j;
+        j.get_to(m_metadata);
         load_and_check(m_approach, m_metadata.approach);
         load_and_check(m_miss, m_metadata.miss);
         load_and_check(m_early, m_metadata.early);

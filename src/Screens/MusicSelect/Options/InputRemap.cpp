@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <magic_enum.hpp>
+#include <SFML/Graphics.hpp>
 
 #include "../../../Toolkit/HSL.hpp"
 #include "../../../Toolkit/NormalizedOrigin.hpp"
@@ -60,7 +61,7 @@ namespace MusicSelect {
 
     MappingPreview::MappingPreview(
         SharedResources& t_resources,
-        const std::unordered_map<sf::Keyboard::Key, Data::Button>& t_key_to_button
+        const std::unordered_map<Data::MappableKey, Data::Button>& t_key_to_button
     ) :
         HoldsSharedResources(t_resources),
         key_to_button(t_key_to_button)
@@ -88,7 +89,7 @@ namespace MusicSelect {
         auto text_size = square_size*0.33f;
         for (auto &&[key, button] : key_to_button) {
             auto coord = Data::button_to_coords(button);
-            std::string key_name{magic_enum::enum_name(key)};
+            std::string key_name = Data::to_string(key);
             key_label.setString(key_name);
             key_label.setCharacterSize(static_cast<unsigned int>(text_size));
             Toolkit::set_local_origin_normalized(key_label, 0.5f, 0.5f);

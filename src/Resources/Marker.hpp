@@ -3,11 +3,9 @@
 #include <string>
 #include <map>
 
-#include <cereal/types/string.hpp>
 #include <ghc/filesystem.hpp>
+#include <nlohmann/json.hpp>
 #include <SFML/Graphics.hpp>
-
-#include "../Toolkit/ExtraCerealTypes/GHCFilesystemPath.hpp"
 
 namespace Resources {
     enum class MarkerAnimation {
@@ -24,17 +22,10 @@ namespace Resources {
         std::size_t count;  // how many sprites total on the sheet
         std::size_t columns;  // how many horizontally
         std::size_t rows;  // how many vertically
-
-        template<class Archive>
-        void serialize(Archive& archive) {
-            archive(
-                CEREAL_NVP(sprite_sheet),
-                CEREAL_NVP(count),
-                CEREAL_NVP(columns),
-                CEREAL_NVP(rows)
-            );
-        }
     };
+
+    void to_json(nlohmann::json& j, const MarkerAnimationMetadata& mam);
+    void from_json(const nlohmann::json& j, MarkerAnimationMetadata& mam);
 
     // Represents what's held in marker.json
     struct MarkerMetadata {
@@ -47,22 +38,10 @@ namespace Resources {
         MarkerAnimationMetadata good;
         MarkerAnimationMetadata great;
         MarkerAnimationMetadata perfect;
-
-        template<class Archive>
-        void serialize(Archive & archive) {
-            archive(
-                CEREAL_NVP(name),
-                CEREAL_NVP(size),
-                CEREAL_NVP(fps),
-                CEREAL_NVP(approach),
-                CEREAL_NVP(miss),
-                CEREAL_NVP(early),
-                CEREAL_NVP(good),
-                CEREAL_NVP(great),
-                CEREAL_NVP(perfect)
-            );
-        }
     };
+
+    void to_json(nlohmann::json& j, const MarkerMetadata& mm);
+    void from_json(const nlohmann::json& j, MarkerMetadata& mm);
 
     struct Marker {
         explicit Marker(const ghc::filesystem::path& marker_folder);
