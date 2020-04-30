@@ -6,8 +6,7 @@
 #include <nlohmann/json.hpp>
 #include <SFML/System.hpp>
 
-#include "Buttons.hpp"
-#include "KeyMapping.hpp"
+#include "../Input/KeyMapping.hpp"
 
 namespace Data {
     // By convention all axis-independant lengths are expressed as a ratio of the screen WIDTH
@@ -50,7 +49,7 @@ namespace Data {
         Screen screen;
         Layout layout;
         Options options;
-        KeyMapping key_mapping;
+        Input::KeyMapping key_mapping;
         ghc::filesystem::path jujube_path;
 
         Preferences(const ghc::filesystem::path& t_jujube_path);

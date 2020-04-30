@@ -2,8 +2,6 @@
 
 #include "../Toolkit/AffineTransform.hpp"
 
-#include "Buttons.hpp"
-
 namespace Data {
     Chart::Chart(const stepland::memon& memon, const std::string& difficulty) {
         auto it = memon.charts.find(difficulty);
@@ -13,19 +11,19 @@ namespace Data {
         auto [_, chart] = *it;
         level = chart.level;
         resolution = static_cast<std::size_t>(chart.resolution);
-        Toolkit::AffineTransform<float> memon_timing_to_300Hz(
+        Toolkit::AffineTransform<float> memon_timing_to_1000Hz(
             0.f, static_cast<float>(chart.resolution),
-            -memon.offset*300.f, (-memon.offset+60.f/memon.BPM)*300.f
+            -memon.offset*1000.f, (-memon.offset+60.f/memon.BPM)*1000.f
         );
         Toolkit::AffineTransform<float> memon_timing_to_300Hz_proportional(
             0.f, static_cast<float>(chart.resolution),
             0.f, (60.f/memon.BPM)*300.f
         );
         for (auto &&note : chart.notes) {
-            auto timing = static_cast<long>(memon_timing_to_300Hz.transform(note.get_timing()));
-            auto position = static_cast<Button>(note.get_pos());
+            auto timing = static_cast<long>(memon_timing_to_1000Hz.transform(note.get_timing()));
+            auto position = static_cast<Input::Button>(note.get_pos());
             std::size_t length = 0;
-            Button tail = Button::B1;
+            auto tail = Input::Button::B1;
             if (note.get_length() != 0) {
                 length = static_cast<std::size_t>(memon_timing_to_300Hz_proportional.transform(note.get_length()));
                 tail = convert_memon_tail(position, note.get_tail_pos());
@@ -34,7 +32,7 @@ namespace Data {
         }
     }
 
-    Button convert_memon_tail(Button note, unsigned int tail_position) {
+    Input::Button convert_memon_tail(Input::Button note, unsigned int tail_position) {
         auto note_position = button_to_index(note);
         assert((note_position <= 15));
         assert((tail_position <= 11));
@@ -67,7 +65,7 @@ namespace Data {
         if (tail_x < 0 or tail_x > 3 or tail_y < 0 or tail_y > 3) {
             throw std::runtime_error("Invalid tail_position : "+std::to_string(tail_position));
         }
-        auto tail = coords_to_button({
+        auto tail = Input::coords_to_button({
             static_cast<unsigned int>(tail_x),
             static_cast<unsigned int>(tail_y)
         });

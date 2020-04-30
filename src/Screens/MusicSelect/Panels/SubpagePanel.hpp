@@ -21,7 +21,7 @@ namespace MusicSelect {
             m_subpage(subpage),
             m_name(name)
         {};
-        void click(Ribbon& ribbon, const Data::Button& button) override;
+        void click(Ribbon& ribbon, const Input::Button& button) override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         std::shared_ptr<OptionPage> m_subpage;

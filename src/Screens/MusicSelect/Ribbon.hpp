@@ -5,7 +5,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 
-#include "../../Data/Buttons.hpp"
+#include "../../Input/Buttons.hpp"
 #include "../../Data/Preferences.hpp"
 #include "../../Data/Song.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
@@ -42,11 +42,11 @@ namespace MusicSelect {
     class Ribbon : public sf::Drawable, public sf::Transformable, public HoldsSharedResources, public Toolkit::Debuggable {
     public:
         Ribbon(PanelLayout layout, SharedResources& t_resources);
-        std::shared_ptr<Panel>& get_panel_under_button(const Data::Button& button);
-        void click_on(const Data::Button& button);
+        std::shared_ptr<Panel>& get_panel_under_button(const Input::Button& button);
+        void click_on(const Input::Button& button);
         void move_right();
         void move_left();
-        void move_to_next_category(const Data::Button& button);
+        void move_to_next_category(const Input::Button& button);
         void draw_debug() override;
         virtual ~Ribbon() = default;
     protected:
@@ -54,7 +54,7 @@ namespace MusicSelect {
     private:
         void draw_with_animation(sf::RenderTarget& target, sf::RenderStates states) const;
         void draw_without_animation(sf::RenderTarget& target, sf::RenderStates states) const;
-        std::size_t get_layout_column(const Data::Button& button) const;
+        std::size_t get_layout_column(const Input::Button& button) const;
         mutable PanelLayout m_layout;
         std::size_t m_position = 0;
         mutable std::optional<MoveAnimation> m_move_animation;

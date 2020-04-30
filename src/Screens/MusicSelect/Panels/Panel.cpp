@@ -25,7 +25,7 @@ namespace MusicSelect {
         target.draw(panel, states);
     }
 
-    void CategoryPanel::click(Ribbon& ribbon, const Data::Button& button) {
+    void CategoryPanel::click(Ribbon& ribbon, const Input::Button& button) {
         ribbon.move_to_next_category(button);
     }
 
@@ -64,7 +64,7 @@ namespace MusicSelect {
         target.draw(label_text, states);
     }
 
-    void SongPanel::click(Ribbon&, const Data::Button&) {
+    void SongPanel::click(Ribbon&, const Input::Button&) {
         if (selected_chart.has_value()) {
             // The song was already selected : look for the next chart in order
             auto it = m_song->chart_levels.upper_bound(*selected_chart);

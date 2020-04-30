@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <optional>
 
-namespace Data {
+namespace Input {
     enum class Button : std::size_t {
         B1,
         B2,

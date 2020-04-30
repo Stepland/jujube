@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Event.hpp>
 
-#include "../../../Data/Buttons.hpp"
+#include "../../../Input/Buttons.hpp"
 #include "../Drawables/ControlPanels.hpp"
 #include "../Ribbon.hpp"
 #include "../SharedResources.hpp"
@@ -29,7 +29,7 @@ namespace MusicSelect {
     public:
         RibbonPage(const PanelLayout& layout, SharedResources& t_resources);
         bool handle_raw_input(const sf::Event::KeyEvent& event) override;
-        void button_click(const Data::Button& button);
+        void button_click(const Input::Button& button);
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         Ribbon m_ribbon;

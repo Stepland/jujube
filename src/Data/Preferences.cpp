@@ -67,7 +67,7 @@ namespace Data {
                 std::cerr << "Using fallback preferences instead" << std::endl;
                 return;
             }
-            key_mapping = KeyMapping{key_mapping.m_button_to_key};
+            key_mapping = Input::KeyMapping{key_mapping.m_button_to_key};
         }
     }
         

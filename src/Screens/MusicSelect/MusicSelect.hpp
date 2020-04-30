@@ -8,7 +8,7 @@
 
 #include "../../Data/Song.hpp"
 #include "../../Data/Chart.hpp"
-#include "../../Data/KeyMapping.hpp"
+#include "../../Input/KeyMapping.hpp"
 #include "../../Drawables/BlackFrame.hpp"
 #include "../../Resources/Marker.hpp"
 #include "../../Toolkit/AffineTransform.hpp"
@@ -50,6 +50,6 @@ namespace MusicSelect {
         // converts a mouse click into a button press
         void handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event);
         // chooses what happens for each button
-        void press_button(const Data::Button& button);
+        void press_button(const Input::Button& button);
     };
 }

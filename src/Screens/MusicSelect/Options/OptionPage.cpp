@@ -27,7 +27,7 @@ namespace MusicSelect {
         if (not button) {
             return false;
         }
-        auto button_index = Data::button_to_index(*button);
+        auto button_index = Input::button_to_index(*button);
         if (button_index > 13) {
             return false;
         }
@@ -35,17 +35,17 @@ namespace MusicSelect {
         return true;
     }
 
-    void RibbonPage::button_click(const Data::Button& button) {
+    void RibbonPage::button_click(const Input::Button& button) {
         resources.button_highlight.button_pressed(button);
-        auto button_index = Data::button_to_index(button);
+        auto button_index = Input::button_to_index(button);
         if (button_index < 12) {
             m_ribbon.click_on(button);
         } else {
             switch (button) {
-            case Data::Button::B13:
+            case Input::Button::B13:
                 m_ribbon.move_left();
                 break;
-            case Data::Button::B14:
+            case Input::Button::B14:
                 m_ribbon.move_right();
                 break;
             default:

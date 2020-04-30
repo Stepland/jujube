@@ -75,12 +75,12 @@ namespace MusicSelect {
     }
 
 
-    std::size_t Ribbon::get_layout_column(const Data::Button& button) const {
-        return (m_position + (Data::button_to_index(button) % 4)) % m_layout.size();
+    std::size_t Ribbon::get_layout_column(const Input::Button& button) const {
+        return (m_position + (Input::button_to_index(button) % 4)) % m_layout.size();
     }
 
-    std::shared_ptr<Panel>& Ribbon::get_panel_under_button(const Data::Button& button) {
-        auto button_index = Data::button_to_index(button);
+    std::shared_ptr<Panel>& Ribbon::get_panel_under_button(const Input::Button& button) {
+        auto button_index = Input::button_to_index(button);
         return (
             m_layout
             .at(this->get_layout_column(button))
@@ -88,12 +88,12 @@ namespace MusicSelect {
         );
     }
 
-    void Ribbon::click_on(const Data::Button& button) {
+    void Ribbon::click_on(const Input::Button& button) {
         switch (button) {
-        case Data::Button::B13: // Left Arrow
+        case Input::Button::B13: // Left Arrow
             move_left();
             break;
-        case Data::Button::B14: // Right Arrow
+        case Input::Button::B14: // Right Arrow
             move_right();
             break;
         default:
@@ -118,7 +118,7 @@ namespace MusicSelect {
         m_move_animation.emplace(old_position, m_position, m_layout.size(), Direction::Left, m_time_factor);
     }
 
-    void Ribbon::move_to_next_category(const Data::Button& button) {
+    void Ribbon::move_to_next_category(const Input::Button& button) {
         std::size_t from_column = this->get_layout_column(button);
         bool found = false;
         size_t offset = 1;
@@ -141,7 +141,7 @@ namespace MusicSelect {
         if (found) {
             // we want the next category panel to land on the same column we clicked
             auto old_position = m_position;
-            auto button_index = Data::button_to_index(button);
+            auto button_index = Input::button_to_index(button);
             auto next_category_column = from_column + offset;
             auto onscreen_clicked_column = (button_index % 4);
             m_position = next_category_column - onscreen_clicked_column;

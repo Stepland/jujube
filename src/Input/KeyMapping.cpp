@@ -1,6 +1,6 @@
 #include "KeyMapping.hpp"
 
-namespace Data {
+namespace Input {
     KeyMapping::KeyMapping() {
         m_key_to_button[sf::Keyboard::Num1] = Button::B1;
         m_key_to_button[sf::Keyboard::Num2] = Button::B2;

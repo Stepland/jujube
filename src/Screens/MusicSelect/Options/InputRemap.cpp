@@ -61,7 +61,7 @@ namespace MusicSelect {
 
     MappingPreview::MappingPreview(
         SharedResources& t_resources,
-        const std::unordered_map<Data::MappableKey, Data::Button>& t_key_to_button
+        const std::unordered_map<Input::MappableKey, Input::Button>& t_key_to_button
     ) :
         HoldsSharedResources(t_resources),
         key_to_button(t_key_to_button)
@@ -88,8 +88,8 @@ namespace MusicSelect {
 
         auto text_size = square_size*0.33f;
         for (auto &&[key, button] : key_to_button) {
-            auto coord = Data::button_to_coords(button);
-            std::string key_name = Data::to_string(key);
+            auto coord = Input::button_to_coords(button);
+            std::string key_name = Input::to_string(key);
             key_label.setString(key_name);
             key_label.setCharacterSize(static_cast<unsigned int>(text_size));
             Toolkit::set_local_origin_normalized(key_label, 0.5f, 0.5f);
@@ -122,7 +122,7 @@ namespace MusicSelect {
     bool InputRemap::handle_raw_input(const sf::Event::KeyEvent& event) {
         if (next_button < 16) {
             if (m_key_to_button.find(event.code) == m_key_to_button.end()) {
-                m_key_to_button[event.code] = *Data::index_to_button(next_button);
+                m_key_to_button[event.code] = *Input::index_to_button(next_button);
                 last_key_press.restart();
                 next_button++;
                 if (next_button == 16) {
@@ -151,7 +151,7 @@ namespace MusicSelect {
         if (not cancel_remapping) {
             if (confirm_clock) {
                 if (confirm_clock->getElapsedTime() > sf::seconds(5)) {
-                    preferences.key_mapping = Data::KeyMapping(m_key_to_button);
+                    preferences.key_mapping = Input::KeyMapping(m_key_to_button);
                 }
             }
         }

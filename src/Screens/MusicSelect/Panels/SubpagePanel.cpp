@@ -3,7 +3,7 @@
 #include "../Options/OptionPage.hpp"
 
 namespace MusicSelect {
-    void SubpagePanel::click(Ribbon&, const Data::Button&) {
+    void SubpagePanel::click(Ribbon&, const Input::Button&) {
         resources.options_state.push_back(*m_subpage);
         resources.options_state.back().get().update();
     }

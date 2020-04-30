@@ -1,6 +1,6 @@
 #include "MappableKeys.hpp"
 
-namespace Data {
+namespace Input {
     MappableKeyToString mappable_button_to_string;
 
     std::string to_string(const MappableKey& mk) {
@@ -32,7 +32,7 @@ namespace Data {
             if (joystick_button >= sf::Joystick::ButtonCount) {
                 throw std::runtime_error("Unsupported Joystick Button : "+matches[2].str());
             }
-            Data::JoystickButton res;
+            JoystickButton res;
             res.joystickId = static_cast<unsigned int>(joystick_id);
             res.button = static_cast<unsigned int>(joystick_button);
             return res;

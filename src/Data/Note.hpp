@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Buttons.hpp"
+#include "../Input/Buttons.hpp"
 
 namespace Data {
     struct Note {
-        // Timing is stored as ticks on a 300Hz clock starting at the begging of the audio
+        // Timing is stored as ticks on a 1000Hz clock starting at the begging of the audio
         long int timing;
-        Button position;
+        Input::Button position;
         // zero length means it's a standard note
         std::size_t length;
-        Button tail;
+        Input::Button tail;
 
         bool operator==(const Note &rhs) const {
             return timing == rhs.timing && position == rhs.position;

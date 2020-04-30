@@ -5,7 +5,7 @@
 
 #include <memon/memon.hpp>
 
-#include "Buttons.hpp"
+#include "../Input/Buttons.hpp"
 #include "Note.hpp"
 
 namespace Data {
@@ -15,5 +15,5 @@ namespace Data {
         std::set<Note> notes;
         std::size_t resolution;
     };
-    Button convert_memon_tail(Button note, unsigned int tail_position);
+    Input::Button convert_memon_tail(Input::Button note, unsigned int tail_position);
 }

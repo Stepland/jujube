@@ -7,8 +7,8 @@
 #include <imgui/misc/cpp/imgui_stdlib.h>
 #include <imgui-sfml/imgui-SFML.h>
 
-#include "../../Data/Buttons.hpp"
-#include "../../Data/KeyMapping.hpp"
+#include "../../Input/Buttons.hpp"
+#include "../../Input/KeyMapping.hpp"
 #include "../../Toolkit/NormalizedOrigin.hpp"
 #include "Panels/Panel.hpp"
 #include "PanelLayout.hpp"
@@ -196,20 +196,20 @@ void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& 
     if (clicked_panel_index < 0) {
         return;
     }
-    auto button = Data::index_to_button(static_cast<std::size_t>(clicked_panel_index));
+    auto button = Input::index_to_button(static_cast<std::size_t>(clicked_panel_index));
     if (button) {
         press_button(*button);
     }
 }
 
-void MusicSelect::Screen::press_button(const Data::Button& button) {
+void MusicSelect::Screen::press_button(const Input::Button& button) {
     resources.button_highlight.button_pressed(button);
-    auto button_index = Data::button_to_index(button);
+    auto button_index = Input::button_to_index(button);
     if (button_index < 14) {
         ribbon.click_on(button);
     } else {
         switch (button) {
-        case Data::Button::B15: // Options Menu
+        case Input::Button::B15: // Options Menu
             if (resources.options_state.empty()) {
                 resources.options_state.push_back(main_option_page);
                 resources.options_state.back().get().update();
@@ -221,7 +221,7 @@ void MusicSelect::Screen::press_button(const Data::Button& button) {
                 }
             }
             break;
-        case Data::Button::B16: // Start Button
+        case Input::Button::B16: // Start Button
             if (resources.selected_panel) {
                 chart_selected = true;
             }

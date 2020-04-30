@@ -1,6 +1,6 @@
 #include "Buttons.hpp"
 
-namespace Data {
+namespace Input {
     ButtonCoords button_to_coords(Button button) {
         auto num = static_cast<std::size_t>(button);
         return {num % 4, num / 4};

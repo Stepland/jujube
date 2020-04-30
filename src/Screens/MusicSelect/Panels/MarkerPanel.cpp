@@ -12,7 +12,7 @@ namespace MusicSelect {
         }
     }
 
-    void MarkerPanel::click(Ribbon&, const Data::Button&) {
+    void MarkerPanel::click(Ribbon&, const Input::Button&) {
         if (selected) {
             resources.selected_marker->last_click.restart();
             resources.selected_marker->is_first_click = false;
