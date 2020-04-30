@@ -13,7 +13,7 @@ namespace MusicSelect {
     class SubpagePanel final : public Panel {
     public:
         SubpagePanel(
-            SharedResources& t_resources,
+            ScreenResources& t_resources,
             std::shared_ptr<OptionPage> subpage,
             const std::string& name
         ) :

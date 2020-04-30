@@ -1,14 +1,16 @@
 #pragma once
 
+#include <SFML/System/Time.hpp>
+
 #include "../Input/Buttons.hpp"
 
 namespace Data {
     struct Note {
-        // Timing is stored as ticks on a 1000Hz clock starting at the begging of the audio
-        long int timing;
+        // offset since the begging of the audio
+        sf::Time timing;
         Input::Button position;
-        // zero length means it's a standard note
-        std::size_t length;
+        // zero means it's a normal note
+        sf::Time duration;
         Input::Button tail;
 
         bool operator==(const Note &rhs) const {

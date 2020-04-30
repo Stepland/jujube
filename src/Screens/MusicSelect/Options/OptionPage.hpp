@@ -6,16 +6,16 @@
 #include "../../../Input/Buttons.hpp"
 #include "../Drawables/ControlPanels.hpp"
 #include "../Ribbon.hpp"
-#include "../SharedResources.hpp"
+#include "../Resources.hpp"
 
 
 namespace MusicSelect {
 
     class PanelLayout;
 
-    class OptionPage : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
+    class OptionPage : public sf::Drawable, public sf::Transformable, public HoldsResources {
     public:
-        OptionPage(SharedResources& t_resources) : HoldsSharedResources(t_resources) {update();};
+        OptionPage(ScreenResources& t_resources) : HoldsResources(t_resources) {update();};
         // Returns true if input was used
         virtual bool handle_raw_input(const sf::Event::KeyEvent& event) = 0;
         virtual ~OptionPage() = default;
@@ -27,7 +27,7 @@ namespace MusicSelect {
 
     class RibbonPage : public OptionPage {
     public:
-        RibbonPage(const PanelLayout& layout, SharedResources& t_resources);
+        RibbonPage(const PanelLayout& layout, ScreenResources& t_resources);
         bool handle_raw_input(const sf::Event::KeyEvent& event) override;
         void button_click(const Input::Button& button);
     private:
@@ -38,26 +38,26 @@ namespace MusicSelect {
 
     class MainOptionPage final : public RibbonPage {
     public:
-        MainOptionPage(SharedResources& t_resources);
+        MainOptionPage(ScreenResources& t_resources);
         const std::string name = "Options";
     private:
-        static PanelLayout create_layout(SharedResources& t_resources);
+        static PanelLayout create_layout(ScreenResources& t_resources);
     };
 
     class InputOptionPage final : public RibbonPage {
     public:
-        InputOptionPage(SharedResources& t_resources);
+        InputOptionPage(ScreenResources& t_resources);
         const std::string name = "Input";
     private:
-        static PanelLayout create_layout(SharedResources& t_resources);
+        static PanelLayout create_layout(ScreenResources& t_resources);
     };
 
     class MarkerSelect final : public RibbonPage {
     public:
-        MarkerSelect(SharedResources& t_resources);
+        MarkerSelect(ScreenResources& t_resources);
         ~MarkerSelect();
         const std::string name = "Marker Select";
     private:
-        static PanelLayout create_layout(SharedResources& t_resources);
+        static PanelLayout create_layout(ScreenResources& t_resources);
     };
 }

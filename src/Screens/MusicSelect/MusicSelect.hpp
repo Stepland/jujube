@@ -15,7 +15,7 @@
 #include "../../Toolkit/Debuggable.hpp"
 #include "Ribbon.hpp"
 #include "SongInfo.hpp"
-#include "SharedResources.hpp"
+#include "Resources.hpp"
 #include "Options/OptionPage.hpp"
 #include "Drawables/ControlPanels.hpp"
 
@@ -24,12 +24,9 @@ namespace MusicSelect {
     class SongPanel;
     // The music select screen is created only once
     // it loads a cache of available songs in the song_list attribute
-    class Screen : public Toolkit::Debuggable, public HoldsSharedResources {
+    class Screen : public Toolkit::Debuggable, public HoldsResources {
     public:
-        Screen(
-            const Data::SongList& t_song_list,
-            SharedResources& t_resources
-        );
+        Screen(const Data::SongList& t_song_list, ScreenResources& t_resources);
         std::optional<Data::SongDifficulty> select_chart(sf::RenderWindow& window);
         void draw_debug() override;
     private:

@@ -11,7 +11,7 @@
 #include "../../Toolkit/AffineTransform.hpp"
 #include "../../Toolkit/Debuggable.hpp"
 #include "../../Toolkit/EasingFunctions.hpp"
-#include "SharedResources.hpp"
+#include "Resources.hpp"
 #include "PanelLayout.hpp"
 #include "Drawables/ControlPanels.hpp"
 
@@ -39,9 +39,9 @@ namespace MusicSelect {
 
     // A Ribbon is a visual representation of a PanelLayout,
     // You can scroll it using the left and right buttons
-    class Ribbon : public sf::Drawable, public sf::Transformable, public HoldsSharedResources, public Toolkit::Debuggable {
+    class Ribbon : public sf::Drawable, public sf::Transformable, public HoldsResources, public Toolkit::Debuggable {
     public:
-        Ribbon(PanelLayout layout, SharedResources& t_resources);
+        Ribbon(PanelLayout layout, ScreenResources& t_resources);
         std::shared_ptr<Panel>& get_panel_under_button(const Input::Button& button);
         void click_on(const Input::Button& button);
         void move_right();

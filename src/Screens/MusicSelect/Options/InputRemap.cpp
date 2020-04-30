@@ -10,12 +10,12 @@
 
 namespace MusicSelect {
 
-    PressHere::PressHere(SharedResources& t_resources) :
-        HoldsSharedResources(t_resources),
+    PressHere::PressHere(ScreenResources& t_resources) :
+        HoldsResources(t_resources),
         color_anim(0.0f, 1.0f, 1.0f, 0.1f),
         size_anim(0.0f, 1.0f, 1.0f, 0.7f)
     {
-        message.setFont(resources.fallback_font.black);
+        message.setFont(shared.fallback_font.black);
         message.setString("PRESS\nHERE!");
         message.setFillColor(sf::Color::White);
         message.setCharacterSize(static_cast<unsigned int>(0.2f*get_panel_size()));
@@ -46,8 +46,8 @@ namespace MusicSelect {
         target.draw(message, states);
     }
 
-    AlreadyMapped::AlreadyMapped(SharedResources& t_resources) : HoldsSharedResources(t_resources) {
-        background.setFillColor(resources.BSC_color);
+    AlreadyMapped::AlreadyMapped(ScreenResources& t_resources) : HoldsResources(t_resources) {
+        background.setFillColor(shared.BSC_color);
     }
 
     void AlreadyMapped::update() {
@@ -60,17 +60,17 @@ namespace MusicSelect {
     }
 
     MappingPreview::MappingPreview(
-        SharedResources& t_resources,
-        const std::unordered_map<Input::MappableKey, Input::Button>& t_key_to_button
+        ScreenResources& t_resources,
+        const std::unordered_map<Input::Event, Input::Button>& t_key_to_button
     ) :
-        HoldsSharedResources(t_resources),
+        HoldsResources(t_resources),
         key_to_button(t_key_to_button)
     {
         square.setFillColor(sf::Color::Transparent);
         square.setOutlineThickness(1.f);
         square.setOutlineColor(sf::Color::White);
         key_label.setFillColor(sf::Color::White);
-        key_label.setFont(resources.fallback_font.medium);
+        key_label.setFont(shared.fallback_font.medium);
     }
 
     void MappingPreview::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -103,20 +103,20 @@ namespace MusicSelect {
         }
     }
 
-    InputRemap::InputRemap(SharedResources& t_resources) :
+    InputRemap::InputRemap(ScreenResources& t_resources) :
         OptionPage(t_resources),
         press_here_panel(t_resources),
         already_mapped_panel(t_resources),
         mapping_preview(t_resources, m_key_to_button)
     {
         confirm_text_top.setString("Are you sure about this setting ?");
-        confirm_text_top.setFillColor(resources.EXT_color);
-        confirm_text_top.setFont(resources.fallback_font.black);
+        confirm_text_top.setFillColor(shared.EXT_color);
+        confirm_text_top.setFont(shared.fallback_font.black);
         confirm_text_bottom.setString("Press any key to cancel");
-        confirm_text_bottom.setFillColor(resources.EXT_color);
-        confirm_text_bottom.setFont(resources.fallback_font.black);
+        confirm_text_bottom.setFillColor(shared.EXT_color);
+        confirm_text_bottom.setFont(shared.fallback_font.black);
         big_number.setFillColor(sf::Color::Black);
-        big_number.setFont(resources.fallback_font.black);
+        big_number.setFont(shared.fallback_font.black);
     }
 
     bool InputRemap::handle_raw_input(const sf::Event::KeyEvent& event) {

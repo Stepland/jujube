@@ -5,4 +5,4 @@ namespace Data {
     public:
         Score();
     };
-};
+}

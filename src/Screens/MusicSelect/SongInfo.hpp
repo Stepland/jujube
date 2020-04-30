@@ -5,13 +5,13 @@
 
 #include "../../Toolkit/AffineTransform.hpp"
 
-#include "SharedResources.hpp"
+#include "Resources.hpp"
 
 namespace MusicSelect {
 
-    class BigCover : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
+    class BigCover : public sf::Drawable, public sf::Transformable, public HoldsResources {
     public:
-        BigCover(SharedResources& t_resources);
+        BigCover(ScreenResources& t_resources);
         float get_size() const {return preferences.layout.big_cover_size*get_screen_width();};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -20,9 +20,9 @@ namespace MusicSelect {
     };
 
     // Displays the song info on the top part of the screen
-    class SongInfo : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
+    class SongInfo : public sf::Drawable, public sf::Transformable, public HoldsResources {
     public:
-        SongInfo(SharedResources& t_resources);
+        SongInfo(ScreenResources& t_resources);
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         void draw_song_title(sf::RenderTarget& target, sf::RenderStates states) const;

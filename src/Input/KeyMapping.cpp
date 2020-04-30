@@ -24,21 +24,21 @@ namespace Input {
         }
     }
 
-    KeyMapping::KeyMapping(std::unordered_map<Button, MappableKey> button_to_key) : m_button_to_key(button_to_key) {
+    KeyMapping::KeyMapping(std::unordered_map<Button, Event> button_to_key) : m_button_to_key(button_to_key) {
         for (auto &&[button, key] : m_button_to_key) {
             m_key_to_button[key] = button;
         }
         assert((m_button_to_key.size() == m_key_to_button.size()));
     }
 
-    KeyMapping::KeyMapping(std::unordered_map<MappableKey, Button> key_to_button) : m_key_to_button(key_to_button) {
+    KeyMapping::KeyMapping(std::unordered_map<Event, Button> key_to_button) : m_key_to_button(key_to_button) {
         for (auto &&[key, button] : m_key_to_button) {
             m_button_to_key[button] = key;
         }
         assert((m_button_to_key.size() == m_key_to_button.size()));
     }
 
-    void KeyMapping::set_button_to_key(const Button& button, const MappableKey& key) {
+    void KeyMapping::set_button_to_key(const Button& button, const Event& key) {
         if (m_key_to_button.find(key) != m_key_to_button.end()) {
             m_button_to_key.erase(m_key_to_button[key]);
             m_key_to_button.erase(key);
@@ -47,7 +47,7 @@ namespace Input {
         m_key_to_button[key] = button;
     }
 
-    std::optional<Button> KeyMapping::key_to_button(const MappableKey& key) {
+    std::optional<Button> KeyMapping::key_to_button(const Event& key) {
         if (m_key_to_button.find(key) == m_key_to_button.end()) {
             return {};
         } else {
@@ -55,7 +55,7 @@ namespace Input {
         }
     }
 
-    std::optional<MappableKey> KeyMapping::button_to_key(const Button& button) {
+    std::optional<Event> KeyMapping::button_to_key(const Button& button) {
         if (m_button_to_key.find(button) == m_button_to_key.end()) {
             return {};
         } else {
@@ -70,7 +70,7 @@ namespace Input {
     }
 
     void from_json(const nlohmann::json& j, KeyMapping& km) {
-        std::unordered_map<Button, MappableKey> map;
+        std::unordered_map<Button, Event> map;
         for (std::size_t i = 0; i < 16; i++) {
             map[*index_to_button(i)] = from_string(j.at("B"+std::to_string(i+1)));
         }

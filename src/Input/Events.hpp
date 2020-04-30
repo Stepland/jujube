@@ -33,7 +33,7 @@ namespace std {
 }
 
 namespace Input {
-    using MappableKey = std::variant<sf::Keyboard::Key, JoystickButton>;
+    using Event = std::variant<sf::Keyboard::Key, JoystickButton>;
 
     const std::unordered_map<sf::Keyboard::Key, std::string> keyboard_to_string{
         {
@@ -249,8 +249,7 @@ namespace Input {
         }
     };
 
-    struct MappableKeyToString {
-    public:
+    struct EventToString {
         std::string operator() (const sf::Keyboard::Key& k) {
             return "Keyboard::"+keyboard_to_string.at(k);
         };
@@ -259,6 +258,6 @@ namespace Input {
         };
     };
 
-    std::string to_string(const MappableKey& mk);
-    MappableKey from_string(const std::string& s);
+    std::string to_string(const Event& mk);
+    Event from_string(const std::string& s);
 }

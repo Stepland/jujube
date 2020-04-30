@@ -12,8 +12,8 @@
 
 namespace MusicSelect {
 
-    BigCover::BigCover(SharedResources& t_resources) :
-        HoldsSharedResources(t_resources)
+    BigCover::BigCover(ScreenResources& t_resources) :
+        HoldsResources(t_resources)
     {
         m_cover_fallback.setFillColor(sf::Color::Transparent);
         m_cover_fallback.setOutlineThickness(1.f);
@@ -36,7 +36,7 @@ namespace MusicSelect {
         if (not cover_path.has_value()) {
             return;
         }
-        auto cover_texture = resources.covers.async_get(*cover_path);
+        auto cover_texture = shared.covers.async_get(*cover_path);
         if (not cover_texture.has_value()) {
             return;
         }
@@ -52,8 +52,8 @@ namespace MusicSelect {
         target.draw(cover, states);
     }
 
-    SongInfo::SongInfo(SharedResources& t_resources) :
-        HoldsSharedResources(t_resources),
+    SongInfo::SongInfo(ScreenResources& t_resources) :
+        HoldsResources(t_resources),
         m_big_cover(resources)
     {}
 
@@ -81,7 +81,7 @@ namespace MusicSelect {
         if (not song_title.empty()) {
             sf::Text song_title_label{
                 sf::String::fromUtf8(song_title.begin(), song_title.end()),
-                resources.fallback_font.medium,
+                shared.fallback_font.medium,
                 static_cast<unsigned int>(
                     0.026315789f*get_screen_width()
                 )
@@ -101,7 +101,7 @@ namespace MusicSelect {
         if (not song_artist.empty()) {
             sf::Text song_artist_label{
                 sf::String::fromUtf8(song_artist.begin(), song_artist.end()),
-                resources.fallback_font.medium,
+                shared.fallback_font.medium,
                 static_cast<unsigned int>(
                     0.02f*get_screen_width()
                 )
@@ -132,7 +132,7 @@ namespace MusicSelect {
         }
         sf::Text level_label{
             "LEVEL",
-            resources.fallback_font.light,
+            shared.fallback_font.light,
             static_cast<unsigned int>(12.f/768.f*get_screen_width())
         };
         Toolkit::set_origin_normalized(level_label, 0.5f, 0.f);
@@ -142,7 +142,7 @@ namespace MusicSelect {
         
         sf::Text level_number_label{
             std::to_string(selected_chart->song.chart_levels.at(selected_chart->difficulty)),
-            resources.fallback_font.black,
+            shared.fallback_font.black,
             static_cast<unsigned int>(130.f/768.f*get_screen_width())
         };
         Toolkit::set_origin_normalized(level_number_label, 0.5f, 0.f);
@@ -161,12 +161,12 @@ namespace MusicSelect {
 
         sf::Text chart_label{
             sf::String::fromUtf8(full_difficulty.begin(), full_difficulty.end()),
-            resources.fallback_font.medium,
+            shared.fallback_font.medium,
             static_cast<unsigned int>(20.f/768.f*get_screen_width())
         };
         Toolkit::set_origin_normalized_no_position(chart_label, 0.5f, 0.f);
         chart_label.setPosition(get_big_level_x(), get_big_level_y()+(145.f/768.f*get_screen_width()));
-        chart_label.setFillColor(resources.get_chart_color(selected_chart->difficulty));
+        chart_label.setFillColor(shared.get_chart_color(selected_chart->difficulty));
         target.draw(chart_label, states);
     }
 
@@ -187,7 +187,7 @@ namespace MusicSelect {
         for (auto &&[difficulty, level] : selected_chart->song.chart_levels) {
             sf::CircleShape dif_badge{dif_badge_radius};
             Toolkit::set_origin_normalized(dif_badge, 0.5f, 0.5f);
-            dif_badge.setFillColor(resources.get_chart_color(difficulty));
+            dif_badge.setFillColor(shared.get_chart_color(difficulty));
             dif_badge.setPosition(dif_badge_x+dif_index*dif_badge_step, dif_badge_y);
             target.draw(dif_badge, states);
             if (difficulty == selected_chart->difficulty) {
@@ -229,8 +229,8 @@ namespace MusicSelect {
         if (not selected_difficulty.has_value()) {
             return;
         }
-        resources.density_graphs.load(*selected_difficulty);
-        auto densities = resources.density_graphs.get(*selected_difficulty);
+        shared.density_graphs.load(*selected_difficulty);
+        auto densities = shared.density_graphs.get(*selected_difficulty);
         if (not densities.has_value()) {
             return;
         }

@@ -6,9 +6,11 @@
 #include "Data/Song.hpp"
 #include "Data/Preferences.hpp"
 #include "Resources/Marker.hpp"
+#include "Resources/SharedResources.hpp"
 // #include "Data/Chart.hpp"
 // #include "Data/Score.hpp"
 
+#include "Screens/MusicSelect/Resources.hpp"
 #include "Screens/MusicSelect/MusicSelect.hpp"
 // #include "Screens/Gameplay.hpp"
 // #include "Screens/Result.hpp"
@@ -19,9 +21,10 @@ int main(int, char const **) {
     const std::string jujube_path = whereami::executable_dir();
     Data::Preferences preferences{jujube_path};
     Data::SongList song_list{jujube_path};
-    MusicSelect::SharedResources music_select_resources{preferences};
-    if (music_select_resources.markers.find(preferences.options.marker) == music_select_resources.markers.end()) {
-        preferences.options.marker = music_select_resources.markers.begin()->first;
+    Resources::SharedResources shared_resources{preferences};
+    MusicSelect::ScreenResources music_select_resources{shared_resources};
+    if (shared_resources.markers.find(preferences.options.marker) == shared_resources.markers.end()) {
+        preferences.options.marker = shared_resources.markers.begin()->first;
     }
     MusicSelect::Screen music_select{song_list, music_select_resources};    
     

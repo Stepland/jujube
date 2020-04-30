@@ -13,15 +13,15 @@
 #include "Panels/Panel.hpp"
 #include "PanelLayout.hpp"
 
-MusicSelect::Screen::Screen(const Data::SongList& t_song_list, SharedResources& t_resources) :
-    HoldsSharedResources(t_resources),
+MusicSelect::Screen::Screen(const Data::SongList& t_song_list, ScreenResources& t_resources) :
+    HoldsResources(t_resources),
     song_list(t_song_list),
     ribbon(PanelLayout::title_sort(t_song_list, t_resources), t_resources),
     song_info(t_resources),
     main_option_page(t_resources),
     options_button(t_resources),
     start_button(t_resources),
-    black_frame(t_resources.preferences)
+    black_frame(t_resources.shared.preferences)
 {
     panel_filter.setFillColor(sf::Color(0,0,0,200));
     std::cout << "loaded MusicSelect::Screen" << std::endl;
@@ -32,7 +32,7 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
     ImGui::SFML::Init(window);
     sf::Clock imguiClock;
     ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
-    resources.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
+    shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
     panel_filter.setSize(sf::Vector2f{window.getSize()});
     options_button.setPosition(get_ribbon_x()+2.f*get_panel_step(), get_ribbon_y()+3.f*get_panel_step());
     start_button.setPosition(get_ribbon_x()+3.f*get_panel_step(), get_ribbon_y()+3.f*get_panel_step());
@@ -53,10 +53,10 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
             case sf::Event::Resized:
                 // update the view to the new size of the window
                 window.setView(sf::View({0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)}));
-                resources.preferences.screen.height = event.size.height;
-                resources.preferences.screen.width = event.size.width;
+                shared.preferences.screen.height = event.size.height;
+                shared.preferences.screen.width = event.size.width;
                 ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
-                resources.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
+                shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
                 panel_filter.setSize(sf::Vector2f{window.getSize()});
                 if (not resources.options_state.empty()) {
                     resources.options_state.back().get().update();
@@ -77,15 +77,15 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
         if (not resources.options_state.empty()) {
             window.draw(panel_filter);
             window.draw(resources.options_state.back());
-            if (resources.options_state.back().get().should_exit()) {
                 resources.options_state.back().get().exit();
+            if (resources.options_state.back().get().should_exit()) {
                 resources.options_state.pop_back();
                 if (not resources.options_state.empty()) {
                     resources.options_state.back().get().update();
                 }
             }
         }
-        window.draw(resources.button_highlight);
+        window.draw(shared.button_highlight);
         window.draw(black_frame);
         ribbon.draw_debug();
         draw_debug();
@@ -107,20 +107,19 @@ void MusicSelect::Screen::draw_debug() {
             if (ImGui::CollapsingHeader("Preferences")) {
                 if (ImGui::TreeNode("screen")) {
                     ImGui::TextUnformatted("width : "); ImGui::SameLine();
-                    ImGui::Text("%s", std::to_string(resources.preferences.screen.width).c_str());
+                    ImGui::Text("%s", std::to_string(preferences.screen.width).c_str());
                     ImGui::TextUnformatted("height : "); ImGui::SameLine();
-                    ImGui::Text("%s", std::to_string(resources.preferences.screen.height).c_str());
+                    ImGui::Text("%s", std::to_string(preferences.screen.height).c_str());
                     ImGui::TextUnformatted("fullscreen : "); ImGui::SameLine();
-                    ImGui::Text("%s", resources.preferences.screen.fullscreen ? "true" : "false");
+                    ImGui::Text("%s", preferences.screen.fullscreen ? "true" : "false");
                     ImGui::TreePop();
                 }
                 if (ImGui::TreeNode("layout")) {
-                    
                     ImGui::TreePop();
                 }
                 if (ImGui::TreeNode("options")) {
                     ImGui::TextUnformatted("marker : "); ImGui::SameLine();
-                    ImGui::Text("%s", resources.preferences.options.marker.c_str());
+                    ImGui::Text("%s", preferences.options.marker.c_str());
                     ImGui::TreePop();
                 }
             }
@@ -157,7 +156,7 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
     if (output_used) {
         return;
     }
-    auto button = resources.preferences.key_mapping.key_to_button(key_event.code);
+    auto button = shared.preferences.key_mapping.key_to_button(key_event.code);
     if (button) {
         press_button(*button);
     } else {
@@ -203,7 +202,7 @@ void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& 
 }
 
 void MusicSelect::Screen::press_button(const Input::Button& button) {
-    resources.button_highlight.button_pressed(button);
+    shared.button_highlight.button_pressed(button);
     auto button_index = Input::button_to_index(button);
     if (button_index < 14) {
         ribbon.click_on(button);

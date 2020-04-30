@@ -1,19 +1,19 @@
-#include "MappableKeys.hpp"
+#include "Events.hpp"
 
 namespace Input {
-    MappableKeyToString mappable_button_to_string;
+    EventToString mappable_button_to_string;
 
-    std::string to_string(const MappableKey& mk) {
+    std::string to_string(const Event& mk) {
         return std::visit(mappable_button_to_string, mk);
     }
 
     std::regex mappable_button_regex("(.+?)::(.+)");
     std::regex joystick_button_regex("(\\d+)_(\\d+)");
 
-    MappableKey from_string(const std::string& s) {
+    Event from_string(const std::string& s) {
         std::smatch matches;
         if (not std::regex_match(s, matches, mappable_button_regex)) {
-            throw std::runtime_error("Unknown MappableKey : "+s);
+            throw std::runtime_error("Unknown Event : "+s);
         }
         auto device = matches[1].str();
         auto button = matches[2].str();

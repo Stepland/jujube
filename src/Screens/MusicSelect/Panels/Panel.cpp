@@ -7,10 +7,10 @@
 #include "../../../Toolkit/HSL.hpp"
 #include "../../../Toolkit/NormalizedOrigin.hpp"
 #include "../Ribbon.hpp"
-#include "../SharedResources.hpp"
+#include "../Resources.hpp"
 
 namespace MusicSelect {
-    Panel::Panel(SharedResources& t_resources) : HoldsSharedResources(t_resources) {
+    Panel::Panel(ScreenResources& t_resources) : HoldsResources(t_resources) {
         
     }
 
@@ -42,7 +42,7 @@ namespace MusicSelect {
 
         sf::Text category_label{
             "category",
-            resources.fallback_font.medium,
+            shared.fallback_font.medium,
             static_cast<unsigned int>(get_size()*0.1f)
         };
         category_label.setFillColor(sf::Color::White);
@@ -51,7 +51,7 @@ namespace MusicSelect {
 
         sf::Text label_text{
             m_label,
-            resources.fallback_font.black,
+            shared.fallback_font.black,
             static_cast<unsigned int>(get_size()*0.7f)
         };
         label_text.setFillColor(sf::Color::White);
@@ -111,7 +111,7 @@ namespace MusicSelect {
         // We should gray out the panel if the currently selected difficulty doesn't exist for this song
         bool should_be_grayed_out = m_song->chart_levels.find(last_selected_chart) == m_song->chart_levels.end();
         if (m_song->cover) {
-            auto loaded_texture = resources.covers.async_get(m_song->folder/m_song->cover.value());
+            auto loaded_texture = shared.covers.async_get(m_song->folder/m_song->cover.value());
             if (loaded_texture) {
                 sf::Sprite cover{*(loaded_texture->texture)};
                 auto alpha = static_cast<std::uint8_t>(
@@ -134,7 +134,7 @@ namespace MusicSelect {
             chart_dif_badge.setFillColor(sf::Color(128,128,128));
         } else {
             chart_dif_badge.setFillColor(
-                resources.get_chart_color(last_selected_chart)
+                shared.get_chart_color(last_selected_chart)
             );
         }
         target.draw(chart_dif_badge, states);
@@ -142,7 +142,7 @@ namespace MusicSelect {
             auto dif = m_song->chart_levels.at(last_selected_chart);
             sf::Text dif_label{
                 std::to_string(dif),
-                resources.fallback_font.black,
+                shared.fallback_font.black,
                 static_cast<unsigned int>(get_size()*0.15f)
             };
             dif_label.setFillColor(sf::Color::White);
@@ -151,7 +151,7 @@ namespace MusicSelect {
             target.draw(dif_label, states);
         }
         sf::Text song_title;
-        song_title.setFont(resources.fallback_font.medium);
+        song_title.setFont(shared.fallback_font.medium);
         song_title.setString(sf::String::fromUtf8(m_song->title.begin(), m_song->title.end()));
         song_title.setCharacterSize(static_cast<unsigned int>(0.06875f*get_size()));
         song_title.setFillColor(sf::Color::White);
@@ -181,7 +181,7 @@ namespace MusicSelect {
         target.draw(frame, states);
 
         sf::Text message;
-        message.setFont(resources.fallback_font.medium);
+        message.setFont(shared.fallback_font.medium);
         message.setString(sf::String::fromUtf8(m_message.begin(), m_message.end()));
         message.setCharacterSize(static_cast<unsigned int>(0.1f*get_size()));
         message.setFillColor(m_color);

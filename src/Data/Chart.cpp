@@ -11,21 +11,21 @@ namespace Data {
         auto [_, chart] = *it;
         level = chart.level;
         resolution = static_cast<std::size_t>(chart.resolution);
-        Toolkit::AffineTransform<float> memon_timing_to_1000Hz(
+        Toolkit::AffineTransform<float> memon_timing_to_seconds(
             0.f, static_cast<float>(chart.resolution),
-            -memon.offset*1000.f, (-memon.offset+60.f/memon.BPM)*1000.f
+            -memon.offset, (-memon.offset+60.f/memon.BPM)
         );
-        Toolkit::AffineTransform<float> memon_timing_to_300Hz_proportional(
+        Toolkit::AffineTransform<float> memon_timing_to_seconds_proportional(
             0.f, static_cast<float>(chart.resolution),
-            0.f, (60.f/memon.BPM)*300.f
+            0.f, (60.f/memon.BPM)*1000.f
         );
         for (auto &&note : chart.notes) {
-            auto timing = static_cast<long>(memon_timing_to_1000Hz.transform(note.get_timing()));
+            auto timing = sf::seconds(memon_timing_to_seconds.transform(note.get_timing()));
             auto position = static_cast<Input::Button>(note.get_pos());
-            std::size_t length = 0;
+            sf::Time length = sf::Time::Zero;
             auto tail = Input::Button::B1;
             if (note.get_length() != 0) {
-                length = static_cast<std::size_t>(memon_timing_to_300Hz_proportional.transform(note.get_length()));
+                length = sf::seconds(memon_timing_to_seconds_proportional.transform(note.get_length()));
                 tail = convert_memon_tail(position, note.get_tail_pos());
             }
             notes.insert({timing, position, length, tail});
@@ -73,5 +73,13 @@ namespace Data {
             throw std::runtime_error("Invalid tail_position : "+std::to_string(tail_position));
         }
         return *tail;
+    }
+
+    sf::Time Chart::get_duration_based_on_notes() const {
+        if (notes.rbegin() == notes.rend()) {
+            return sf::Time::Zero;
+        } else {
+            return notes.rbegin()->timing;
+        }
     }
 }

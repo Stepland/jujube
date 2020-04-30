@@ -9,8 +9,7 @@
 #include "../../../Input/Buttons.hpp"
 #include "../../../Data/Song.hpp"
 #include "../../../Toolkit/AffineTransform.hpp"
-#include "../DensityGraph.hpp"
-#include "../SharedResources.hpp"
+#include "../Resources.hpp"
 
 namespace MusicSelect {
 
@@ -18,9 +17,9 @@ namespace MusicSelect {
 
     // A Panel holds anything that can go under a button on the moving part
     // of the music select screen, be it nothing, a category indicator, or a song
-    class Panel : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
+    class Panel : public sf::Drawable, public sf::Transformable, public HoldsResources {
     public:
-        explicit Panel(SharedResources& t_resources);
+        explicit Panel(ScreenResources& t_resources);
         // What happens when you click on the panel
         virtual void click(Ribbon& ribbon, const Input::Button& button) = 0;
         virtual ~Panel() = default;
@@ -38,7 +37,7 @@ namespace MusicSelect {
 
     class ColoredMessagePanel final : public Panel {
     public:
-        ColoredMessagePanel(SharedResources& t_resources, const sf::Color& color, const std::string& message) : Panel(t_resources), m_color(color), m_message(message) {};
+        ColoredMessagePanel(ScreenResources& t_resources, const sf::Color& color, const std::string& message) : Panel(t_resources), m_color(color), m_message(message) {};
         void click(Ribbon&, const Input::Button&) override {return;};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -48,7 +47,7 @@ namespace MusicSelect {
 
     class ColorPanel final : public Panel {
     public:
-        ColorPanel(SharedResources& t_resources, const sf::Color& t_color) : Panel(t_resources), m_color(t_color) {};
+        ColorPanel(ScreenResources& t_resources, const sf::Color& t_color) : Panel(t_resources), m_color(t_color) {};
         void click(Ribbon&, const Input::Button&) override {return;};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -57,7 +56,7 @@ namespace MusicSelect {
 
     class CategoryPanel final : public Panel {
     public:
-        CategoryPanel(SharedResources& t_resources, const std::string& t_label) : Panel(t_resources), m_label(t_label) {};
+        CategoryPanel(ScreenResources& t_resources, const std::string& t_label) : Panel(t_resources), m_label(t_label) {};
         void click(Ribbon& ribbon, const Input::Button& button) override;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -74,7 +73,7 @@ namespace MusicSelect {
 
     class SongPanel final : public SelectablePanel {
     public:
-        explicit SongPanel(SharedResources& t_resources, const std::shared_ptr<const Data::Song>& t_song) : SelectablePanel(t_resources), m_song(t_song) {};
+        explicit SongPanel(ScreenResources& t_resources, const std::shared_ptr<const Data::Song>& t_song) : SelectablePanel(t_resources), m_song(t_song) {};
         void click(Ribbon& ribbon, const Input::Button& button) override;
         void unselect() override;
         std::optional<Data::SongDifficulty> get_selected_difficulty() const override;

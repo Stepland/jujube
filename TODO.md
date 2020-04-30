@@ -2,6 +2,7 @@
 ## Misc
 
 ## Gameplay Screen
+- Precise Input handling, the dirty way
 
 ## Results Screen
 

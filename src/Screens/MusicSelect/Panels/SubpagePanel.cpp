@@ -19,7 +19,7 @@ namespace MusicSelect {
         target.draw(frame, states);
 
         sf::Text message;
-        message.setFont(resources.fallback_font.medium);
+        message.setFont(shared.fallback_font.medium);
         message.setString(sf::String::fromUtf8(m_name.begin(), m_name.end()));
         message.setCharacterSize(static_cast<unsigned int>(0.1f*get_size()));
         message.setFillColor(sf::Color::White);

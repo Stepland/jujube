@@ -57,7 +57,7 @@ namespace MusicSelect {
 
         sf::Text label{
             "OPTIONS",
-            resources.fallback_font.black,
+            shared.fallback_font.black,
             static_cast<unsigned int>(0.2f*get_panel_size())
         };
         label.setFillColor(sf::Color::White);
@@ -72,17 +72,17 @@ namespace MusicSelect {
         sf::CircleShape circle{get_panel_size()*0.4f};
         circle.setFillColor(sf::Color::Black);
         circle.setOutlineThickness(0.02f*get_panel_size());
-        circle.setOutlineColor(resources.BSC_color);
+        circle.setOutlineColor(shared.BSC_color);
         Toolkit::set_origin_normalized(circle, 0.5f, 0.5f);
         circle.setPosition(get_panel_size()*0.5f, get_panel_size()*0.5f);
         target.draw(circle, states);
 
         sf::Text label{
             "START",
-            resources.fallback_font.black,
+            shared.fallback_font.black,
             static_cast<unsigned int>(0.2f*get_panel_size())
         };
-        label.setFillColor(resources.BSC_color);
+        label.setFillColor(shared.BSC_color);
         Toolkit::set_local_origin_normalized(label, 0.5f, 0.5f);
         label.setPosition(get_panel_size()*0.5f, get_panel_size()*0.5f);
         target.draw(label, states);
@@ -93,17 +93,17 @@ namespace MusicSelect {
         sf::CircleShape circle{get_panel_size()*0.4f};
         circle.setFillColor(sf::Color::Black);
         circle.setOutlineThickness(0.02f*get_panel_size());
-        circle.setOutlineColor(resources.EXT_color);
+        circle.setOutlineColor(shared.EXT_color);
         Toolkit::set_origin_normalized(circle, 0.5f, 0.5f);
         circle.setPosition(get_panel_size()*0.5f, get_panel_size()*0.5f);
         target.draw(circle, states);
 
         sf::Text label{
             "BACK",
-            resources.fallback_font.black,
+            shared.fallback_font.black,
             static_cast<unsigned int>(0.2f*get_panel_size())
         };
-        label.setFillColor(resources.EXT_color);
+        label.setFillColor(shared.EXT_color);
         Toolkit::set_local_origin_normalized(label, 0.5f, 0.5f);
         label.setPosition(get_panel_size()*0.5f, get_panel_size()*0.5f);
         target.draw(label, states);

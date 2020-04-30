@@ -2,12 +2,9 @@
 
 #include <iostream>
 
-#include "../../Toolkit/HSL.hpp"
+#include "../Toolkit/HSL.hpp"
 
-#include "Options/OptionPage.hpp"
-#include "Panels/Panel.hpp"
-
-namespace MusicSelect {
+namespace Resources {
 
     FallbackFont::FallbackFont(const ghc::filesystem::path& jujube_path) :
         light(),
@@ -34,32 +31,6 @@ namespace MusicSelect {
     {
         covers.reserve(256);
         std::cout << "Loaded MusicSelect::SharedResources" << std::endl;
-    }
-
-    std::string SharedResources::get_last_selected_difficulty() {
-        return get_selected_difficulty().value_or("BSC");
-    }
-
-    std::optional<std::string> SharedResources::get_selected_difficulty() {
-        if (not selected_panel.has_value()) {
-            return {};
-        }
-        auto chart_selection = selected_panel->obj.get_selected_difficulty();
-        if (not chart_selection.has_value()) {
-            return {};
-        }
-        return chart_selection->difficulty;
-    }
-
-    std::optional<std::reference_wrapper<const Data::Song>> MusicSelect::SharedResources::get_selected_song() {
-        if (not selected_panel.has_value()) {
-            return {};
-        }
-        auto chart_selection = selected_panel->obj.get_selected_difficulty();
-        if (not chart_selection.has_value()) {
-            return {};
-        }
-        return chart_selection->song;
     }
 
     sf::Color SharedResources::get_chart_color(const std::string& chart) {

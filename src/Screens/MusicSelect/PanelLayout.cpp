@@ -5,7 +5,7 @@
 namespace MusicSelect {
     PanelLayout::PanelLayout(
         const std::map<std::string,std::vector<std::shared_ptr<Panel>>>& categories,
-        SharedResources& t_resources
+        ScreenResources& t_resources
     ) {
         for (auto &&[category, panels] : categories) {
             if (not panels.empty()) {
@@ -31,7 +31,7 @@ namespace MusicSelect {
 
     PanelLayout::PanelLayout(
         const std::vector<std::shared_ptr<Panel>>& panels,
-        SharedResources& t_resources
+        ScreenResources& t_resources
     ) {
         std::vector<std::shared_ptr<Panel>> current_column;
         for (auto& panel : panels) {
@@ -50,7 +50,7 @@ namespace MusicSelect {
         fill_layout(t_resources);
     }
 
-    PanelLayout PanelLayout::red_empty_layout(SharedResources& t_resources) {
+    PanelLayout PanelLayout::red_empty_layout(ScreenResources& t_resources) {
         std::vector<std::shared_ptr<Panel>> panels;
         for (size_t i = 0; i < 3*4; i++) {
             panels.emplace_back(std::make_shared<ColoredMessagePanel>(t_resources, sf::Color::Red, "- EMPTY -"));
@@ -58,7 +58,7 @@ namespace MusicSelect {
         return PanelLayout{panels, t_resources};
     }
 
-    PanelLayout PanelLayout::title_sort(const Data::SongList& song_list, SharedResources& t_resources) {
+    PanelLayout PanelLayout::title_sort(const Data::SongList& song_list, ScreenResources& t_resources) {
         std::vector<std::shared_ptr<const Data::Song>> songs;
         for (auto &&song : song_list.songs) {
             songs.push_back(song);
@@ -90,7 +90,7 @@ namespace MusicSelect {
         return PanelLayout{categories, t_resources};
     }
     
-    void PanelLayout::fill_layout(SharedResources& t_resources) {
+    void PanelLayout::fill_layout(ScreenResources& t_resources) {
         while (size() < 4) {
             push_back({
                 std::make_shared<EmptyPanel>(t_resources),

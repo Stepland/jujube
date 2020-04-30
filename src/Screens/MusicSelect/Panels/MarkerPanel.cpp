@@ -3,11 +3,11 @@
 #include <cmath>
 
 namespace MusicSelect {
-    MarkerPanel::MarkerPanel(SharedResources& t_resources, const Resources::Marker& marker) :
+    MarkerPanel::MarkerPanel(ScreenResources& t_resources, const Resources::Marker& marker) :
         Panel(t_resources),
         m_marker(marker)
     {
-        if (resources.preferences.options.marker == m_marker.m_metadata.name) {
+        if (shared.preferences.options.marker == m_marker.m_metadata.name) {
             select();
         }
     }
@@ -40,7 +40,7 @@ namespace MusicSelect {
             resources.selected_marker->obj.unselect();
         }
         resources.selected_marker.emplace(*this);
-        resources.preferences.options.marker = m_marker.m_metadata.name;
+        preferences.options.marker = m_marker.m_metadata.name;
         this->selected = true;
     }
 

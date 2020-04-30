@@ -5,9 +5,9 @@
 
 #include <SFML/Audio.hpp>
 
-#include "../../Toolkit/AffineTransform.hpp"
+#include "../Toolkit/AffineTransform.hpp"
 
-namespace MusicSelect {
+namespace Drawables {
 
     DensityGraph::DensityGraph(const std::array<unsigned int, 115>& t_densities) :
         m_densities(t_densities),
@@ -53,7 +53,7 @@ namespace MusicSelect {
             throw std::invalid_argument("Song "+song.title+" has no "+difficulty+" chart");
         }
         if (c->notes.empty()) {
-            return compute_density_graph_from_chart(*c, 0, 0);
+            return compute_density_graph_from_chart(*c, sf::Time::Zero, sf::Time::Zero);
         }
         if (not song.audio.has_value()) {
             return compute_density_graph_from_chart(*c, c->notes.begin()->timing, c->notes.rbegin()->timing);
@@ -64,22 +64,22 @@ namespace MusicSelect {
         }
         return compute_density_graph_from_chart(
             *c,
-            std::min(0L, c->notes.begin()->timing),
-            std::max(c->notes.rbegin()->timing, static_cast<long>(m.getDuration().asMilliseconds()*3/10))
+            sf::microseconds(std::min(0LL, c->notes.begin()->timing.asMicroseconds())),
+            sf::microseconds(std::max(c->notes.rbegin()->timing.asMicroseconds(), m.getDuration().asMicroseconds()))
         );
     }
 
-    DensityGraph compute_density_graph_from_chart(const Data::Chart& chart, long start, long end) {
+    DensityGraph compute_density_graph_from_chart(const Data::Chart& chart, sf::Time start, sf::Time end) {
         std::array<unsigned int, 115> d{};
         if (start != end) {
             Toolkit::AffineTransform<float> ticks_to_column{
-                static_cast<float>(start),
-                static_cast<float>(end),
+                start.asSeconds(),
+                end.asSeconds(),
                 0.f,
                 115.f
             };
             for (auto &&note : chart.notes) {
-                auto index = static_cast<unsigned int>(ticks_to_column.transform(static_cast<float>(note.timing)));
+                auto index = static_cast<unsigned int>(ticks_to_column.transform(note.timing.asSeconds()));
                 d.at(index) += 1;
             }
             std::replace_if(
@@ -95,7 +95,7 @@ namespace MusicSelect {
 
 namespace Toolkit {
     template<>
-    void set_origin_normalized(MusicSelect::DensityGraph& s, float x, float y) {
+    void set_origin_normalized(Drawables::DensityGraph& s, float x, float y) {
         s.setOrigin(x*574.f, y*39.f);
     }
 }

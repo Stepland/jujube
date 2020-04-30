@@ -6,16 +6,16 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "../../../Input/MappableKeys.hpp"
+#include "../../../Input/Events.hpp"
 #include "../../../Toolkit/AffineTransform.hpp"
-#include "../SharedResources.hpp"
+#include "../Resources.hpp"
 #include "OptionPage.hpp"
 
 namespace MusicSelect {
 
-    class PressHere final : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
+    class PressHere final : public sf::Drawable, public sf::Transformable, public HoldsResources {
     public:
-        PressHere(SharedResources& t_resources);
+        PressHere(ScreenResources& t_resources);
         void update();
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -26,28 +26,28 @@ namespace MusicSelect {
         Toolkit::AffineTransform<float> size_anim;
     };
 
-    class AlreadyMapped final : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
+    class AlreadyMapped final : public sf::Drawable, public sf::Transformable, public HoldsResources {
     public:
-        AlreadyMapped(SharedResources& t_resources);
+        AlreadyMapped(ScreenResources& t_resources);
         void update();
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         sf::RectangleShape background;
     };
 
-    class MappingPreview final : public sf::Drawable, public sf::Transformable, public HoldsSharedResources {
+    class MappingPreview final : public sf::Drawable, public sf::Transformable, public HoldsResources {
     public:
-        MappingPreview(SharedResources& t_resources, const std::unordered_map<Input::MappableKey, Input::Button>& t_key_to_button);
+        MappingPreview(ScreenResources& t_resources, const std::unordered_map<Input::Event, Input::Button>& t_key_to_button);
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-        const std::unordered_map<Input::MappableKey, Input::Button>& key_to_button;
+        const std::unordered_map<Input::Event, Input::Button>& key_to_button;
         mutable sf::RectangleShape square;
         mutable sf::Text key_label;
     };
 
     class InputRemap final : public OptionPage {
     public:
-        InputRemap(SharedResources& t_resources);
+        InputRemap(ScreenResources& t_resources);
         bool handle_raw_input(const sf::Event::KeyEvent& event) override;
         const std::string name = "Mapping";
         bool should_exit() override;
@@ -61,7 +61,7 @@ namespace MusicSelect {
         mutable sf::Text confirm_text_top;
         mutable sf::Text confirm_text_bottom;
         mutable sf::Text big_number;
-        std::unordered_map<Input::MappableKey, Input::Button> m_key_to_button;
+        std::unordered_map<Input::Event, Input::Button> m_key_to_button;
         mutable PressHere press_here_panel;
         mutable AlreadyMapped already_mapped_panel;
         mutable MappingPreview mapping_preview;

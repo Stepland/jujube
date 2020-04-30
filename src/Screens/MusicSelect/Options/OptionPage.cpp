@@ -15,7 +15,7 @@ namespace MusicSelect {
         this->setPosition(get_ribbon_x(), get_ribbon_y());
     }
 
-    RibbonPage::RibbonPage(const PanelLayout& layout, SharedResources& t_resources) :
+    RibbonPage::RibbonPage(const PanelLayout& layout, ScreenResources& t_resources) :
         OptionPage(t_resources),
         m_ribbon(layout, t_resources),
         back_button(t_resources)
@@ -36,7 +36,7 @@ namespace MusicSelect {
     }
 
     void RibbonPage::button_click(const Input::Button& button) {
-        resources.button_highlight.button_pressed(button);
+        shared.button_highlight.button_pressed(button);
         auto button_index = Input::button_to_index(button);
         if (button_index < 12) {
             m_ribbon.click_on(button);
@@ -61,12 +61,12 @@ namespace MusicSelect {
         target.draw(back_button, states);
     }
 
-    MainOptionPage::MainOptionPage(SharedResources& t_resources) :
+    MainOptionPage::MainOptionPage(ScreenResources& t_resources) :
         RibbonPage(MainOptionPage::create_layout(t_resources), t_resources)
     {
     }
 
-    PanelLayout MainOptionPage::create_layout(SharedResources& t_resources) {
+    PanelLayout MainOptionPage::create_layout(ScreenResources& t_resources) {
         std::vector<std::shared_ptr<Panel>> subpages;
         auto marker_select = std::make_shared<MarkerSelect>(t_resources);
         subpages.emplace_back(std::make_shared<SubpagePanel>(t_resources, std::move(marker_select), "markers"));
@@ -75,19 +75,19 @@ namespace MusicSelect {
         return PanelLayout{subpages, t_resources};
     }
 
-    InputOptionPage::InputOptionPage(SharedResources& t_resources) :
+    InputOptionPage::InputOptionPage(ScreenResources& t_resources) :
         RibbonPage(InputOptionPage::create_layout(t_resources), t_resources)
     {
     }
 
-    PanelLayout InputOptionPage::create_layout(SharedResources& t_resources) {
+    PanelLayout InputOptionPage::create_layout(ScreenResources& t_resources) {
         std::vector<std::shared_ptr<Panel>> subpages;
         auto input_remap = std::make_shared<InputRemap>(t_resources);
         subpages.emplace_back(std::make_shared<SubpagePanel>(t_resources, std::move(input_remap), "remap\nbuttons"));
         return PanelLayout{subpages, t_resources};
     }
 
-    MarkerSelect::MarkerSelect(SharedResources& t_resources) :
+    MarkerSelect::MarkerSelect(ScreenResources& t_resources) :
         RibbonPage(MarkerSelect::create_layout(t_resources), t_resources)
     {
     }
@@ -96,9 +96,9 @@ namespace MusicSelect {
         resources.selected_marker.reset();
     }
 
-    PanelLayout MarkerSelect::create_layout(SharedResources& t_resources) {
+    PanelLayout MarkerSelect::create_layout(ScreenResources& t_resources) {
         std::vector<std::shared_ptr<Panel>> markers;
-        for (const auto &[name, marker] : t_resources.markers) {
+        for (const auto &[name, marker] : t_resources.shared.markers) {
             markers.emplace_back(std::make_shared<MarkerPanel>(t_resources, marker));
         }
         return PanelLayout{markers, t_resources};

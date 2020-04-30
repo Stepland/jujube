@@ -9,20 +9,16 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/System.hpp>
 
-#include "../../Data/Preferences.hpp"
-#include "../../Data/Song.hpp"
-#include "../../Drawables/ButtonHighlight.hpp"
-#include "../../Resources/Marker.hpp"
-#include "../../Resources/TextureCache.hpp"
+#include "../Data/Preferences.hpp"
+#include "../Data/Song.hpp"
+#include "../Drawables/ButtonHighlight.hpp"
+#include "../Drawables/DensityGraph.hpp"
+#include "../Resources/Marker.hpp"
+#include "../Resources/TextureCache.hpp"
 
-#include "DensityGraph.hpp"
-#include "MusicPreview.hpp"
+namespace Resources {
 
-namespace MusicSelect {
-
-    class SelectablePanel;
     class MarkerPanel;
-    class OptionPage;
 
     template<class Object>
     struct Timed {
@@ -40,7 +36,7 @@ namespace MusicSelect {
         sf::Font black;
     };
 
-    // Holds everything that needs to be shared by all levels of the class hierarchy
+    // Holds everything that needs to be shared between screens and down the class hierarchy
     struct SharedResources : public Data::HoldsPreferences {
         SharedResources(Data::Preferences& p);
 
@@ -48,32 +44,21 @@ namespace MusicSelect {
         
         FallbackFont fallback_font;
 
-        MusicSelect::DensityGraphCache density_graphs;
-        
-        std::optional<Timed<SelectablePanel>> selected_panel;
-        std::string get_last_selected_difficulty();
-        std::optional<std::string> get_selected_difficulty();
-        std::optional<std::reference_wrapper<const Data::Song>> get_selected_song();
+        Drawables::DensityGraphCache density_graphs;
 
         sf::Color BSC_color = sf::Color{34,216,92};
         sf::Color ADV_color = sf::Color{252,212,32};
         sf::Color EXT_color = sf::Color{234,46,32};
         sf::Color get_chart_color(const std::string& chart);
 
-        MusicPreview music_preview;
-
-        std::vector<std::reference_wrapper<OptionPage>> options_state;
-
         Resources::Markers markers;
-        std::optional<Timed<MarkerPanel>> selected_marker;
 
         Drawables::ButtonHighlight button_highlight;
     };
 
     // Proxy for HoldsPreferences
     struct HoldsSharedResources : public Data::HoldsPreferences {
-        HoldsSharedResources(SharedResources& t_resources) : Data::HoldsPreferences(t_resources.preferences), resources(t_resources) {};
-    protected:
-        SharedResources& resources;
+        HoldsSharedResources(SharedResources& t_resources) : Data::HoldsPreferences(t_resources.preferences), shared(t_resources) {};
+        SharedResources& shared;
     };
 }

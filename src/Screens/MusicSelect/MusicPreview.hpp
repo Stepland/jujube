@@ -11,6 +11,8 @@
 
 namespace fs = ghc::filesystem;
 
+// In this file define stuff to try to handle creating sf::Music objects
+// and starting their playback asynchronously while trying to keep some thread-safety
 namespace MusicSelect {
     struct MusicLoop {
         MusicLoop(fs::path music_path, std::optional<sf::Music::TimeSpan> t_loop);
@@ -18,7 +20,6 @@ namespace MusicSelect {
         sf::Music::TimeSpan loop;
         Toolkit::AffineTransform<float> fade_out = {0.f, 1.f, 0.f, 1.f}; // placeholder value
     };
-
     class MusicPreview {
     public:
         MusicPreview() = default;
