@@ -77,8 +77,8 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
         if (not resources.options_state.empty()) {
             window.draw(panel_filter);
             window.draw(resources.options_state.back());
-                resources.options_state.back().get().exit();
             if (resources.options_state.back().get().should_exit()) {
+                resources.options_state.back().get().exit();
                 resources.options_state.pop_back();
                 if (not resources.options_state.empty()) {
                     resources.options_state.back().get().update();
