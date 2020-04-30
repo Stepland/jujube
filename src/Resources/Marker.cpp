@@ -34,7 +34,7 @@ namespace Resources {
             {"fps", mm.fps},
             {"approach", mm.approach},
             {"miss", mm.miss},
-            {"early", mm.early},
+            {"poor", mm.poor},
             {"good", mm.good},
             {"great", mm.great},
             {"perfect", mm.perfect}
@@ -47,7 +47,7 @@ namespace Resources {
         j.at("fps").get_to(mm.fps);
         j.at("approach").get_to(mm.approach);
         j.at("miss").get_to(mm.miss);
-        j.at("early").get_to(mm.early);
+        j.at("poor").get_to(mm.poor);
         j.at("good").get_to(mm.good);
         j.at("great").get_to(mm.great);
         j.at("perfect").get_to(mm.perfect);
@@ -58,7 +58,7 @@ namespace Resources {
         m_metadata(),
         m_approach(),
         m_miss(),
-        m_early(),
+        m_poor(),
         m_good(),
         m_great(),
         m_perfect()
@@ -75,7 +75,7 @@ namespace Resources {
         j.get_to(m_metadata);
         load_and_check(m_approach, m_metadata.approach);
         load_and_check(m_miss, m_metadata.miss);
-        load_and_check(m_early, m_metadata.early);
+        load_and_check(m_poor, m_metadata.poor);
         load_and_check(m_good, m_metadata.good);
         load_and_check(m_great, m_metadata.great);
         load_and_check(m_perfect, m_metadata.perfect);
@@ -143,8 +143,8 @@ namespace Resources {
         case MarkerAnimation::MISS:
             return m_miss;
             break;
-        case MarkerAnimation::EARLY:
-            return m_early;
+        case MarkerAnimation::POOR:
+            return m_poor;
             break;
         case MarkerAnimation::GOOD:
             return m_good;
@@ -168,8 +168,8 @@ namespace Resources {
         case MarkerAnimation::MISS:
             return m_metadata.miss;
             break;
-        case MarkerAnimation::EARLY:
-            return m_metadata.early;
+        case MarkerAnimation::POOR:
+            return m_metadata.poor;
             break;
         case MarkerAnimation::GOOD:
             return m_metadata.good;

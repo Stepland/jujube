@@ -11,7 +11,7 @@ namespace Resources {
     enum class MarkerAnimation {
         APPROACH,
         MISS,
-        EARLY, // or LATE
+        POOR,
         GOOD,
         GREAT,
         PERFECT
@@ -34,7 +34,7 @@ namespace Resources {
         std::size_t fps; // classic jubeat markers are 30 fps
         MarkerAnimationMetadata approach;
         MarkerAnimationMetadata miss;
-        MarkerAnimationMetadata early;
+        MarkerAnimationMetadata poor;
         MarkerAnimationMetadata good;
         MarkerAnimationMetadata great;
         MarkerAnimationMetadata perfect;
@@ -55,7 +55,7 @@ namespace Resources {
         MarkerMetadata m_metadata;
         sf::Texture m_approach;
         sf::Texture m_miss;
-        sf::Texture m_early;
+        sf::Texture m_poor;
         sf::Texture m_good;
         sf::Texture m_great;
         sf::Texture m_perfect;
