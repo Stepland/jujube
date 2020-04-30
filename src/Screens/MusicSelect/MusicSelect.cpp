@@ -27,7 +27,7 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list, SharedResources& 
     std::cout << "loaded MusicSelect::Screen" << std::endl;
 }
 
-Data::SongDifficulty MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
+std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
     sf::Clock imguiClock;
@@ -94,8 +94,11 @@ Data::SongDifficulty MusicSelect::Screen::select_chart(sf::RenderWindow& window)
         resources.music_preview.update();
     }
     ImGui::SFML::Shutdown();
-    assert((resources.selected_panel.has_value()));
-    return *resources.selected_panel->obj.get_selected_difficulty();
+    if (resources.selected_panel) {
+        return resources.selected_panel->obj.get_selected_difficulty();
+    } else {
+        return {};
+    }
 }
 
 void MusicSelect::Screen::draw_debug() {

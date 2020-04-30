@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <optional>
 #include <stack>
 
 #include <SFML/Window.hpp>
@@ -29,7 +30,7 @@ namespace MusicSelect {
             const Data::SongList& t_song_list,
             SharedResources& t_resources
         );
-        Data::SongDifficulty select_chart(sf::RenderWindow& window);
+        std::optional<Data::SongDifficulty> select_chart(sf::RenderWindow& window);
         void draw_debug() override;
     private:
         const Data::SongList song_list;

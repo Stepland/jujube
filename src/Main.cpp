@@ -38,7 +38,11 @@ int main(int, char const **) {
         settings
     };
     auto chart = music_select.select_chart(window);
-    std::cout << "Selected Chart : " << chart.song.title << " [" << chart.difficulty << "]" << std::endl;
+    if (chart) {
+        std::cout << "Selected Chart : " << chart->song.title << " [" << chart->difficulty << "]" << std::endl;
+    } else {
+        std::cout << "Exited MusicSelect::Screen without selecting a chart" << std::endl;
+    }
     /*
     while (true) {
         
