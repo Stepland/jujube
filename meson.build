@@ -79,6 +79,8 @@ sources = [
     'src/Screens/MusicSelect/SongInfo.cpp',
     'src/Screens/Gameplay/Gameplay.hpp',
     'src/Screens/Gameplay/Gameplay.cpp',
+    'src/Screens/Gameplay/GradedNote.cpp',
+    'src/Screens/Gameplay/GradedNote.hpp',
     'src/Screens/Gameplay/PreciseMusic.hpp',
     'src/Screens/Gameplay/PreciseMusic.cpp',
     'src/Screens/Gameplay/Silence.hpp',

@@ -8,7 +8,7 @@ import json
 class MarkerAnimation(str, Enum):
     APPROACH = "approach"
     MISS = "miss"
-    EARLY = "early"
+    POOR = "poor"
     GOOD = "good"
     GREAT = "great"
     PERFECT = "perfect"
@@ -16,10 +16,10 @@ class MarkerAnimation(str, Enum):
 FILENAMES = {
     MarkerAnimation.APPROACH : [f'ma{i:02}.png' for i in range(16)],
     MarkerAnimation.MISS : [f'ma{i:02}.png' for i in range(16, 24)],
-    MarkerAnimation.EARLY : [f'h1{i:02}.png' for i in range(16)],
+    MarkerAnimation.POOR : [f'h1{i:02}.png' for i in range(16)],
     MarkerAnimation.GOOD : [f'h2{i:02}.png' for i in range(16)],
     MarkerAnimation.GREAT : [f'h3{i:02}.png' for i in range(16)],
-    MarkerAnimation.PERFECT : [f'h4{i:02}.png' for i in range(16)],
+    MarkerAnimation.PEEARLYRFECT : [f'h4{i:02}.png' for i in range(16)],
 }
 
 METADATA = {
