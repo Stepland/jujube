@@ -1,5 +1,6 @@
 #include "Gameplay.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include <optional>
 #include <thread>
@@ -11,20 +12,14 @@
 
 namespace Gameplay {
     Screen::Screen(const Data::SongDifficulty& t_song_selection, ScreenResources& t_resources) :
+        HoldsResources(t_resources),
         song_selection(t_song_selection),
         chart(*t_song_selection.song.get_chart(t_song_selection.difficulty)),
-        HoldsResources(t_resources),
-        marker(t_resources.shared.get_selected_marker()),
-        notes(t_song_selection.song.get_chart(t_song_selection.difficulty)->notes.size())
+        marker(t_resources.shared.get_selected_marker())
     {
-        auto it = chart.notes.begin();
-        std::size_t i = 0;
-        while (it != chart.notes.end()) {
-            notes[i] = GradedNote{*it};
-            ++it;
-            ++i;
+        for (auto&& note : chart.notes) {
+            notes.emplace_back(GradedNote{note});
         }
-        note_cursor = notes.begin();
         std::variant<PreciseMusic, Silence> music;
         auto music_path = song_selection.song.full_audio_path();
         if (music_path) {
@@ -36,7 +31,7 @@ namespace Gameplay {
         getStatus = std::visit(GetStatusVisitor{}, music);
     }
 
-    Data::Score Screen::play_chart(sf::RenderWindow& window) {
+    void Screen::play_chart(sf::RenderWindow& window) {
         std::thread render_thread(&Screen::render, this, std::ref(window));
         while ((not song_finished) and window.isOpen()) {
             auto music_time = getPlayingOffset();
@@ -75,10 +70,10 @@ namespace Gameplay {
         while ((not song_finished) and window.isOpen()) {
             ImGui::SFML::Update(window, imguiClock.restart());
             auto music_time = getPlayingOffset();
-            update_note_cursor(music_time);
+            update_note_index(music_time);
             window.clear(sf::Color(7, 23, 53));
-            for (auto it = note_cursor.load(); it != notes.end(); ++it) {
-                auto note = it->load();
+            for (auto i = note_index.load(); i < notes.size(); ++i) {
+                auto note = notes[i].load();
                 std::optional<sf::Sprite> sprite;
                 if (note.timed_judgment) {
                     sprite = marker.get_sprite(
@@ -152,9 +147,9 @@ namespace Gameplay {
         shared.button_highlight.button_pressed(button);
         // Is the music even playing ?
         if (getStatus() == sf::SoundSource::Playing) {
-            update_note_cursor(music_time);
-            for (auto it = note_cursor.load(); it != notes.end(); ++it) {
-                auto note = it->load();
+            update_note_index(music_time);
+            for (auto i = note_index.load(); i < notes.size(); ++i) {
+                auto note = notes[i].load();
                 // is the note still visible ?
                 if (note.timing > music_time + sf::seconds(16.f/30.f)) {
                     break;
@@ -167,20 +162,20 @@ namespace Gameplay {
                 if (note.timed_judgment) {
                     continue;
                 }
-                it->store(GradedNote{note, music_time-note.timing});
+                notes[i].store(GradedNote{note, music_time-note.timing});
                 break;
             }
         }
     }
-    void Screen::update_note_cursor(const sf::Time& music_time) {
-        for (auto it = note_cursor.load(); it != notes.end(); ++it) {
-            if (it->load().timing >= music_time - sf::seconds(16.f/30.f)) {
-                note_cursor = it;
+    void Screen::update_note_index(const sf::Time& music_time) {
+        for (auto i = note_index.load(); i < notes.size(); ++i) {
+            auto note = notes[i].load();
+            if (note.timing >= music_time - sf::seconds(16.f/30.f)) {
+                note_index = i;
                 break;
             } else {
-                auto note = it->load();
                 note.timed_judgment.emplace(sf::Time::Zero, Judgement::Miss);
-                it->store(note);
+                notes[i].store(note);
             }
         }
     }

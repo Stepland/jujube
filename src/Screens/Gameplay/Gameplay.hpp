@@ -1,7 +1,7 @@
 #pragma once
 
 #include <atomic>
-#include <vector>
+#include <deque>
 
 #include <SFML/Graphics.hpp>
 
@@ -22,7 +22,7 @@ namespace Gameplay {
     class Screen : Toolkit::Debuggable, HoldsResources {
     public:
         explicit Screen(const Data::SongDifficulty& song_selection, ScreenResources& t_resources);
-        Data::Score play_chart(sf::RenderWindow& window);
+        void play_chart(sf::RenderWindow& window);
     private:
         void render(sf::RenderWindow& window);
 
@@ -37,11 +37,11 @@ namespace Gameplay {
         const Data::Chart chart;
         const Resources::Marker& marker;
 
-        std::vector<std::atomic<GradedNote>> notes;
-        std::atomic<std::vector<std::atomic<GradedNote>>::iterator> note_cursor;
+        std::deque<std::atomic<GradedNote>> notes;
+        std::atomic<std::size_t> note_index;
         // moves note_cursor forward to the first note that has to be conscidered for judging
         // marks every note between the old and the new position as missed
-        void update_note_cursor(const sf::Time& music_time);
+        void update_note_index(const sf::Time& music_time);
 
         std::atomic<bool> song_finished = false;
     };

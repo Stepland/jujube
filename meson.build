@@ -5,19 +5,6 @@ project(
     version : '0.1.0-alpha'
 )
 
-cc = meson.get_compiler('cpp')
-
-sfml = []
-foreach module : ['system', 'window', 'graphics', 'audio']
-    sfml += [dependency('sfml-'+module, version : '>=2.5.1')]
-endforeach
-
-thread_dep = dependency('threads')
-m_dep = cc.find_library('m', required : false)
-gl_dep = dependency('gl')
-
-add_project_link_arguments(['-lstdc++'], language : 'cpp')
-
 sources = [
     'include/imgui/imgui.cpp',
     'include/imgui/imgui_draw.cpp',
@@ -100,6 +87,21 @@ sources = [
     'src/Main.cpp',
 ]
 
+cc = meson.get_compiler('cpp')
+
+dependencies = []
+
+foreach module : ['system', 'window', 'graphics', 'audio']
+    dependencies += [dependency('sfml-'+module, version : '>=2.5.1')]
+endforeach
+
+dependencies += dependency('threads')
+dependencies += cc.find_library('m', required : false)
+dependencies += dependency('gl')
+dependencies += cc.find_library('atomic')
+
+add_project_link_arguments(['-lstdc++'], language : 'cpp')
+
 inc = include_directories('include', 'include/imgui', 'include/imgui-sfml')
 
 subdir('test')
@@ -107,8 +109,8 @@ subdir('test')
 executable(
     'jujube',
     sources,
-    dependencies: [sfml, thread_dep, gl_dep, m_dep],
-    include_directories : include_directories('include', 'include/imgui', 'include/imgui-sfml'), 
+    dependencies: dependencies,
+    include_directories : inc, 
     cpp_args : [
         '-Wall',
         '-Wextra',

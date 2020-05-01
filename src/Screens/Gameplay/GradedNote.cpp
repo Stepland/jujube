@@ -1,7 +1,7 @@
 #include "GradedNote.hpp"
 
 namespace Gameplay {
-    Resources::MarkerAnimation Gameplay::judgement_to_animation(const Judgement& j) {
+    Resources::MarkerAnimation judgement_to_animation(const Judgement& j) {
         switch (j) {
         case Judgement::Perfect:
             return Resources::MarkerAnimation::PERFECT;
@@ -13,6 +13,8 @@ namespace Gameplay {
             return Resources::MarkerAnimation::POOR;
         case Judgement::Miss:
             return Resources::MarkerAnimation::MISS;
+        default:
+            return Resources::MarkerAnimation::APPROACH;
         }
     }
 
@@ -38,7 +40,7 @@ namespace Gameplay {
         }
     }
 
-    TimedJudgement Gameplay::JudgeFromDelta(const sf::Time& t) {
+    TimedJudgement JudgeFromDelta(const sf::Time& t) {
         auto res = TimedJudgement{};
         res.delta = t;
         res.judgement = delta_to_judgement(t);

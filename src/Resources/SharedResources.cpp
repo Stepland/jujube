@@ -26,9 +26,9 @@ namespace Resources {
     SharedResources::SharedResources(Data::Preferences& p) :
         Data::HoldsPreferences(p),
         fallback_font(p.jujube_path),
-        markers(Resources::load_markers(p.jujube_path)),
         black_frame(p),
-        button_highlight(p)
+        button_highlight(p),
+        markers(Resources::load_markers(p.jujube_path))
     {
         covers.reserve(256);
         std::cout << "Loaded MusicSelect::SharedResources" << std::endl;
