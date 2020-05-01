@@ -5,7 +5,7 @@ namespace Toolkit {
     class Debuggable {
     public:
         virtual ~Debuggable() = default;
-        virtual void draw_debug() = 0;
+        virtual void draw_debug() {};
         bool debug = false;
     };
 }

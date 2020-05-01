@@ -12,7 +12,8 @@
 
 #include "Screens/MusicSelect/Resources.hpp"
 #include "Screens/MusicSelect/MusicSelect.hpp"
-// #include "Screens/Gameplay.hpp"
+#include "Screens/Gameplay/Resources.hpp"
+#include "Screens/Gameplay/Gameplay.hpp"
 // #include "Screens/Result.hpp"
 
 int main(int, char const **) {
@@ -45,7 +46,12 @@ int main(int, char const **) {
         std::cout << "Selected Chart : " << chart->song.title << " [" << chart->difficulty << "]" << std::endl;
     } else {
         std::cout << "Exited MusicSelect::Screen without selecting a chart" << std::endl;
+        return 0;
     }
+
+    Gameplay::ScreenResources gameplay_resources{shared_resources};
+    Gameplay::Screen gameplay{*chart, gameplay_resources};
+
     /*
     while (true) {
         
