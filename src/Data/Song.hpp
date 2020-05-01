@@ -53,7 +53,7 @@ namespace Data {
     struct SongDifficulty {
         const Data::Song& song;
         const std::string& difficulty;
-
+        
         bool operator==(const SongDifficulty &other) const {
             return (
                 song.folder == other.song.folder and

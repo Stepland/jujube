@@ -20,8 +20,7 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list, ScreenResources& 
     song_info(t_resources),
     main_option_page(t_resources),
     options_button(t_resources),
-    start_button(t_resources),
-    black_frame(t_resources.shared.preferences)
+    start_button(t_resources)
 {
     panel_filter.setFillColor(sf::Color(0,0,0,200));
     std::cout << "loaded MusicSelect::Screen" << std::endl;
@@ -86,7 +85,7 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
             }
         }
         window.draw(shared.button_highlight);
-        window.draw(black_frame);
+        window.draw(shared.black_frame);
         ribbon.draw_debug();
         draw_debug();
         ImGui::SFML::Render(window);

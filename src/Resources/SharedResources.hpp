@@ -11,6 +11,7 @@
 
 #include "../Data/Preferences.hpp"
 #include "../Data/Song.hpp"
+#include "../Drawables/BlackFrame.hpp"
 #include "../Drawables/ButtonHighlight.hpp"
 #include "../Drawables/DensityGraph.hpp"
 #include "../Resources/Marker.hpp"
@@ -44,6 +45,9 @@ namespace Resources {
         
         FallbackFont fallback_font;
 
+        Drawables::BlackFrame black_frame;
+        Drawables::ButtonHighlight button_highlight;
+        
         Drawables::DensityGraphCache density_graphs;
 
         sf::Color BSC_color = sf::Color{34,216,92};
@@ -52,8 +56,7 @@ namespace Resources {
         sf::Color get_chart_color(const std::string& chart);
 
         Resources::Markers markers;
-
-        Drawables::ButtonHighlight button_highlight;
+        Resources::Marker& get_selected_marker();
     };
 
     // Proxy for HoldsPreferences

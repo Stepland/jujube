@@ -27,6 +27,7 @@ namespace Resources {
         Data::HoldsPreferences(p),
         fallback_font(p.jujube_path),
         markers(Resources::load_markers(p.jujube_path)),
+        black_frame(p),
         button_highlight(p)
     {
         covers.reserve(256);
@@ -47,5 +48,9 @@ namespace Resources {
                 49
             ).TurnToRGB();
         }
+    }
+
+    Resources::Marker& SharedResources::get_selected_marker() {
+        return markers.at(preferences.options.marker);
     }
 }

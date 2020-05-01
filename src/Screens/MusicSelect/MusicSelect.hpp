@@ -39,7 +39,6 @@ namespace MusicSelect {
         StartButton start_button;
         bool chart_selected = false;
 
-        Drawables::BlackFrame black_frame;
         sf::RectangleShape panel_filter;
     
         // converts a key press into a button press

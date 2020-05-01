@@ -185,7 +185,12 @@ namespace Resources {
         }
     }
 
-    std::optional<sf::Sprite> Marker::get_sprite(const MarkerAnimation& state, float seconds) const {
+
+    std::optional<sf::Sprite> Marker::get_sprite(const MarkerAnimation& state, const sf::Time delta) const {
+        return get_sprite(state, delta.asSeconds());
+    }
+
+    std::optional<sf::Sprite> Marker::get_sprite(const MarkerAnimation& state, const float seconds) const {
         auto raw_frame = static_cast<int>(std::floor(seconds*m_metadata.fps));
         if (raw_frame >= 0) {
             if (state == MarkerAnimation::APPROACH) {

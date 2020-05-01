@@ -13,7 +13,9 @@
 #include <SFML/Window/Event.hpp>
 
 namespace Input {
-    struct JoystickButton : sf::Event::JoystickButtonEvent {
+    struct JoystickButton : public sf::Event::JoystickButtonEvent {
+        JoystickButton() : sf::Event::JoystickButtonEvent() {};
+        JoystickButton(const sf::Event::JoystickButtonEvent& jbe) : sf::Event::JoystickButtonEvent(jbe) {};
         friend bool operator==(const JoystickButton& rhs, const JoystickButton& lhs) {
             return rhs.joystickId == lhs.joystickId and rhs.button == lhs.button;
         }
