@@ -4,11 +4,14 @@
 #include <chrono>
 #include <optional>
 #include <thread>
+#include <utility>
 
 #include <imgui/imgui.h>
 #include <imgui-sfml/imgui-SFML.h>
 
 #include "../../Input/Buttons.hpp"
+#include "PreciseMusic.hpp"
+#include "Silence.hpp"
 
 namespace Gameplay {
     Screen::Screen(const Data::SongDifficulty& t_song_selection, ScreenResources& t_resources) :
@@ -20,21 +23,19 @@ namespace Gameplay {
         for (auto&& note : chart.notes) {
             notes.emplace_back(GradedNote{note});
         }
-        std::variant<PreciseMusic, Silence> music;
         auto music_path = song_selection.song.full_audio_path();
         if (music_path) {
-            music.emplace<PreciseMusic>(music_path->string());
+            music = std::make_unique<PreciseMusic>(music_path->string());
         } else {
-            music.emplace<Silence>(chart.get_duration_based_on_notes());
+            music = std::make_unique<Silence>(chart.get_duration_based_on_notes());
         }
-        getPlayingOffset = std::visit(GetPlayingOffsetVisitor{}, music);
-        getStatus = std::visit(GetStatusVisitor{}, music);
     }
 
     void Screen::play_chart(sf::RenderWindow& window) {
+        window.setActive(false);
         std::thread render_thread(&Screen::render, this, std::ref(window));
         while ((not song_finished) and window.isOpen()) {
-            auto music_time = getPlayingOffset();
+            auto music_time = music->getPlayingOffset();
             sf::Event event;
             while (window.pollEvent(event)) {
                 ImGui::SFML::ProcessEvent(event);
@@ -64,12 +65,12 @@ namespace Gameplay {
     }
     
     void Screen::render(sf::RenderWindow& window) {
-        window.setFramerateLimit(60);
-        ImGui::SFML::Init(window);
+        window.setActive(true);
         sf::Clock imguiClock;
+        music->play();
         while ((not song_finished) and window.isOpen()) {
             ImGui::SFML::Update(window, imguiClock.restart());
-            auto music_time = getPlayingOffset();
+            auto music_time = music->getPlayingOffset();
             update_note_index(music_time);
             window.clear(sf::Color(7, 23, 53));
             for (auto i = note_index.load(); i < notes.size(); ++i) {
@@ -103,7 +104,6 @@ namespace Gameplay {
             ImGui::SFML::Render(window);
             window.display();
         }
-        ImGui::SFML::Shutdown();
     }
 
     void Gameplay::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event, const sf::Time& music_time) {
@@ -146,7 +146,7 @@ namespace Gameplay {
     void Screen::handle_button(const Input::Button& button, const sf::Time& music_time) {
         shared.button_highlight.button_pressed(button);
         // Is the music even playing ?
-        if (getStatus() == sf::SoundSource::Playing) {
+        if (music->getStatus() == sf::SoundSource::Playing) {
             update_note_index(music_time);
             for (auto i = note_index.load(); i < notes.size(); ++i) {
                 auto note = notes[i].load();

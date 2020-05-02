@@ -3,18 +3,14 @@
 #include <chrono>
 
 namespace Gameplay {
-    PreciseMusic::PreciseMusic() : Music::Music() {
-        
-    }
-    
-    PreciseMusic::PreciseMusic(std::string path) {
+    _PreciseMusic::_PreciseMusic(const std::string& path) {
         if (not this->openFromFile(path)) {
             throw std::invalid_argument("Could not open "+path);
         }
-        position_update_watchdog = std::thread{&PreciseMusic::position_update_watchdog_main, this};
+        position_update_watchdog = std::thread{&_PreciseMusic::position_update_watchdog_main, this};
     }
 
-    void PreciseMusic::position_update_watchdog_main() {
+    void _PreciseMusic::position_update_watchdog_main() {
         sf::Time next_music_position = sf::Time::Zero;
         while (not should_stop_watchdog) {
             if (this->getStatus() == sf::Music::Playing) {
@@ -29,12 +25,12 @@ namespace Gameplay {
         }
     }
 
-    PreciseMusic::~PreciseMusic() {
+    _PreciseMusic::~_PreciseMusic() {
         should_stop_watchdog = true;
         position_update_watchdog.join();
     }
 
-    sf::Time PreciseMusic::getPrecisePlayingOffset() const {
+    sf::Time _PreciseMusic::getPrecisePlayingOffset() const {
         if (should_correct) {
             return last_music_position+last_position_update.getElapsedTime()-lag;
         } else {
@@ -42,7 +38,7 @@ namespace Gameplay {
         }
     }
 
-    bool PreciseMusic::onGetData(sf::SoundStream::Chunk& data) {
+    bool _PreciseMusic::onGetData(sf::SoundStream::Chunk& data) {
         if (first_onGetData_call) {
             first_onGetData_call = false;
             lag_measurement.restart();

@@ -30,14 +30,6 @@ namespace Gameplay {
         m_position = sf::Time::Zero;
     }
 
-    unsigned int getChannelCount() {
-        return 2;
-    }
-
-    unsigned int getSampleRate() {
-        return 48000;
-    }
-
     sf::SoundSource::Status Silence::getStatus() const {
         return m_status;
     }

@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <deque>
+#include <memory>
 
 #include <SFML/Graphics.hpp>
 
@@ -13,8 +14,7 @@
 #include "../../Input/Buttons.hpp"
 #include "../../Input/Events.hpp"
 #include "../../Toolkit/Debuggable.hpp"
-#include "PreciseMusic.hpp"
-#include "Silence.hpp"
+#include "AbstractMusic.hpp"
 #include "GradedNote.hpp"
 #include "Resources.hpp"
 
@@ -26,9 +26,6 @@ namespace Gameplay {
     private:
         void render(sf::RenderWindow& window);
 
-        std::function<sf::Time(void)> getPlayingOffset;
-        std::function<sf::SoundSource::Status(void)> getStatus;
-
         void handle_raw_event(const Input::Event& event, const sf::Time& music_time);
         void handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event, const sf::Time& music_time);
         void handle_button(const Input::Button& button, const sf::Time& music_time);
@@ -36,6 +33,7 @@ namespace Gameplay {
         const Data::SongDifficulty& song_selection;
         const Data::Chart chart;
         const Resources::Marker& marker;
+        std::unique_ptr<AbstractMusic> music;
 
         std::deque<std::atomic<GradedNote>> notes;
         std::atomic<std::size_t> note_index;
@@ -44,24 +42,6 @@ namespace Gameplay {
         void update_note_index(const sf::Time& music_time);
 
         std::atomic<bool> song_finished = false;
-    };
-
-    struct GetPlayingOffsetVisitor {
-        std::function<sf::Time(void)> operator() (const PreciseMusic& pm) {
-            return [&pm](){return pm.getPrecisePlayingOffset();};
-        }
-        std::function<sf::Time(void)> operator() (const Silence& s) {
-            return [&s](){return s.getPlayingOffset();};
-        }
-    };
-
-    struct GetStatusVisitor {
-        std::function<sf::SoundSource::Status(void)> operator() (const PreciseMusic& pm) {
-            return [&pm](){return pm.getStatus();};
-        }
-        std::function<sf::SoundSource::Status(void)> operator() (const Silence& s) {
-            return [&s](){return s.getStatus();};
-        }
     };
 }
 

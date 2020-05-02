@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <imgui-sfml/imgui-SFML.h>
 #include <SFML/Graphics.hpp>
 #include <whereami/whereami++.hpp>
 
@@ -15,8 +16,15 @@
 #include "Screens/Gameplay/Resources.hpp"
 #include "Screens/Gameplay/Gameplay.hpp"
 // #include "Screens/Result.hpp"
+#if defined(__unix__) && defined(__linux__)
+    #include <X11/Xlib.h>
+#endif
 
 int main(int, char const **) {
+
+    #if defined(__unix__) && defined(__linux__)
+        XInitThreads();
+    #endif
 
     // Load prefs, music, markers
     const std::string jujube_path = whereami::executable_dir();
@@ -41,6 +49,8 @@ int main(int, char const **) {
         preferences.screen.fullscreen ? sf::Style::Fullscreen : sf::Style::Default,
         settings
     };
+    window.setFramerateLimit(60);
+    ImGui::SFML::Init(window);
     auto chart = music_select.select_chart(window);
     if (chart) {
         std::cout << "Selected Chart : " << chart->song.title << " [" << chart->difficulty << "]" << std::endl;
@@ -51,6 +61,7 @@ int main(int, char const **) {
 
     Gameplay::ScreenResources gameplay_resources{shared_resources};
     Gameplay::Screen gameplay{*chart, gameplay_resources};
+    gameplay.play_chart(window);
 
     /*
     while (true) {
@@ -65,7 +76,6 @@ int main(int, char const **) {
     
     }
     */
-    
+    ImGui::SFML::Shutdown();
     return 0;
-
 }

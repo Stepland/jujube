@@ -24,6 +24,7 @@ namespace MusicSelect {
     public:
         MusicPreview() = default;
         void play(std::optional<fs::path> music_path, std::optional<sf::Music::TimeSpan> loop);
+        void stop();
         void update();
     private:
         void play_async(std::optional<fs::path> music_path, std::optional<sf::Music::TimeSpan> loop);

@@ -99,6 +99,7 @@ dependencies += dependency('threads')
 dependencies += cc.find_library('m', required : false)
 dependencies += dependency('gl')
 dependencies += cc.find_library('atomic')
+dependencies += cc.find_library('X11')
 
 add_project_link_arguments(['-lstdc++'], language : 'cpp')
 

@@ -27,8 +27,6 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list, ScreenResources& 
 }
 
 std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
-    window.setFramerateLimit(60);
-    ImGui::SFML::Init(window);
     sf::Clock imguiClock;
     ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
     shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
@@ -92,7 +90,7 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
         window.display();
         resources.music_preview.update();
     }
-    ImGui::SFML::Shutdown();
+    resources.music_preview.stop();
     if (resources.selected_panel) {
         return resources.selected_panel->obj.get_selected_difficulty();
     } else {

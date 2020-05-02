@@ -3,14 +3,16 @@
 #include <thread>
 #include <atomic>
 
-#include <SFML/Audio.hpp>
+#include <SFML/Audio/Music.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/System/Time.hpp>
 
+#include "AbstractMusic.hpp"
+
 namespace Gameplay {
-    struct PreciseMusic : sf::Music {
-        PreciseMusic();
-        explicit PreciseMusic(std::string path);
-        ~PreciseMusic();
+    struct _PreciseMusic : sf::Music {
+        explicit _PreciseMusic(const std::string& path);
+        ~_PreciseMusic();
 
         std::thread position_update_watchdog;
 
@@ -27,5 +29,16 @@ namespace Gameplay {
         sf::Clock last_position_update;
     protected:
         bool onGetData(sf::SoundStream::Chunk& data) override;
+    };
+
+    struct PreciseMusic : AbstractMusic {
+        explicit PreciseMusic(const std::string& path) : m_precise_music(path) {};
+        void play() override {m_precise_music.play();};
+        void pause() override {m_precise_music.pause();};
+        void stop() override {m_precise_music.stop();};
+        sf::SoundSource::Status getStatus() const override {return m_precise_music.getStatus();};
+        sf::Time getPlayingOffset() const override {return m_precise_music.getPrecisePlayingOffset();};
+    private:
+        _PreciseMusic m_precise_music;
     };
 }

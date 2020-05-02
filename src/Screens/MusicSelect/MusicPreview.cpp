@@ -67,4 +67,11 @@ namespace MusicSelect {
             );
         }
     }
+
+    void MusicPreview::stop() {
+        std::lock_guard<std::mutex> lock{m_music_loop_mutex};
+        if (m_music_loop) {
+            m_music_loop->music->stop();
+        }
+    }
 }
