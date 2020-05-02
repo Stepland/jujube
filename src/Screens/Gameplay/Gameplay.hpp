@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../Data/Chart.hpp"
+#include "../../Data/GradedNote.hpp"
 #include "../../Data/Note.hpp"
 #include "../../Data/Song.hpp"
 #include "../../Data/Score.hpp"
@@ -15,7 +16,6 @@
 #include "../../Input/Events.hpp"
 #include "../../Toolkit/Debuggable.hpp"
 #include "AbstractMusic.hpp"
-#include "GradedNote.hpp"
 #include "Resources.hpp"
 
 namespace Gameplay {
@@ -35,9 +35,9 @@ namespace Gameplay {
         const Resources::Marker& marker;
         std::unique_ptr<AbstractMusic> music;
 
-        std::deque<std::atomic<GradedNote>> notes;
+        std::deque<std::atomic<Data::GradedNote>> notes;
         std::atomic<std::size_t> note_index;
-        // moves note_cursor forward to the first note that has to be conscidered for judging
+        // moves note_index forward to the first note that has to be conscidered for judging
         // marks every note between the old and the new position as missed
         void update_note_index(const sf::Time& music_time);
 

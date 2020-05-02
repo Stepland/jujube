@@ -1,6 +1,6 @@
 #include "GradedNote.hpp"
 
-namespace Gameplay {
+namespace Data {
     Resources::MarkerAnimation judgement_to_animation(const Judgement& j) {
         switch (j) {
         case Judgement::Perfect:

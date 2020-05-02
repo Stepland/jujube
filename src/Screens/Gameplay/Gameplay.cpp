@@ -21,7 +21,7 @@ namespace Gameplay {
         marker(t_resources.shared.get_selected_marker())
     {
         for (auto&& note : chart.notes) {
-            notes.emplace_back(GradedNote{note});
+            notes.emplace_back(Data::GradedNote{note});
         }
         auto music_path = song_selection.song.full_audio_path();
         if (music_path) {
@@ -166,7 +166,7 @@ namespace Gameplay {
                 if (note.timed_judgment) {
                     continue;
                 }
-                notes[i].store(GradedNote{note, music_time-note.timing});
+                notes[i].store(Data::GradedNote{note, music_time-note.timing});
                 break;
             }
         }
@@ -179,7 +179,7 @@ namespace Gameplay {
                 note_index = i;
                 break;
             } else {
-                note.timed_judgment.emplace(sf::Time::Zero, Judgement::Miss);
+                note.timed_judgment.emplace(sf::Time::Zero, Data::Judgement::Miss);
                 notes[i].store(note);
             }
         }

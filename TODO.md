@@ -11,6 +11,7 @@
 - Combo
     - compute
     - display
+- Shutter
 
 ## Results Screen
 

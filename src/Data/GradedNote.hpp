@@ -4,10 +4,10 @@
 
 #include <SFML/System/Time.hpp>
 
-#include "../../Data/Note.hpp"
-#include "../../Resources/Marker.hpp"
+#include "../Resources/Marker.hpp"
+#include "Note.hpp"
 
-namespace Gameplay {
+namespace Data {
     enum class Judgement {
         Perfect,
         Great,
