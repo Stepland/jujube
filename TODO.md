@@ -1,5 +1,8 @@
 # v0.1.0 (MVP)
 ## Misc
+- Logging system
+- Crash handling
+- Option Menu For Audio Lag and Input Lag
 
 ## Gameplay Screen
 - Score

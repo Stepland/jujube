@@ -62,6 +62,9 @@ namespace Gameplay {
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
+        if (render_thread.joinable()) {
+            render_thread.join();
+        }
     }
     
     void Screen::render(sf::RenderWindow& window) {
@@ -69,6 +72,7 @@ namespace Gameplay {
         sf::Clock imguiClock;
         music->play();
         while ((not song_finished) and window.isOpen()) {
+            song_finished = music->getStatus() == sf::Music::Stopped;
             ImGui::SFML::Update(window, imguiClock.restart());
             auto music_time = music->getPlayingOffset();
             update_note_index(music_time);
@@ -167,6 +171,7 @@ namespace Gameplay {
             }
         }
     }
+
     void Screen::update_note_index(const sf::Time& music_time) {
         for (auto i = note_index.load(); i < notes.size(); ++i) {
             auto note = notes[i].load();
