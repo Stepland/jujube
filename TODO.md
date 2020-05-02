@@ -2,7 +2,12 @@
 ## Misc
 
 ## Gameplay Screen
-- Precise Input handling, the dirty way
+- Score
+    - compute
+    - display
+- Combo
+    - compute
+    - display
 
 ## Results Screen
 

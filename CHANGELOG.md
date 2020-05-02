@@ -41,6 +41,10 @@
     - Back
 - Start Button Action
 
+## Gameplay
+- Precise Input handling, the dirty way
+- Sort out the wierdness when hitting early
+
 ## Misc
 - Handling Resolution changes
     - reload preferences on change

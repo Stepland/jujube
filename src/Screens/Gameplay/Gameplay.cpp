@@ -79,7 +79,7 @@ namespace Gameplay {
                 if (note.timed_judgment) {
                     sprite = marker.get_sprite(
                         judgement_to_animation(note.timed_judgment->judgement),
-                        music_time-note.timing+note.timed_judgment->delta
+                        music_time-note.timing-note.timed_judgment->delta
                     );
                 } else {
                     sprite = marker.get_sprite(

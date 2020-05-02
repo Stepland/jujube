@@ -25,18 +25,14 @@ namespace Gameplay {
         }
         // Numbers from http://544332133981.hatenablog.com/entry/bemani-rank_4
         // which themselves are apparently from jubeat analyser's code.
-        // Here they are divided by 2 because we are checking against an absolute
-        // offset from the target time position
-        if (delta_abs < sf::milliseconds(21)) {
+        if (delta_abs < sf::milliseconds(42)) {
             return Judgement::Perfect;
-        } else if (delta_abs < sf::milliseconds(46)) {
+        } else if (delta_abs < sf::milliseconds(92)) {
             return Judgement::Great;
-        } else if (delta_abs < sf::milliseconds(83)) {
+        } else if (delta_abs < sf::milliseconds(166)) {
             return Judgement::Good;
-        } else if (delta_abs < sf::milliseconds(250)) {
-            return Judgement::Poor;
         } else {
-            return Judgement::Miss;
+            return Judgement::Poor;
         }
     }
 
