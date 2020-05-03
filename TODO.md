@@ -2,7 +2,9 @@
 ## Misc
 - Logging system
 - Crash handling
-- Option Menu For Audio Lag and Input Lag
+- Audio Lag
+- Input Lag
+- Fullscreen handling
 
 ## Gameplay Screen
 - Score
@@ -33,15 +35,15 @@
 - Volume Settings
 - Give marker selection the timing check feature when your re-click on the same panel
     
-
 ## memo Compatibility
 
 ## Themeing support
 - Python bindings ?
 
 ## Misc
-- Fullscreen handling
 - Make Drawables lazily react to resolution changes
+- "Value" class with delayed update for *n i c e* score updates
+- update .memon spec and memoncpp to support BPM Changes
 
 ## FB9 Support
 

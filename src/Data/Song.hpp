@@ -39,8 +39,8 @@ namespace Data {
         // Mapping from chart difficulty (BSC, ADV, EXT ...) to the numeric level,
         std::map<std::string, unsigned int, cmp_dif_name> chart_levels;
 
-        std::optional<fs::path> full_cover_path() const;
-        std::optional<fs::path> full_audio_path() const;
+        virtual std::optional<fs::path> full_cover_path() const;
+        virtual std::optional<fs::path> full_audio_path() const;
 
         virtual std::optional<Chart> get_chart(const std::string& difficulty) const = 0;
 

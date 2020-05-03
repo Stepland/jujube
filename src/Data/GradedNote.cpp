@@ -35,11 +35,4 @@ namespace Data {
             return Judgement::Poor;
         }
     }
-
-    TimedJudgement JudgeFromDelta(const sf::Time& t) {
-        auto res = TimedJudgement{};
-        res.delta = t;
-        res.judgement = delta_to_judgement(t);
-        return res;
-    }
 }

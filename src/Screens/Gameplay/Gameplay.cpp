@@ -8,8 +8,10 @@
 
 #include <imgui/imgui.h>
 #include <imgui-sfml/imgui-SFML.h>
+#include <SFML/Graphics.hpp>
 
 #include "../../Input/Buttons.hpp"
+#include "../../Toolkit/NormalizedOrigin.hpp"
 #include "PreciseMusic.hpp"
 #include "Silence.hpp"
 
@@ -18,7 +20,8 @@ namespace Gameplay {
         HoldsResources(t_resources),
         song_selection(t_song_selection),
         chart(*t_song_selection.song.get_chart(t_song_selection.difficulty)),
-        marker(t_resources.shared.get_selected_marker())
+        marker(t_resources.shared.get_selected_marker()),
+        score(t_song_selection.song.get_chart(t_song_selection.difficulty)->notes)
     {
         for (auto&& note : chart.notes) {
             notes.emplace_back(Data::GradedNote{note});
@@ -77,13 +80,30 @@ namespace Gameplay {
             auto music_time = music->getPlayingOffset();
             update_note_index(music_time);
             window.clear(sf::Color(7, 23, 53));
+            // Draw Combo
+            auto combo_now = combo.load();
+            if (combo_now >= 4) {
+                sf::Text combo_text;
+                combo_text.setFont(shared.fallback_font.black);
+                combo_text.setFillColor(sf::Color(23, 78, 181));
+                combo_text.setString(std::to_string(combo_now));
+                combo_text.setCharacterSize(static_cast<unsigned int>(1.5*get_panel_step()));
+                Toolkit::set_local_origin_normalized(combo_text, 0.5f, 0.5f);
+                combo_text.setPosition(
+                    get_ribbon_x()+get_ribbon_size()*0.5f,
+                    get_ribbon_y()+get_ribbon_size()*0.5f
+                );
+                window.draw(combo_text);
+            }
+
+            // Draw Notes
             for (auto i = note_index.load(); i < notes.size(); ++i) {
                 auto note = notes[i].load();
                 std::optional<sf::Sprite> sprite;
-                if (note.timed_judgment) {
+                if (note.timed_judgement) {
                     sprite = marker.get_sprite(
-                        judgement_to_animation(note.timed_judgment->judgement),
-                        music_time-note.timing-note.timed_judgment->delta
+                        judgement_to_animation(note.timed_judgement->judgement),
+                        music_time-note.timing-note.timed_judgement->delta
                     );
                 } else {
                     sprite = marker.get_sprite(
@@ -144,6 +164,14 @@ namespace Gameplay {
         auto button = preferences.key_mapping.key_to_button(event);
         if (button) {
             handle_button(*button, music_time);
+        } else if (auto key = std::get_if<sf::Keyboard::Key>(&event)) {
+            switch (*key) {
+            case sf::Keyboard::F12:
+                debug = not debug;
+                break;
+            default:
+                break;
+            }
         }
     }
 
@@ -163,10 +191,23 @@ namespace Gameplay {
                     continue;
                 }
                 // has it already been graded ?
-                if (note.timed_judgment) {
+                if (note.timed_judgement) {
                     continue;
                 }
-                notes[i].store(Data::GradedNote{note, music_time-note.timing});
+                auto graded_note = Data::GradedNote{note, music_time-note.timing};
+                auto& judgement = graded_note.timed_judgement->judgement;
+                score.update(judgement);
+                switch (judgement) {
+                case Data::Judgement::Perfect:
+                case Data::Judgement::Great:
+                case Data::Judgement::Good:
+                    combo++;
+                    break;
+                default:
+                    combo = 0;
+                    break;
+                }
+                notes[i].store(graded_note);
                 break;
             }
         }
@@ -179,9 +220,33 @@ namespace Gameplay {
                 note_index = i;
                 break;
             } else {
-                note.timed_judgment.emplace(sf::Time::Zero, Data::Judgement::Miss);
-                notes[i].store(note);
+                if (not note.timed_judgement) {
+                    note.timed_judgement.emplace(sf::Time::Zero, Data::Judgement::Miss);
+                    score.update(Data::Judgement::Miss);
+                    combo = 0;
+                    notes[i].store(note);
+                }
             }
         }
+    }
+
+    void Screen::draw_debug() {
+        if (ImGui::Begin("Gameplay Debug")) {
+            ImGui::Text("Combo : %lu", combo.load());
+            if (ImGui::TreeNode("Score")) {
+                ImGui::Text("Raw : %d", score.get_score());
+                ImGui::Text("Final : %d", score.get_final_score());
+                if (ImGui::TreeNode("Counts")) {
+                    ImGui::Text("PERFECT : %lu", score.judgement_counts.at(Data::Judgement::Perfect));
+                    ImGui::Text("GREAT   : %lu", score.judgement_counts.at(Data::Judgement::Great));
+                    ImGui::Text("GOOD    : %lu", score.judgement_counts.at(Data::Judgement::Good));
+                    ImGui::Text("POOR    : %lu", score.judgement_counts.at(Data::Judgement::Poor));
+                    ImGui::Text("MISS    : %lu", score.judgement_counts.at(Data::Judgement::Miss));
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+        }
+        ImGui::End();
     }
 }

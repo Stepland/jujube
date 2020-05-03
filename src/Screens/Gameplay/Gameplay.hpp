@@ -3,6 +3,7 @@
 #include <atomic>
 #include <deque>
 #include <memory>
+#include <unordered_map>
 
 #include <SFML/Graphics.hpp>
 
@@ -19,11 +20,13 @@
 #include "Resources.hpp"
 
 namespace Gameplay {
-    class Screen : Toolkit::Debuggable, HoldsResources {
+    class Screen : public Toolkit::Debuggable, public HoldsResources {
     public:
         explicit Screen(const Data::SongDifficulty& song_selection, ScreenResources& t_resources);
         void play_chart(sf::RenderWindow& window);
     private:
+        void draw_debug() override;
+        
         void render(sf::RenderWindow& window);
 
         void handle_raw_event(const Input::Event& event, const sf::Time& music_time);
@@ -36,10 +39,13 @@ namespace Gameplay {
         std::unique_ptr<AbstractMusic> music;
 
         std::deque<std::atomic<Data::GradedNote>> notes;
-        std::atomic<std::size_t> note_index;
+        std::atomic<std::size_t> note_index = 0;
         // moves note_index forward to the first note that has to be conscidered for judging
         // marks every note between the old and the new position as missed
         void update_note_index(const sf::Time& music_time);
+
+        Data::ClassicScore score;
+        std::atomic<std::size_t> combo = 0;
 
         std::atomic<bool> song_finished = false;
     };
