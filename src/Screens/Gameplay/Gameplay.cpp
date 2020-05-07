@@ -81,12 +81,12 @@ namespace Gameplay {
             update_note_index(music_time);
             window.clear(sf::Color(7, 23, 53));
             // Draw Combo
-            auto combo_now = combo.load();
-            if (combo_now >= 4) {
+            auto current_combo = combo.load();
+            if (current_combo >= 4) {
                 sf::Text combo_text;
                 combo_text.setFont(shared.fallback_font.black);
-                combo_text.setFillColor(sf::Color(23, 78, 181));
-                combo_text.setString(std::to_string(combo_now));
+                combo_text.setFillColor(sf::Color(18, 59, 135));
+                combo_text.setString(std::to_string(current_combo));
                 combo_text.setCharacterSize(static_cast<unsigned int>(1.5*get_panel_step()));
                 Toolkit::set_local_origin_normalized(combo_text, 0.5f, 0.5f);
                 combo_text.setPosition(
@@ -95,6 +95,19 @@ namespace Gameplay {
                 );
                 window.draw(combo_text);
             }
+            auto current_score = score.get_score();
+            sf::Text score_text;
+            score_text.setFont(shared.fallback_font.black);
+            score_text.setFillColor(sf::Color(29, 98, 226));
+            score_text.setString(std::to_string(current_score));
+            score_text.setCharacterSize(static_cast<unsigned int>(45.f/768.f*get_screen_width()));
+            Toolkit::set_local_origin_normalized(score_text, 1.f, 1.f);
+            score_text.setPosition(
+                500.f/768.f*get_screen_width(),
+                370.f/768.f*get_screen_width()
+            );
+            window.draw(score_text);
+
 
             // Draw Notes
             for (auto i = note_index.load(); i < notes.size(); ++i) {
@@ -124,7 +137,9 @@ namespace Gameplay {
             }
             window.draw(shared.button_highlight);
             window.draw(shared.black_frame);
-            draw_debug();
+            if (debug) {
+                draw_debug();
+            }
             ImGui::SFML::Render(window);
             window.display();
         }
@@ -234,9 +249,10 @@ namespace Gameplay {
         if (ImGui::Begin("Gameplay Debug")) {
             ImGui::Text("Combo : %lu", combo.load());
             if (ImGui::TreeNode("Score")) {
-                ImGui::Text("Raw : %d", score.get_score());
-                ImGui::Text("Final : %d", score.get_final_score());
-                if (ImGui::TreeNode("Counts")) {
+                ImGui::Text("Raw           : %d", score.get_score());
+                ImGui::Text("Final         : %d", score.get_final_score());
+                ImGui::Text("Shutter value : %d", score.shutter);
+                if (ImGui::TreeNode("Judgement Counts")) {
                     ImGui::Text("PERFECT : %lu", score.judgement_counts.at(Data::Judgement::Perfect));
                     ImGui::Text("GREAT   : %lu", score.judgement_counts.at(Data::Judgement::Great));
                     ImGui::Text("GOOD    : %lu", score.judgement_counts.at(Data::Judgement::Good));

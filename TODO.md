@@ -8,16 +8,18 @@
 
 ## Gameplay Screen
 - Score
-    - compute
-    - display
-- Combo
-    - compute
     - display
 - Shutter
+    - display
+- Density Graph
 
 ## Results Screen
 
 ## Windows and macOS builds
+
+# v0.2.0
+## Misc
+- "Value" class with delayed update for *n i c e* score display
 
 # v1.0.0
 ## Music Select Screen
@@ -42,7 +44,6 @@
 
 ## Misc
 - Make Drawables lazily react to resolution changes
-- "Value" class with delayed update for *n i c e* score updates
 - update .memon spec and memoncpp to support BPM Changes
 
 ## FB9 Support

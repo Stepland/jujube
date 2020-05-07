@@ -44,6 +44,13 @@
 ## Gameplay
 - Precise Input handling, the dirty way
 - Sort out the wierdness when hitting early
+- Score
+    - compute
+- Combo
+    - compute
+    - display
+- Shutter
+    - compute
 
 ## Misc
 - Handling Resolution changes
