@@ -73,6 +73,8 @@ sources = [
     'src/Screens/Gameplay/PreciseMusic.cpp',
     'src/Screens/Gameplay/Silence.hpp',
     'src/Screens/Gameplay/Silence.cpp',
+    'src/Screens/Gameplay/TimedEventsQueue.hpp',
+    'src/Screens/Gameplay/TimedEventsQueue.cpp',
     # 'src/Screens/Result.hpp',
     'src/Toolkit/AffineTransform.hpp',
     'src/Toolkit/Cache.hpp',

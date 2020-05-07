@@ -42,29 +42,7 @@ namespace Gameplay {
             sf::Event event;
             while (window.pollEvent(event)) {
                 ImGui::SFML::ProcessEvent(event);
-                switch (event.type) {
-                case sf::Event::KeyPressed:
-                    handle_raw_event(event.key.code, music_time);
-                    break;
-                case sf::Event::JoystickButtonPressed:
-                    handle_raw_event(event.joystickButton, music_time);
-                    break;
-                case sf::Event::MouseButtonPressed:
-                    handle_mouse_click(event.mouseButton, music_time);
-                    break;
-                case sf::Event::Closed:
-                    window.close();
-                    break;
-                case sf::Event::Resized:
-                    // update the view to the new size of the window
-                    window.setView(sf::View({0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)}));
-                    shared.preferences.screen.height = event.size.height;
-                    shared.preferences.screen.width = event.size.width;
-                    shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
-                    break;
-                default:
-                    break;
-                }
+                events_queue.push({music_time, event});
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
@@ -78,10 +56,44 @@ namespace Gameplay {
         sf::Clock imguiClock;
         music->play();
         while ((not song_finished) and window.isOpen()) {
+            while (auto timed_event = events_queue.pop()) {
+                switch (timed_event->event.type) {
+                case sf::Event::KeyPressed:
+                    handle_raw_event(timed_event->event.key.code, timed_event->time);
+                    break;
+                case sf::Event::JoystickButtonPressed:
+                    handle_raw_event(timed_event->event.joystickButton, timed_event->time);
+                    break;
+                case sf::Event::MouseButtonPressed:
+                    handle_mouse_click(timed_event->event.mouseButton, timed_event->time);
+                    break;
+                case sf::Event::Closed:
+                    window.close();
+                    break;
+                case sf::Event::Resized:
+                    // update the view to the new size of the window
+                    window.setView(
+                        sf::View(
+                            {
+                                0,
+                                0,
+                                static_cast<float>(timed_event->event.size.width),
+                                static_cast<float>(timed_event->event.size.height)
+                            }
+                        )
+                    );
+                    shared.preferences.screen.height = timed_event->event.size.height;
+                    shared.preferences.screen.width = timed_event->event.size.width;
+                    shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
+                    break;
+                default:
+                    break;
+                }
+            }
             song_finished = music->getStatus() == sf::Music::Stopped;
             ImGui::SFML::Update(window, imguiClock.restart());
             auto music_time = music->getPlayingOffset();
-            update_note_index(music_time);
+            update_visible_notes(music_time);
             window.clear(sf::Color(7, 23, 53));
 
             // Draw song info
@@ -102,12 +114,11 @@ namespace Gameplay {
 
 
             // Draw Combo
-            auto current_combo = combo.load();
-            if (current_combo >= 4) {
+            if (combo >= 4) {
                 sf::Text combo_text;
                 combo_text.setFont(shared.fallback_font.black);
                 combo_text.setFillColor(sf::Color(18, 59, 135));
-                combo_text.setString(std::to_string(current_combo));
+                combo_text.setString(std::to_string(combo));
                 combo_text.setCharacterSize(static_cast<unsigned int>(1.5*get_panel_step()));
                 Toolkit::set_local_origin_normalized(combo_text, 0.5f, 0.5f);
                 combo_text.setPosition(
@@ -196,8 +207,8 @@ namespace Gameplay {
             window.draw(chart_label);
 
             // Draw Notes
-            for (auto i = note_index.load(); i < notes.size(); ++i) {
-                auto note = notes[i].load();
+            for (auto &&note_ref : visible_notes) {
+                const auto& note = note_ref.get();
                 std::optional<sf::Sprite> sprite;
                 if (note.timed_judgement) {
                     sprite = marker.get_sprite(
@@ -279,9 +290,9 @@ namespace Gameplay {
         shared.button_highlight.button_pressed(button);
         // Is the music even playing ?
         if (music->getStatus() == sf::SoundSource::Playing) {
-            update_note_index(music_time);
-            for (auto i = note_index.load(); i < notes.size(); ++i) {
-                auto note = notes[i].load();
+            update_visible_notes(music_time);
+            for (auto&& note_ref : visible_notes) {
+                auto& note = note_ref.get();
                 // is the note still visible ?
                 if (note.timing > music_time + sf::seconds(16.f/30.f)) {
                     break;
@@ -294,8 +305,8 @@ namespace Gameplay {
                 if (note.timed_judgement) {
                     continue;
                 }
-                auto graded_note = Data::GradedNote{note, music_time-note.timing};
-                auto& judgement = graded_note.timed_judgement->judgement;
+                note = Data::GradedNote{note, music_time-note.timing};
+                auto& judgement = note.timed_judgement->judgement;
                 score.update(judgement);
                 switch (judgement) {
                 case Data::Judgement::Perfect:
@@ -307,32 +318,56 @@ namespace Gameplay {
                     combo = 0;
                     break;
                 }
-                notes[i].store(graded_note);
                 break;
             }
         }
     }
 
-    void Screen::update_note_index(const sf::Time& music_time) {
-        for (auto i = note_index.load(); i < notes.size(); ++i) {
-            auto note = notes[i].load();
-            if (note.timing >= music_time - sf::seconds(16.f/30.f)) {
-                note_index = i;
-                break;
-            } else {
-                if (not note.timed_judgement) {
-                    note.timed_judgement.emplace(sf::Time::Zero, Data::Judgement::Miss);
-                    score.update(Data::Judgement::Miss);
-                    combo = 0;
-                    notes[i].store(note);
+    void Screen::update_visible_notes(const sf::Time& music_time) {
+        // Mark old notes as missed
+        std::for_each(visible_notes.begin(), visible_notes.end(),
+            [this, music_time](Data::GradedNote& note){
+                if (note.timing + note.duration < music_time - sf::seconds(16.f/30.f)) {
+                    if (not note.timed_judgement) {
+                        note.timed_judgement.emplace(sf::Time::Zero, Data::Judgement::Miss);
+                        this->score.update(Data::Judgement::Miss);
+                        this->combo = 0;
+                    }
                 }
             }
+        );
+        // Remove old notes
+        visible_notes.erase(
+            std::remove_if(visible_notes.begin(), visible_notes.end(),
+                [music_time](Data::GradedNote& note) -> bool {
+                    return note.timing + note.duration < music_time - sf::seconds(16.f/30.f);
+                }
+            ),
+            visible_notes.end()
+        );
+        
+        // Add new notes
+        Data::GradedNote lower_note, upper_note;
+        if (visible_notes.empty()) {
+            lower_note.position = Input::Button::B16;
+            lower_note.timing = music_time - sf::seconds(16.f/30.f);
+        } else {
+            lower_note = *visible_notes.rbegin();
         }
+        upper_note.position = Input::Button::B1;
+        upper_note.timing = music_time + sf::seconds(16.f/30.f);
+        auto new_notes_begin = std::upper_bound(notes.begin(), notes.end(), lower_note);
+        auto new_notes_end = std::upper_bound(new_notes_begin, notes.end(), upper_note);
+        std::for_each(new_notes_begin, new_notes_end,
+            [this](Data::GradedNote& note){
+                this->visible_notes.emplace_back(note);
+            }
+        );
     }
 
     void Screen::draw_debug() {
         if (ImGui::Begin("Gameplay Debug")) {
-            ImGui::Text("Combo : %lu", combo.load());
+            ImGui::Text("Combo : %lu", combo);
             if (ImGui::TreeNode("Score")) {
                 ImGui::Text("Raw           : %d", score.get_score());
                 ImGui::Text("Final         : %d", score.get_final_score());

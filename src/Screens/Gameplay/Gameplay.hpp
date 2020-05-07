@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <deque>
+#include <functional>
 #include <memory>
 #include <unordered_map>
 
@@ -18,6 +19,7 @@
 #include "../../Toolkit/Debuggable.hpp"
 #include "AbstractMusic.hpp"
 #include "Resources.hpp"
+#include "TimedEventsQueue.hpp"
 
 namespace Gameplay {
     class Screen : public Toolkit::Debuggable, public HoldsResources {
@@ -38,16 +40,24 @@ namespace Gameplay {
         const Resources::Marker& marker;
         std::unique_ptr<AbstractMusic> music;
 
-        std::deque<std::atomic<Data::GradedNote>> notes;
-        std::atomic<std::size_t> note_index = 0;
+        std::deque<Data::GradedNote> notes;
+        std::deque<std::reference_wrapper<Data::GradedNote>> visible_notes;
         // moves note_index forward to the first note that has to be conscidered for judging
         // marks every note between the old and the new position as missed
-        void update_note_index(const sf::Time& music_time);
+        void update_visible_notes(const sf::Time& music_time);
 
         Data::ClassicScore score;
-        std::atomic<std::size_t> combo = 0;
+        std::size_t combo = 0;
 
         std::atomic<bool> song_finished = false;
+
+        TimedEventsQueue events_queue;
+    };
+    
+    struct cmpAtomicNotes {
+        bool operator()(const std::atomic<Data::GradedNote>& a, const std::atomic<Data::GradedNote>& b) {
+            return a.load().timing < b.load().timing;
+        }
     };
 }
 
