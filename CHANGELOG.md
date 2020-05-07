@@ -46,11 +46,13 @@
 - Sort out the wierdness when hitting early
 - Score
     - compute
+    - display
 - Combo
     - compute
     - display
 - Shutter
     - compute
+- Song Info
 
 ## Misc
 - Handling Resolution changes

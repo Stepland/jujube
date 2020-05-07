@@ -1,6 +1,6 @@
 #include "ControlPanels.hpp"
 
-#include "../../../Toolkit/NormalizedOrigin.hpp"
+#include "../../../Toolkit/SFMLHelpers.hpp"
 
 namespace MusicSelect {
     void LeftButton::draw(sf::RenderTarget& target, sf::RenderStates states) const {

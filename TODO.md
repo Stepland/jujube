@@ -7,11 +7,10 @@
 - Fullscreen handling
 
 ## Gameplay Screen
-- Score
-    - display
 - Shutter
     - display
 - Density Graph
+- Long Notes
 
 ## Results Screen
 

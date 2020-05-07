@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 namespace Toolkit {
     template<class T>
@@ -20,4 +20,6 @@ namespace Toolkit {
         auto bounds = s.getGlobalBounds();
         s.setOrigin(x*bounds.width, y*bounds.height);
     }
+
+    void set_size_from_local_bounds(sf::Sprite& s, float x, float y);
 }

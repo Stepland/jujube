@@ -6,7 +6,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include "../../Toolkit/EasingFunctions.hpp"
-#include "../../Toolkit/NormalizedOrigin.hpp"
+#include "../../Toolkit/SFMLHelpers.hpp"
 
 #include "Panels/Panel.hpp"
 
@@ -111,7 +111,6 @@ namespace MusicSelect {
             if (song_artist_bounds.width > m_big_cover.get_size()) {
                 song_artist_label.setScale(m_big_cover.get_size() / song_artist_bounds.width, 1.0f);
             }
-            song_artist_label.setFillColor(sf::Color::White);
             song_artist_label.setFillColor(sf::Color::White);
             song_artist_label.setPosition(
                 get_big_cover_x() - m_big_cover.get_size()/2.f,

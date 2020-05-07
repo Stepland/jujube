@@ -8,7 +8,7 @@
 #include "../Data/Chart.hpp"
 #include "../Data/Song.hpp"
 #include "../Toolkit/Cache.hpp"
-#include "../Toolkit/NormalizedOrigin.hpp"
+#include "../Toolkit/SFMLHelpers.hpp"
 
 namespace Drawables {
     class DensityGraph : public sf::Drawable, public sf::Transformable {

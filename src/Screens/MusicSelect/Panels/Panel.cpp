@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../../Toolkit/HSL.hpp"
-#include "../../../Toolkit/NormalizedOrigin.hpp"
+#include "../../../Toolkit/SFMLHelpers.hpp"
 #include "../Ribbon.hpp"
 #include "../Resources.hpp"
 

@@ -11,7 +11,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../Input/Buttons.hpp"
-#include "../../Toolkit/NormalizedOrigin.hpp"
+#include "../../Toolkit/SFMLHelpers.hpp"
 #include "PreciseMusic.hpp"
 #include "Silence.hpp"
 
@@ -58,6 +58,9 @@ namespace Gameplay {
                 case sf::Event::Resized:
                     // update the view to the new size of the window
                     window.setView(sf::View({0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)}));
+                    shared.preferences.screen.height = event.size.height;
+                    shared.preferences.screen.width = event.size.width;
+                    shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
                     break;
                 default:
                     break;
@@ -80,6 +83,24 @@ namespace Gameplay {
             auto music_time = music->getPlayingOffset();
             update_note_index(music_time);
             window.clear(sf::Color(7, 23, 53));
+
+            // Draw song info
+            // Cover is 40x40 @ (384,20)
+            if (song_selection.song.cover) {
+                auto cover = shared.covers.get(*song_selection.song.full_cover_path());
+                if (cover) {
+                    sf::Sprite cover_sprite{*cover->texture};
+                    auto cover_size = 40.f/768.f*get_screen_width();
+                    Toolkit::set_size_from_local_bounds(cover_sprite, cover_size, cover_size);
+                    cover_sprite.setPosition(
+                        384.f/768.f*get_screen_width(),
+                        20.f/768.f*get_screen_width()
+                    );
+                    window.draw(cover_sprite);
+                }
+            } 
+
+
             // Draw Combo
             auto current_combo = combo.load();
             if (current_combo >= 4) {
@@ -95,6 +116,8 @@ namespace Gameplay {
                 );
                 window.draw(combo_text);
             }
+
+            // Draw score
             auto current_score = score.get_score();
             sf::Text score_text;
             score_text.setFont(shared.fallback_font.black);
@@ -108,6 +131,69 @@ namespace Gameplay {
             );
             window.draw(score_text);
 
+            // Draw song info
+            auto song_title = song_selection.song.title;
+            if (not song_title.empty()) {
+                sf::Text song_title_label{
+                    sf::String::fromUtf8(song_title.begin(), song_title.end()),
+                    shared.fallback_font.medium,
+                    static_cast<unsigned int>(scale(20.f))
+                };
+                Toolkit::set_local_origin_normalized(song_title_label, 0.f, 1.f);
+                song_title_label.setFillColor(sf::Color::White);
+                song_title_label.setPosition(scale(440.f), scale(40.f));
+                window.draw(song_title_label);
+            }
+            auto song_artist = song_selection.song.artist;
+            if (not song_artist.empty()) {
+                sf::Text song_artist_label{
+                    sf::String::fromUtf8(song_artist.begin(), song_artist.end()),
+                    shared.fallback_font.medium,
+                    static_cast<unsigned int>(scale(12.f))
+                };
+                song_artist_label.setStyle(sf::Text::Italic);
+                song_artist_label.setFillColor(sf::Color::White);
+                song_artist_label.setPosition(scale(440.f), scale(45.f));
+                window.draw(song_artist_label);
+            }
+            sf::Text level_label{
+                "LEVEL:",
+                shared.fallback_font.medium,
+                static_cast<unsigned int>(scale(10.f))
+            };
+            Toolkit::set_origin_normalized(level_label, 1.f, 1.f);
+            level_label.setPosition(scale(322.f), scale(35.f));
+            level_label.setFillColor(sf::Color::White);
+            window.draw(level_label);
+            
+            sf::Text level_number_label{
+                std::to_string(chart.level),
+                shared.fallback_font.black,
+                static_cast<unsigned int>(scale(35.f))
+            };
+            Toolkit::set_origin_normalized(level_number_label, 0.5f, 0.f);
+            level_number_label.setPosition(scale(351.f), scale(24.f));
+            level_number_label.setFillColor(sf::Color::White);
+            window.draw(level_number_label);
+
+            std::string full_difficulty = song_selection.difficulty;
+            if (full_difficulty == "BSC") {
+                full_difficulty = "BASIC";
+            } else if (full_difficulty == "ADV") {
+                full_difficulty = "ADVANCED";
+            } else if (full_difficulty == "EXT") {
+                full_difficulty = "EXTREME";
+            }
+
+            sf::Text chart_label{
+                sf::String::fromUtf8(full_difficulty.begin(), full_difficulty.end()),
+                shared.fallback_font.medium,
+                static_cast<unsigned int>(scale(16.f))
+            };
+            Toolkit::set_local_origin_normalized(chart_label, 1.f, 1.f);
+            chart_label.setPosition(scale(322.f), scale(55.f));
+            chart_label.setFillColor(shared.get_chart_color(song_selection.difficulty));
+            window.draw(chart_label);
 
             // Draw Notes
             for (auto i = note_index.load(); i < notes.size(); ++i) {
@@ -125,8 +211,7 @@ namespace Gameplay {
                     );
                 }
                 if (sprite) {
-                    auto rect = sprite->getLocalBounds();
-                    sprite->setScale(get_panel_size()/rect.width, get_panel_size()/rect.height);
+                    Toolkit::set_size_from_local_bounds(*sprite, get_panel_size(), get_panel_size());
                     auto pos = Input::button_to_coords(note.position);
                     sprite->setPosition(
                         get_ribbon_x()+get_panel_step()*pos.x,

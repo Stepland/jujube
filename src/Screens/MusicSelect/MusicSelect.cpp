@@ -9,7 +9,7 @@
 
 #include "../../Input/Buttons.hpp"
 #include "../../Input/KeyMapping.hpp"
-#include "../../Toolkit/NormalizedOrigin.hpp"
+#include "../../Toolkit/SFMLHelpers.hpp"
 #include "Panels/Panel.hpp"
 #include "PanelLayout.hpp"
 

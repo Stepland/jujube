@@ -74,6 +74,8 @@ namespace Data {
         float get_big_level_x() const {return preferences.layout.big_level_x*get_screen_width();};
         float get_big_level_y() const {return preferences.layout.big_level_y*get_screen_width();};
         float get_upper_part_height() const {return preferences.layout.upper_part_height*get_screen_width();};
+        // Scales a length in pixels from the original jubeat resolution of 768x1360 to the current screen resolution
+        float scale(float length) const {return (length*get_screen_width())/768.f;};
         Preferences& preferences;
     };
 }
