@@ -5,6 +5,7 @@
 - Audio Lag
 - Input Lag
 - Fullscreen handling
+- Delay Marker loading
 
 ## Gameplay Screen
 - Shutter
