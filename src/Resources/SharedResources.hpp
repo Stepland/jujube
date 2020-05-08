@@ -15,6 +15,7 @@
 #include "../Drawables/ButtonHighlight.hpp"
 #include "../Drawables/DensityGraph.hpp"
 #include "../Resources/Marker.hpp"
+#include "../Resources/LNMarker.hpp"
 #include "../Resources/TextureCache.hpp"
 
 namespace Resources {
@@ -57,6 +58,9 @@ namespace Resources {
 
         Resources::Markers markers;
         Resources::Marker& get_selected_marker();
+
+        Resources::LNMarkers ln_markers;
+        Resources::LNMarker& get_selected_ln_marker();
     };
 
     // Proxy for HoldsPreferences

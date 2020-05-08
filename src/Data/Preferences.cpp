@@ -39,11 +39,15 @@ namespace Data {
     }
     
     void to_json(nlohmann::json& j, const Options& o) {
-        j = nlohmann::json{{"marker", o.marker}};
+        j = nlohmann::json{
+            {"marker", o.marker},
+            {"ln_marker", o.ln_marker}
+        };
     }
 
     void from_json(const nlohmann::json& j, Options& o) {
         j.at("marker").get_to(o.marker);
+        j.at("ln_marker").get_to(o.ln_marker);
     }    
     
     // RAII style class which loads preferences from the dedicated file when constructed and saves them when destructed
@@ -63,8 +67,8 @@ namespace Data {
                 prefs_file >> j;
                 j.get_to(*this);
             } catch (const std::exception& e) {
-                std::cerr << "Error while loading data/preferences.json : " << e.what() << std::endl;
-                std::cerr << "Using fallback preferences instead" << std::endl;
+                std::cerr << "Error while loading data/preferences.json : " << e.what() << '\n';
+                std::cerr << "Using fallback preferences instead" << '\n';
                 return;
             }
             key_mapping = Input::KeyMapping{key_mapping.m_button_to_key};
@@ -77,7 +81,7 @@ namespace Data {
             ghc::filesystem::create_directory(data_folder);
         }
         if (not ghc::filesystem::is_directory(data_folder)) {
-            std::cerr << "Can't create data folder to save preferences, a file named 'data' exists" << std::endl;
+            std::cerr << "Can't create data folder to save preferences, a file named 'data' exists" << '\n';
         }
         std::ofstream preferences_file;
         preferences_file.open(data_folder/"preferences.json", std::ofstream::trunc | std::ofstream::out);

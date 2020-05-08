@@ -55,7 +55,7 @@ namespace Data {
                 }
             }
         }
-        std::cout << "Loaded Data::SongList, found " << songs.size() << " songs" << std::endl;
+        std::cout << "Loaded Data::SongList, found " << songs.size() << " songs" << '\n';
     }
 
     std::list<std::shared_ptr<Song>> recursiveSongSearch(fs::path song_or_pack) {

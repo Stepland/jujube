@@ -28,10 +28,11 @@ namespace Resources {
         fallback_font(p.jujube_path),
         black_frame(p),
         button_highlight(p),
-        markers(Resources::load_markers(p.jujube_path))
+        markers(p.jujube_path),
+        ln_markers(p.jujube_path)
     {
         covers.reserve(256);
-        std::cout << "Loaded MusicSelect::SharedResources" << std::endl;
+        std::cout << "Loaded MusicSelect::SharedResources" << '\n';
     }
 
     sf::Color SharedResources::get_chart_color(const std::string& chart) {

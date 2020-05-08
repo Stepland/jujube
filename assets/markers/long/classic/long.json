@@ -1,0 +1,51 @@
+{
+    "name": "classic",
+    "fps": 30,
+    "size": 160,
+    "note": {
+        "background": {
+            "sprite_sheet": "background.png",
+            "count": 16,
+            "columns": 4,
+            "rows": 4
+        },
+        "outline": {
+            "sprite_sheet": "outline.png",
+            "count": 16,
+            "columns": 4,
+            "rows": 4
+        },
+        "highlight": {
+            "sprite_sheet": "highlight.png",
+            "count": 16,
+            "columns": 4,
+            "rows": 4
+        }
+    },
+    "tail": {
+        "sprite_sheet": "tail.png",
+        "count": 16,
+        "columns": 4,
+        "rows": 4
+    },
+    "tip": {
+        "appearance": {
+            "sprite_sheet": "tip_appearance.png",
+            "count": 16,
+            "columns": 4,
+            "rows": 4
+        },
+        "begin cycle": {
+            "sprite_sheet": "tip_begin_cycle.png",
+            "count": 8,
+            "columns": 3,
+            "rows": 3
+        },
+        "cycle": {
+            "sprite_sheet": "tip_cycle.png",
+            "count": 16,
+            "columns": 4,
+            "rows": 4
+        }
+    }
+}

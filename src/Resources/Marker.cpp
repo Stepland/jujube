@@ -111,26 +111,28 @@ namespace Resources {
         }
     }
 
-    Markers load_markers(const fs::path& jujube_path) {
-        Markers res;
-        auto markers_folder = jujube_path/"markers";
+    Markers::Markers(const fs::path& jujube_path) {
+        load_from_folder(jujube_path/"markers"/"tap");
+        load_from_folder(jujube_path/"assets"/"markers"/"tap");
+        if (empty()) {
+            throw std::runtime_error("No tap note markers found in marker folder, jujube needs at least one to operate");
+        }
+    }
+
+    void Markers::load_from_folder(const fs::path& markers_folder) {
         if (fs::exists(markers_folder)) {
             for (auto& p : fs::directory_iterator(markers_folder)) {
                 if (p.is_directory()) {
                     try {
                         Marker m{p.path()};
-                        res.emplace(m.name, m);
+                        emplace(m.name, m);
                     } catch (const std::exception& e) {
                         std::cerr << "Unable to load marker folder "
                         << p.path().filename().string() << " : "
-                        << e.what() << std::endl;
+                        << e.what() << '\n';
                     }
                 }
             }
         }
-        if (res.empty()) {
-            throw std::runtime_error("No markers found in marker folder, jujube needs at least one to operate");
-        }
-        return res;
     }
 }

@@ -1,6 +1,7 @@
 #include "LNMarker.hpp"
 
 #include <fstream>
+#include <iostream>
 
 namespace Resources {
     LNMarker::LNMarker(const fs::path& t_folder) :
@@ -36,5 +37,29 @@ namespace Resources {
         j.at("tip").at("appearance").get_to(m.tip_appearance);
         j.at("tip").at("begin cycle").get_to(m.tip_begin_cycle);
         j.at("tip").at("cycle").get_to(m.tip_cycle);
+    }
+
+    LNMarkers::LNMarkers(const fs::path& jujube_path) {
+        load_from_folder(jujube_path/"markers"/"long");
+        load_from_folder(jujube_path/"assets"/"markers"/"long");
+        if (empty()) {
+            throw std::runtime_error("No long note markers found, jujube needs at least one to operate");
+        }
+    }
+    void LNMarkers::load_from_folder(const fs::path& lnmarkers_folder) {
+        if (fs::exists(lnmarkers_folder)) {
+            for (auto& p : fs::directory_iterator(lnmarkers_folder)) {
+                if (p.is_directory()) {
+                    try {
+                        LNMarker m{p.path()};
+                        emplace(m.name, m);
+                    } catch (const std::exception& e) {
+                        std::cerr << "Unable to load marker folder "
+                        << p.path().filename().string() << " : "
+                        << e.what() << '\n';
+                    }
+                }
+            }
+        }
     }
 }

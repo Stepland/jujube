@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <map>
+
 #include <ghc/filesystem.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -25,4 +28,11 @@ namespace Resources {
     };
 
     void from_json(const nlohmann::json& j, LNMarker& m);
+
+    class LNMarkers : public std::map<std::string, LNMarker> {
+    public:
+        LNMarkers(const fs::path& jujube_path);
+    private:
+        void load_from_folder(const fs::path& lnmarkers_folder);
+    }
 }

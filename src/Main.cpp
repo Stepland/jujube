@@ -35,6 +35,9 @@ int main(int, char const **) {
     if (shared_resources.markers.find(preferences.options.marker) == shared_resources.markers.end()) {
         preferences.options.marker = shared_resources.markers.begin()->first;
     }
+    if (shared_resources.ln_markers.find(preferences.options.ln_marker) == shared_resources.ln_markers.end()) {
+        preferences.options.ln_marker = shared_resources.ln_markers.begin()->first;
+    }
     MusicSelect::Screen music_select{song_list, music_select_resources};    
     
     // Create the window
@@ -53,9 +56,9 @@ int main(int, char const **) {
     ImGui::SFML::Init(window);
     auto chart = music_select.select_chart(window);
     if (chart) {
-        std::cout << "Selected Chart : " << chart->song.title << " [" << chart->difficulty << "]" << std::endl;
+        std::cout << "Selected Chart : " << chart->song.title << " [" << chart->difficulty << "]" << '\n';
     } else {
-        std::cout << "Exited MusicSelect::Screen without selecting a chart" << std::endl;
+        std::cout << "Exited MusicSelect::Screen without selecting a chart" << '\n';
         return 0;
     }
 

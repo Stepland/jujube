@@ -71,7 +71,7 @@ namespace MusicSelect {
         left_button(t_resources),
         right_button(t_resources)
     {
-        std::cout << "Loaded MusicSelect::Ribbon" << std::endl;
+        std::cout << "Loaded MusicSelect::Ribbon" << '\n';
     }
 
 

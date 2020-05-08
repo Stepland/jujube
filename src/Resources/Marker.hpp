@@ -42,6 +42,10 @@ namespace Resources {
 
     void from_json(const nlohmann::json& j, Marker& m);
 
-    using Markers = std::map<std::string, Marker>;
-    Markers load_markers(const ghc::filesystem::path& jujube_path);
+    class Markers : public std::map<std::string, Marker> {
+    public:
+        Markers(const fs::path& jujube_path);
+    private:
+        void load_from_folder(const fs::path& markers_folder);
+    };
 }
