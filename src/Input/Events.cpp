@@ -1,19 +1,19 @@
 #include "Events.hpp"
 
 namespace Input {
-    EventToString mappable_button_to_string;
+    KeyToString mappable_button_to_string;
 
-    std::string to_string(const Event& mk) {
+    std::string to_string(const Key& mk) {
         return std::visit(mappable_button_to_string, mk);
     }
 
     std::regex mappable_button_regex("(.+?)::(.+)");
     std::regex joystick_button_regex("(\\d+)_(\\d+)");
 
-    Event from_string(const std::string& s) {
+    Key from_string(const std::string& s) {
         std::smatch matches;
         if (not std::regex_match(s, matches, mappable_button_regex)) {
-            throw std::runtime_error("Unknown Event : "+s);
+            throw std::runtime_error("Unknown Key : "+s);
         }
         auto device = matches[1].str();
         auto button = matches[2].str();
@@ -32,7 +32,7 @@ namespace Input {
             if (joystick_button >= sf::Joystick::ButtonCount) {
                 throw std::runtime_error("Unsupported Joystick Button : "+matches[2].str());
             }
-            JoystickButton res;
+            sf::Event::JoystickButtonEvent res;
             res.joystickId = static_cast<unsigned int>(joystick_id);
             res.button = static_cast<unsigned int>(joystick_button);
             return res;

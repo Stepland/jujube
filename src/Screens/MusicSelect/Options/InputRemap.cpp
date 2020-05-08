@@ -61,7 +61,7 @@ namespace MusicSelect {
 
     MappingPreview::MappingPreview(
         ScreenResources& t_resources,
-        const std::unordered_map<Input::Event, Input::Button>& t_key_to_button
+        const std::unordered_map<Input::Key, Input::Button>& t_key_to_button
     ) :
         HoldsResources(t_resources),
         key_to_button(t_key_to_button)

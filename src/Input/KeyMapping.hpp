@@ -19,14 +19,14 @@ namespace Input {
     class KeyMapping {
     public:
         KeyMapping();
-        explicit KeyMapping(std::unordered_map<Button, Event> button_to_key);
-        explicit KeyMapping(std::unordered_map<Event, Button> button_to_key);
-        void set_button_to_key(const Button& button, const Event& key);
-        std::optional<Button> key_to_button(const Event& key);
-        std::optional<Event> button_to_key(const Button& button);
+        explicit KeyMapping(std::unordered_map<Button, Key> button_to_key);
+        explicit KeyMapping(std::unordered_map<Key, Button> button_to_key);
+        void set_button_to_key(const Button& button, const Key& key);
+        std::optional<Button> key_to_button(const Key& key);
+        std::optional<Key> button_to_key(const Button& button);
     private:
-        std::unordered_map<Event, Button> m_key_to_button;
-        std::unordered_map<Button, Event> m_button_to_key;
+        std::unordered_map<Key, Button> m_key_to_button;
+        std::unordered_map<Button, Key> m_button_to_key;
 
         friend struct Data::Preferences;
         friend void to_json(nlohmann::json& j, const KeyMapping& km);

@@ -37,10 +37,10 @@ namespace MusicSelect {
 
     class MappingPreview final : public sf::Drawable, public sf::Transformable, public HoldsResources {
     public:
-        MappingPreview(ScreenResources& t_resources, const std::unordered_map<Input::Event, Input::Button>& t_key_to_button);
+        MappingPreview(ScreenResources& t_resources, const std::unordered_map<Input::Key, Input::Button>& t_key_to_button);
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-        const std::unordered_map<Input::Event, Input::Button>& key_to_button;
+        const std::unordered_map<Input::Key, Input::Button>& key_to_button;
         mutable sf::RectangleShape square;
         mutable sf::Text key_label;
     };
@@ -61,7 +61,7 @@ namespace MusicSelect {
         mutable sf::Text confirm_text_top;
         mutable sf::Text confirm_text_bottom;
         mutable sf::Text big_number;
-        std::unordered_map<Input::Event, Input::Button> m_key_to_button;
+        std::unordered_map<Input::Key, Input::Button> m_key_to_button;
         mutable PressHere press_here_panel;
         mutable AlreadyMapped already_mapped_panel;
         mutable MappingPreview mapping_preview;

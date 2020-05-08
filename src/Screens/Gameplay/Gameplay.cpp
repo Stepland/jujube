@@ -35,6 +35,7 @@ namespace Gameplay {
     }
 
     void Screen::play_chart(sf::RenderWindow& window) {
+        window.setKeyRepeatEnabled(false);
         window.setActive(false);
         std::thread render_thread(&Screen::render, this, std::ref(window));
         while ((not song_finished) and window.isOpen()) {
@@ -59,10 +60,16 @@ namespace Gameplay {
             while (auto timed_event = events_queue.pop()) {
                 switch (timed_event->event.type) {
                 case sf::Event::KeyPressed:
-                    handle_raw_event(timed_event->event.key.code, timed_event->time);
+                    handle_raw_event({timed_event->event.key.code, Input::EventType::Pressed}, timed_event->time);
+                    break;
+                case sf::Event::KeyReleased:
+                    handle_raw_event({timed_event->event.key.code, Input::EventType::Released}, timed_event->time);
                     break;
                 case sf::Event::JoystickButtonPressed:
-                    handle_raw_event(timed_event->event.joystickButton, timed_event->time);
+                    handle_raw_event({timed_event->event.joystickButton, Input::EventType::Pressed}, timed_event->time);
+                    break;
+                case sf::Event::JoystickButtonReleased:
+                    handle_raw_event({timed_event->event.joystickButton, Input::EventType::Released}, timed_event->time);
                     break;
                 case sf::Event::MouseButtonPressed:
                     handle_mouse_click(timed_event->event.mouseButton, timed_event->time);
@@ -210,10 +217,10 @@ namespace Gameplay {
             for (auto &&note_ref : visible_notes) {
                 const auto& note = note_ref.get();
                 std::optional<sf::Sprite> sprite;
-                if (note.timed_judgement) {
+                if (note.tap_judgement) {
                     sprite = marker.get_sprite(
-                        judgement_to_animation(note.timed_judgement->judgement),
-                        music_time-note.timing-note.timed_judgement->delta
+                        judgement_to_animation(note.tap_judgement->judgement),
+                        music_time-note.timing-note.tap_judgement->delta
                     );
                 } else {
                     sprite = marker.get_sprite(
@@ -231,6 +238,7 @@ namespace Gameplay {
                     window.draw(*sprite);
                 }
             }
+            shared.button_highlight.update();
             window.draw(shared.button_highlight);
             window.draw(shared.black_frame);
             if (debug) {
@@ -267,15 +275,15 @@ namespace Gameplay {
         }
         auto button = Input::index_to_button(static_cast<std::size_t>(clicked_panel_index));
         if (button) {
-            handle_button(*button, music_time);
+            handle_button_event({*button, Input::EventType::Pressed}, music_time);
         }
     }
 
-    void Screen::handle_raw_event(const Input::Event& event, const sf::Time& music_time) {
-        auto button = preferences.key_mapping.key_to_button(event);
+    void Screen::handle_raw_event(const Input::RawEvent& raw_event, const sf::Time& music_time) {
+        auto button = preferences.key_mapping.key_to_button(raw_event.key);
         if (button) {
-            handle_button(*button, music_time);
-        } else if (auto key = std::get_if<sf::Keyboard::Key>(&event)) {
+            handle_button_event({*button, raw_event.type}, music_time);
+        } else if (auto key = std::get_if<sf::Keyboard::Key>(&raw_event.key)) {
             switch (*key) {
             case sf::Keyboard::F12:
                 debug = not debug;
@@ -286,8 +294,8 @@ namespace Gameplay {
         }
     }
 
-    void Screen::handle_button(const Input::Button& button, const sf::Time& music_time) {
-        shared.button_highlight.button_pressed(button);
+    void Screen::handle_button_event(const Input::ButtonEvent& button_event, const sf::Time& music_time) {
+        shared.button_highlight.handle_button_event(button_event);
         // Is the music even playing ?
         if (music->getStatus() == sf::SoundSource::Playing) {
             update_visible_notes(music_time);
@@ -298,15 +306,15 @@ namespace Gameplay {
                     break;
                 }
                 // is it even the right button ?
-                if (note.position != button) {
+                if (note.position != button_event.button) {
                     continue;
                 }
                 // has it already been graded ?
-                if (note.timed_judgement) {
+                if (note.tap_judgement) {
                     continue;
                 }
                 note = Data::GradedNote{note, music_time-note.timing};
-                auto& judgement = note.timed_judgement->judgement;
+                auto& judgement = note.tap_judgement->judgement;
                 score.update(judgement);
                 switch (judgement) {
                 case Data::Judgement::Perfect:
@@ -328,8 +336,8 @@ namespace Gameplay {
         std::for_each(visible_notes.begin(), visible_notes.end(),
             [this, music_time](Data::GradedNote& note){
                 if (note.timing + note.duration < music_time - sf::seconds(16.f/30.f)) {
-                    if (not note.timed_judgement) {
-                        note.timed_judgement.emplace(sf::Time::Zero, Data::Judgement::Miss);
+                    if (not note.tap_judgement) {
+                        note.tap_judgement.emplace(sf::Time::Zero, Data::Judgement::Miss);
                         this->score.update(Data::Judgement::Miss);
                         this->combo = 0;
                     }

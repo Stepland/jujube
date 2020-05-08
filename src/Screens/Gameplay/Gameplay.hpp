@@ -31,9 +31,9 @@ namespace Gameplay {
         
         void render(sf::RenderWindow& window);
 
-        void handle_raw_event(const Input::Event& event, const sf::Time& music_time);
+        void handle_raw_event(const Input::RawEvent& raw_event, const sf::Time& music_time);
         void handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event, const sf::Time& music_time);
-        void handle_button(const Input::Button& button, const sf::Time& music_time);
+        void handle_button_event(const Input::ButtonEvent& button_event, const sf::Time& music_time);
 
         const Data::SongDifficulty& song_selection;
         const Data::Chart chart;

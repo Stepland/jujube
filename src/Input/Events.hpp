@@ -12,19 +12,17 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Event.hpp>
 
-namespace Input {
-    struct JoystickButton : public sf::Event::JoystickButtonEvent {
-        JoystickButton() : sf::Event::JoystickButtonEvent() {};
-        JoystickButton(const sf::Event::JoystickButtonEvent& jbe) : sf::Event::JoystickButtonEvent(jbe) {};
-        friend bool operator==(const JoystickButton& rhs, const JoystickButton& lhs) {
-            return rhs.joystickId == lhs.joystickId and rhs.button == lhs.button;
-        }
-    };
+#include "Buttons.hpp"
+
+namespace sf {
+    inline bool operator==(const Event::JoystickButtonEvent& rhs, const Event::JoystickButtonEvent& lhs) {
+        return rhs.joystickId == lhs.joystickId and rhs.button == lhs.button;
+    }
 }
 
 namespace std {
-    template <> struct hash<Input::JoystickButton> {
-        size_t operator()(const Input::JoystickButton & jbe) const {
+    template <> struct hash<sf::Event::JoystickButtonEvent> {
+        size_t operator()(const sf::Event::JoystickButtonEvent & jbe) const {
             std::hash<unsigned int> hasher;
             size_t res = 17;
             res = res * 37 + hasher(jbe.joystickId);
@@ -35,7 +33,22 @@ namespace std {
 }
 
 namespace Input {
-    using Event = std::variant<sf::Keyboard::Key, JoystickButton>;
+    using Key = std::variant<sf::Keyboard::Key, sf::Event::JoystickButtonEvent>;
+
+    enum class EventType {
+        Pressed,
+        Released
+    };
+
+    struct RawEvent {
+        Key key;
+        EventType type;
+    };
+
+    struct ButtonEvent {
+        Button button;
+        EventType type;
+    };
 
     const std::unordered_map<sf::Keyboard::Key, std::string> keyboard_to_string{
         {
@@ -251,15 +264,15 @@ namespace Input {
         }
     };
 
-    struct EventToString {
+    struct KeyToString {
         std::string operator() (const sf::Keyboard::Key& k) {
             return "Keyboard::"+keyboard_to_string.at(k);
         };
-        std::string operator() (const JoystickButton& jbe) {
+        std::string operator() (const sf::Event::JoystickButtonEvent& jbe) {
             return "Joystick::"+std::to_string(jbe.joystickId)+"_"+std::to_string(jbe.button);
         };
     };
 
-    std::string to_string(const Event& mk);
-    Event from_string(const std::string& s);
+    std::string to_string(const Key& mk);
+    Key from_string(const std::string& s);
 }

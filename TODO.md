@@ -20,6 +20,12 @@
 # v0.2.0
 ## Misc
 - "Value" class with delayed update for *n i c e* score display
+- LN Marker
+    - Selection screen in Options
+- Customizable button highlight
+    - Format
+    - selection screen in Options
+- Global Offset
 
 # v1.0.0
 ## Music Select Screen
@@ -33,7 +39,6 @@
 - Sound
     - Sound Effects
 ### Options menu
-- Global Offset
 - Volume Settings
 - Give marker selection the timing check feature when your re-click on the same panel
     

@@ -27,6 +27,7 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list, ScreenResources& 
 }
 
 std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
+    window.setKeyRepeatEnabled(true);
     sf::Clock imguiClock;
     ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
     shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
@@ -82,6 +83,7 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
                 }
             }
         }
+        shared.button_highlight.update();
         window.draw(shared.button_highlight);
         window.draw(shared.black_frame);
         ribbon.draw_debug();

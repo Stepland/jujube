@@ -31,8 +31,9 @@ namespace Data {
     struct GradedNote : Data::Note {
         GradedNote() = default;
         GradedNote(const Data::Note& n) : Note::Note(n) {};
-        GradedNote(const Data::Note& n, const sf::Time& t) : Note::Note(n), timed_judgement(t) {};
-        GradedNote(const Data::Note& n, const TimedJudgement& t) : Note::Note(n), timed_judgement(t) {};
-        std::optional<TimedJudgement> timed_judgement;
+        GradedNote(const Data::Note& n, const sf::Time& t) : Note::Note(n), tap_judgement(t) {};
+        GradedNote(const Data::Note& n, const TimedJudgement& t) : Note::Note(n), tap_judgement(t) {};
+        std::optional<TimedJudgement> tap_judgement;
+        std::optional<TimedJudgement> long_release;
     };
 }
