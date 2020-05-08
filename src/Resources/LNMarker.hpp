@@ -34,5 +34,5 @@ namespace Resources {
         LNMarkers(const fs::path& jujube_path);
     private:
         void load_from_folder(const fs::path& lnmarkers_folder);
-    }
+    };
 }

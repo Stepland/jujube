@@ -3,11 +3,11 @@
 #include <cmath>
 
 namespace MusicSelect {
-    MarkerPanel::MarkerPanel(ScreenResources& t_resources, const Resources::Marker& marker) :
+    MarkerPanel::MarkerPanel(ScreenResources& t_resources, const Resources::Marker& t_marker) :
         Panel(t_resources),
-        m_marker(marker)
+        marker(t_marker)
     {
-        if (shared.preferences.options.marker == m_marker.m_metadata.name) {
+        if (shared.preferences.options.marker == marker.name) {
             select();
         }
     }
@@ -27,7 +27,7 @@ namespace MusicSelect {
         if (selected) {
             animation_time = std::fmod(resources.selected_marker->last_click.getElapsedTime().asSeconds(), 2.f) - 1.f;
         }
-        auto sprite = m_marker.get_sprite(Resources::MarkerAnimation::APPROACH, animation_time);
+        auto sprite = marker.get_sprite(Resources::MarkerAnimation::APPROACH, animation_time);
         if (sprite) {
             auto bounds = sprite->getGlobalBounds();
             sprite->setScale(get_panel_size()/bounds.width, get_panel_size()/bounds.height);
@@ -40,7 +40,7 @@ namespace MusicSelect {
             resources.selected_marker->obj.unselect();
         }
         resources.selected_marker.emplace(*this);
-        preferences.options.marker = m_marker.m_metadata.name;
+        preferences.options.marker = marker.name;
         this->selected = true;
     }
 

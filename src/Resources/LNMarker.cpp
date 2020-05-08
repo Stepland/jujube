@@ -10,7 +10,7 @@ namespace Resources {
         if (not fs::is_directory(folder)) {
             throw std::invalid_argument(folder.string()+" is not a folder");
         }
-        if (not fs::exists(folder/"marker.json")) {
+        if (not fs::exists(folder/"long.json")) {
             throw std::invalid_argument("LNMarker folder ( "+folder.string()+" ) has no long.json file");
         }
         std::ifstream marker_json{folder/"long.json"};
@@ -54,8 +54,8 @@ namespace Resources {
                         LNMarker m{p.path()};
                         emplace(m.name, m);
                     } catch (const std::exception& e) {
-                        std::cerr << "Unable to load marker folder "
-                        << p.path().filename().string() << " : "
+                        std::cerr << "Unable to load long note marker folder ";
+                        std::cerr << "'" << p.path().filename().string() << "' : "
                         << e.what() << '\n';
                     }
                 }

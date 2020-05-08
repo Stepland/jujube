@@ -8,6 +8,11 @@
 namespace fs = ghc::filesystem;
 
 namespace Resources {
+    struct DurationInFrames {
+        std::size_t frames;
+        std::size_t fps;
+    };
+
     struct SpriteSheet {
         sf::Texture tex;
         fs::path tex_path;
@@ -21,11 +26,6 @@ namespace Resources {
             std::size_t fps,
             const DurationInFrames& max_duration
         );
-    };
-
-    struct DurationInFrames {
-        std::size_t frames;
-        std::size_t fps;
     };
 
     void from_json(const nlohmann::json& j, SpriteSheet& s);

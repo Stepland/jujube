@@ -16,7 +16,7 @@ namespace MusicSelect {
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         void select();
         void unselect();
-        const Resources::Marker& m_marker;
+        const Resources::Marker& marker;
         bool selected = false;
     };
 }

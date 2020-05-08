@@ -14,7 +14,7 @@ namespace Resources {
         // File Load & Check
         if (not tex.loadFromFile(folder/tex_path)) {
             throw std::runtime_error(
-                "Cannot open marker sprite sheet "
+                "Cannot open file "
                 +(folder/tex_path).string()
             );
         }
@@ -26,7 +26,7 @@ namespace Resources {
         auto expected_size = sf::Vector2u(columns, rows) * static_cast<unsigned int>(size);
         if (sheet_size != expected_size) {
             std::stringstream ss;
-            ss << "Marker sprite sheet ";
+            ss << "Sprite sheet ";
             ss << (folder/tex_path).string();
             ss << " should be " << expected_size.x << "×" << expected_size.y << " pixels";
             ss << " but is " << sheet_size.x << "×" << sheet_size.y;
@@ -37,7 +37,7 @@ namespace Resources {
         // throw if the count calls for more sprites than possible according to the 'columns' and 'rows' fields
         if (count > columns * rows) {
             std::stringstream ss;
-            ss << "Metadata for marker sprite sheet ";
+            ss << "Metadata for sprite sheet ";
             ss << (folder/tex_path).string();
             ss << " indicates that it holds " << count << " sprites";
             ss << " when it can only hold a maximum of " << columns * rows;
@@ -54,7 +54,7 @@ namespace Resources {
         // Which allows us to avoid having to cast to float
         if (count*max_duration.fps > max_duration.frames*fps) {
             std::stringstream ss;
-            ss << "Marker animation for sprite sheet ";
+            ss << "Animation for sprite sheet ";
             ss << (folder/tex_path).string();
             ss << " lasts " << count/static_cast<float>(fps)*1000.f << "ms";
             ss << " (" << count << "f @ " << fps << "fps)";
