@@ -1,0 +1,67 @@
+#include "SpriteSheet.hpp"
+
+#include <sstream>
+
+namespace Resources {
+    void from_json(const nlohmann::json& j, SpriteSheet& s) {
+        s.tex_path = fs::path{j.at("sprite_sheet").get<std::string>()};
+        j.at("count").get_to(s.count);
+        j.at("columns").get_to(s.columns);
+        j.at("rows").get_to(s.rows);
+    }
+
+    void SpriteSheet::load_and_check(const fs::path& folder, std::size_t size, std::size_t fps, const DurationInFrames& max_duration) {
+        // File Load & Check
+        if (not tex.loadFromFile(folder/tex_path)) {
+            throw std::runtime_error(
+                "Cannot open marker sprite sheet "
+                +(folder/tex_path).string()
+            );
+        }
+        tex.setSmooth(true);
+        
+        // Sprite sheet size check
+        // throw if the texture size does not match what's announced by the metadata
+        auto sheet_size = tex.getSize();
+        auto expected_size = sf::Vector2u(columns, rows) * static_cast<unsigned int>(size);
+        if (sheet_size != expected_size) {
+            std::stringstream ss;
+            ss << "Marker sprite sheet ";
+            ss << (folder/tex_path).string();
+            ss << " should be " << expected_size.x << "×" << expected_size.y << " pixels";
+            ss << " but is " << sheet_size.x << "×" << sheet_size.y;
+            throw std::invalid_argument(ss.str());
+        }
+
+        // Sprite count check
+        // throw if the count calls for more sprites than possible according to the 'columns' and 'rows' fields
+        if (count > columns * rows) {
+            std::stringstream ss;
+            ss << "Metadata for marker sprite sheet ";
+            ss << (folder/tex_path).string();
+            ss << " indicates that it holds " << count << " sprites";
+            ss << " when it can only hold a maximum of " << columns * rows;
+            ss << " according to the 'columns' and 'rows' fields";
+            throw std::invalid_argument(ss.str());
+        }
+
+        // Duration check
+        // We do not allow any marker animation to take longer than the jubeat standard of 16 frames at 30 fps
+        // For that we make sure that :
+        //     frames/fps <= max_frames/reference_fps
+        // Which is mathematically equivalent to checking that :
+        //     count*reference_fps <= max_frames*fps
+        // Which allows us to avoid having to cast to float
+        if (count*max_duration.fps > max_duration.frames*fps) {
+            std::stringstream ss;
+            ss << "Marker animation for sprite sheet ";
+            ss << (folder/tex_path).string();
+            ss << " lasts " << count/static_cast<float>(fps)*1000.f << "ms";
+            ss << " (" << count << "f @ " << fps << "fps)";
+            ss << " which is more than the maximum of ";
+            ss << max_duration.frames/static_cast<float>(max_duration.fps)*1000.f << "ms";
+            ss << " (16f @ 30fps)";
+            throw std::invalid_argument(ss.str());
+        }       
+    }
+}
