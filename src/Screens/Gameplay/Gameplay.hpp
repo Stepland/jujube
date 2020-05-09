@@ -30,8 +30,10 @@ namespace Gameplay {
         void draw_debug() override;
         
         void render(sf::RenderWindow& window);
-        void draw_tap_note(sf::RenderWindow& window, const Data::GradedNote& note, const sf::Time& music_time);
-        void draw_long_note(sf::RenderWindow& window, const Data::GradedNote& note, const sf::Time& music_time);
+        // Draw a normal note on marker_layer
+        void draw_tap_note(const Data::GradedNote& note, const sf::Time& music_time);
+        // Draw the long note tail on ln_tail_layer and its markers on marker_layer
+        void draw_long_note(const Data::GradedNote& note, const sf::Time& music_time);
 
         void handle_raw_event(const Input::RawEvent& raw_event, const sf::Time& music_time);
         void handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event, const sf::Time& music_time);
@@ -50,6 +52,9 @@ namespace Gameplay {
         // Performs passive grading actions (misses and long note releases)
         // Then update the visible notes
         void update_visible_notes(const sf::Time& music_time);
+
+        sf::RenderTexture ln_tail_layer;
+        sf::RenderTexture marker_layer;
 
         Data::ClassicScore score;
         std::size_t combo = 0;

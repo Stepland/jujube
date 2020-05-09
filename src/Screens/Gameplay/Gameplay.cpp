@@ -34,6 +34,8 @@ namespace Gameplay {
         } else {
             music = std::make_unique<Silence>(chart.get_duration_based_on_notes());
         }
+        ln_tail_layer.setSmooth(true);
+        marker_layer.setSmooth(true);
     }
 
     void Screen::play_chart(sf::RenderWindow& window) {
@@ -56,6 +58,9 @@ namespace Gameplay {
     
     void Screen::render(sf::RenderWindow& window) {
         window.setActive(true);
+        auto window_size = window.getSize();
+        ln_tail_layer.create(window_size.x, window_size.y);
+        marker_layer.create(window_size.x, window_size.y);
         sf::Clock imguiClock;
         music->play();
         while ((not song_finished) and window.isOpen()) {
@@ -97,6 +102,8 @@ namespace Gameplay {
                             }
                         )
                     );
+                    ln_tail_layer.create(timed_event->event.size.width, timed_event->event.size.height);
+                    marker_layer.create(timed_event->event.size.width, timed_event->event.size.height);
                     shared.preferences.screen.height = timed_event->event.size.height;
                     shared.preferences.screen.width = timed_event->event.size.width;
                     shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
@@ -106,6 +113,8 @@ namespace Gameplay {
                 }
             }
             window.clear(sf::Color(7, 23, 53));
+            ln_tail_layer.clear(sf::Color::Transparent);
+            marker_layer.clear(sf::Color::Transparent);
 
             // Draw song info
             // Cover is 40x40 @ (384,20)
@@ -217,15 +226,20 @@ namespace Gameplay {
             chart_label.setFillColor(shared.get_chart_color(song_selection.difficulty));
             window.draw(chart_label);
 
-            // Draw Notes
+            // Draw Notes, longs first then normal ones
             for (auto &&note_ref : visible_notes) {
                 const auto& note = note_ref.get();
                 if (note.duration == sf::Time::Zero) {
-                    draw_tap_note(window, note, music_time);
+                    draw_tap_note(note, music_time);
                 } else {
-                    draw_long_note(window, note, music_time);
+                    draw_long_note(note, music_time);
                 }
             }
+            ln_tail_layer.display();
+            marker_layer.display();
+            window.draw(sf::Sprite{ln_tail_layer.getTexture()});
+            window.draw(sf::Sprite{marker_layer.getTexture()});
+
             shared.button_highlight.update();
             window.draw(shared.button_highlight);
             if (display_black_bars) {
@@ -239,7 +253,7 @@ namespace Gameplay {
         }
     }
 
-    void Screen::draw_tap_note(sf::RenderWindow& window, const Data::GradedNote& note, const sf::Time& music_time) {
+    void Screen::draw_tap_note(const Data::GradedNote& note, const sf::Time& music_time) {
         std::optional<sf::Sprite> sprite;
         if (note.tap_judgement) {
             sprite = marker.get_sprite(
@@ -259,11 +273,11 @@ namespace Gameplay {
                 get_ribbon_x()+get_panel_step()*pos.x,
                 get_ribbon_y()+get_panel_step()*pos.y
             );
-            window.draw(*sprite);
+            marker_layer.draw(*sprite);
         }
     }
 
-    void Screen::draw_long_note(sf::RenderWindow& window, const Data::GradedNote& note, const sf::Time& music_time) {
+    void Screen::draw_long_note(const Data::GradedNote& note, const sf::Time& music_time) {
         if (not note.long_release) {
             // long note did not finish yet
             // No need to display the background and tail if the first tap judgement at the beginning broke combo
@@ -310,7 +324,7 @@ namespace Gameplay {
                     tail_sprite->setPosition(note_position);
                     tail_sprite->rotate(tail_angle+180.f);
                     tail_sprite->setScale(scale, scale);
-                    window.draw(*tail_sprite);
+                    ln_tail_layer.draw(*tail_sprite);
                 }
                 if (auto tip_sprite = ln_marker.get_tip_sprite(note_offset)) {
                     Toolkit::set_origin_normalized(
@@ -321,31 +335,31 @@ namespace Gameplay {
                     tip_sprite->setPosition(note_position);
                     tip_sprite->setRotation(tail_angle);
                     tip_sprite->setScale(scale, scale);
-                    window.draw(*tip_sprite);
+                    ln_tail_layer.draw(*tip_sprite);
                 }
                 if (auto background_sprite = ln_marker.get_background_sprite(note_offset)) {
                     Toolkit::set_origin_normalized(*background_sprite, 0.5f, 0.5f);
                     background_sprite->setPosition(note_position);
                     background_sprite->setRotation(tail_angle);
                     background_sprite->setScale(scale, scale);
-                    window.draw(*background_sprite);
+                    ln_tail_layer.draw(*background_sprite);
                 }
                 if (auto outline_sprite = ln_marker.get_outline_sprite(note_offset)) {
                     Toolkit::set_origin_normalized(*outline_sprite, 0.5f, 0.5f);
                     outline_sprite->setPosition(note_position);
                     outline_sprite->setRotation(tail_angle);
                     outline_sprite->setScale(scale, scale);
-                    window.draw(*outline_sprite);                  
+                    ln_tail_layer.draw(*outline_sprite);                  
                 }
                 if (auto highlight_sprite = ln_marker.get_highlight_sprite(note_offset)) {
                     Toolkit::set_origin_normalized(*highlight_sprite, 0.5f, 0.5f);
                     highlight_sprite->setPosition(note_position);
                     highlight_sprite->setRotation(tail_angle);
                     highlight_sprite->setScale(scale, scale);
-                    window.draw(*highlight_sprite);
+                    ln_tail_layer.draw(*highlight_sprite);
                 }
             }
-            draw_tap_note(window, note, music_time);
+            draw_tap_note(note, music_time);
         } else {
             // long note ended, only draw the ending marker
             std::optional<sf::Sprite> sprite;
@@ -360,7 +374,7 @@ namespace Gameplay {
                     get_ribbon_x()+get_panel_step()*pos.x,
                     get_ribbon_y()+get_panel_step()*pos.y
                 );
-                window.draw(*sprite);
+                marker_layer.draw(*sprite);
             }
         }
     }
