@@ -49,6 +49,8 @@ namespace Gameplay {
 
         std::deque<Data::GradedNote> notes;
         std::deque<std::reference_wrapper<Data::GradedNote>> visible_notes;
+        void miss_old_notes(const sf::Time& music_time);
+        void release_finished_longs(const sf::Time& music_time);
         // Performs passive grading actions (misses and long note releases)
         // Then update the visible notes
         void update_visible_notes(const sf::Time& music_time);

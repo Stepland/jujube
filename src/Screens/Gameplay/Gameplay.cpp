@@ -455,17 +455,12 @@ namespace Gameplay {
             note = Data::GradedNote{note, music_time-note.timing};
             auto& judgement = note.tap_judgement->judgement;
             score.update(judgement);
-            switch (judgement) {
-            case Data::Judgement::Perfect:
-            case Data::Judgement::Great:
-            case Data::Judgement::Good:
-                combo++;
-                break;
-            default:
+            if (Data::judgement_breaks_combo(judgement)) {
                 combo = 0;
-                break;
+            } else {
+                combo++;
             }
-            break;
+            return;
         }
     }
 
@@ -473,7 +468,7 @@ namespace Gameplay {
         for (auto&& note_ref : visible_notes) {
             auto& note = note_ref.get();
             // is it a long note ?
-            if (note.duration > sf::Time::Zero) {
+            if (note.duration == sf::Time::Zero) {
                 continue;
             }
             // is it even the right button ?
@@ -487,9 +482,10 @@ namespace Gameplay {
             if (note.long_release) {
                 continue;
             }
-            note.long_release = Data::TimedJudgement{music_time-note.timing-note.duration};
-            score.update(note.long_release->judgement);
-            if (Data::judgement_breaks_combo(note.long_release->judgement)) {
+            auto timed_judgement = Data::TimedJudgement{music_time-note.timing-note.duration};
+            note.long_release = timed_judgement;
+            score.update(timed_judgement.judgement);
+            if (Data::judgement_breaks_combo(timed_judgement.judgement)) {
                 combo = 0;
             } else {
                 combo++;
@@ -498,32 +494,43 @@ namespace Gameplay {
         }
     }
 
-    void Screen::update_visible_notes(const sf::Time& music_time) {
-        // Mark old notes as missed and finished longs as released
+    void Screen::miss_old_notes(const sf::Time& music_time) {
         for (auto &&note_ref : visible_notes) {
             auto& note = note_ref.get();
             if (
-                note.timing < music_time - sf::seconds(16.f/30.f) and
-                not note.tap_judgement
+                (not note.tap_judgement.has_value())
+                and (note.timing < music_time - sf::seconds(16.f/30.f))
             ) {
-                note.tap_judgement.emplace(sf::Time::Zero, Data::Judgement::Miss);
+                auto timed_judgement = Data::TimedJudgement{sf::Time::Zero, Data::Judgement::Miss};
+                note.tap_judgement = timed_judgement;
                 score.update(Data::Judgement::Miss);
                 combo = 0;
-            } else if (
-                note.duration > sf::Time::Zero and
-                note.timing + note.duration <= music_time and
-                note.tap_judgement and
-                not note.long_release
-            ) {
-                // We do not conscider the long note release for scoring
-                // if its associated beginning tap note broke combo
-                if (not Data::judgement_breaks_combo(note.tap_judgement->judgement)) {
-                    note.long_release.emplace(sf::Time::Zero, Data::Judgement::Perfect);
-                    score.update(Data::Judgement::Perfect);
-                    combo++;
-                }
             }
         }
+    }
+
+    void Screen::release_finished_longs(const sf::Time& music_time) {
+        for (auto &&note_ref : visible_notes) {
+            auto& note = note_ref.get();
+            if (
+                (note.duration > sf::Time::Zero)
+                and (note.timing + note.duration < music_time)
+                and note.tap_judgement.has_value()
+                and note.tap_judgement->judgement != Data::Judgement::Miss
+                and (not note.long_release.has_value())
+            ) {
+                auto timed_judgement = Data::TimedJudgement{sf::Time::Zero, Data::Judgement::Perfect};
+                note.long_release = timed_judgement;
+                score.update(timed_judgement.judgement);
+                combo++;
+            }
+        }
+    }
+
+    void Screen::update_visible_notes(const sf::Time& music_time) {
+        // Mark old notes as missed and finished longs as released
+        miss_old_notes(music_time);
+        release_finished_longs(music_time);
         
         // Remove old notes
         visible_notes.erase(
