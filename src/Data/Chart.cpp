@@ -17,7 +17,7 @@ namespace Data {
         );
         Toolkit::AffineTransform<float> memon_timing_to_seconds_proportional(
             0.f, static_cast<float>(chart.resolution),
-            0.f, (60.f/memon.BPM)*1000.f
+            0.f, (60.f/memon.BPM)
         );
         for (auto &&note : chart.notes) {
             auto timing = sf::seconds(memon_timing_to_seconds.transform(note.get_timing()));

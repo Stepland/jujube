@@ -1,29 +1,31 @@
-#include "SpriteSheet.hpp"
+#include "SplitSpriteSheet.hpp"
 
 #include <sstream>
 
+#include <SFML/Graphics/RenderTexture.hpp>
+
 namespace Resources {
-    void from_json(const nlohmann::json& j, SpriteSheet& s) {
+    void from_json(const nlohmann::json& j, SplitSpriteSheet& s) {
         s.tex_path = fs::path{j.at("sprite_sheet").get<std::string>()};
         j.at("count").get_to(s.count);
         j.at("columns").get_to(s.columns);
         j.at("rows").get_to(s.rows);
     }
 
-    void SpriteSheet::load_and_check(
+    void SplitSpriteSheet::load_and_check(
         const fs::path& folder,
         std::size_t size,
         std::size_t fps,
         const Toolkit::DurationInFrames& max_duration
     ) {
         // File Load & Check
+        sf::Texture tex;
         if (not tex.loadFromFile(folder/tex_path)) {
             throw std::runtime_error(
                 "Cannot open file "
                 +(folder/tex_path).string()
             );
         }
-        tex.setSmooth(true);
 
         // Sprite sheet size check
         // throw if the texture size does not match what's announced by the metadata
@@ -37,6 +39,8 @@ namespace Resources {
             ss << " but is " << sheet_size.x << "×" << sheet_size.y;
             throw std::invalid_argument(ss.str());
         }
+
+
 
         // Sprite count check
         // throw if the count calls for more sprites than possible according to the 'columns' and 'rows' fields
@@ -67,11 +71,12 @@ namespace Resources {
             ss << max_duration.frames/static_cast<float>(max_duration.fps)*1000.f << "ms";
             ss << " (16f @ 30fps)";
             throw std::invalid_argument(ss.str());
-        }       
-    }
+        }
 
-    std::optional<sf::Sprite> SpriteSheet::get_sprite(std::size_t frame, std::size_t size) const {
-        if (frame < count) {
+        for (std::size_t frame = 0; frame < count; frame++) {
+            sf::RenderTexture sprite_frame;
+            sprite_frame.create(size, size);
+            sprite_frame.setSmooth(true);
             sf::Sprite sprite{tex};
             sf::IntRect rect{
                 sf::Vector2i{
@@ -84,7 +89,17 @@ namespace Resources {
                 }
             };
             sprite.setTextureRect(rect);
-            return sprite;
+            sprite_frame.draw(sprite);
+            textures.push_back(sprite_frame.getTexture());
+            textures.back().setRepeated(true);
+            textures.back().setSmooth(true);
+        }
+        
+    }
+
+    std::optional<sf::Sprite> SplitSpriteSheet::get_sprite(std::size_t frame) const {
+        if (frame < count) {
+            return sf::Sprite{textures.at(frame)};
         }
         return {};
     }

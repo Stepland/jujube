@@ -54,4 +54,8 @@ namespace Resources {
     Resources::Marker& SharedResources::get_selected_marker() {
         return markers.at(preferences.options.marker);
     }
+
+    Resources::LNMarker& SharedResources::get_selected_ln_marker() {
+        return ln_markers.at(preferences.options.ln_marker);
+    }
 }

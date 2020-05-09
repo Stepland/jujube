@@ -92,23 +92,7 @@ namespace Resources {
 
     std::optional<sf::Sprite> Marker::get_sprite(const MarkerAnimation& state, const std::size_t frame) const {
         auto& sprite_sheet = get_sprite_sheet_from_enum(state);
-        if (frame >= sprite_sheet.count) {
-            return {};
-        } else {
-            sf::Sprite sprite{sprite_sheet.tex};
-            sf::IntRect rect{
-                sf::Vector2i{
-                    static_cast<int>(frame % sprite_sheet.columns),
-                    static_cast<int>(frame / sprite_sheet.columns)
-                } * static_cast<int>(size),
-                sf::Vector2i{
-                    static_cast<int>(size),
-                    static_cast<int>(size)
-                }
-            };
-            sprite.setTextureRect(rect);
-            return sprite;
-        }
+        return sprite_sheet.get_sprite(frame, size);
     }
 
     Markers::Markers(const fs::path& jujube_path) {

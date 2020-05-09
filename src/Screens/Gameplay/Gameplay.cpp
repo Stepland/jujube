@@ -11,6 +11,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../../Input/Buttons.hpp"
+#include "../../Toolkit/AffineTransform.hpp"
 #include "../../Toolkit/SFMLHelpers.hpp"
 #include "PreciseMusic.hpp"
 #include "Silence.hpp"
@@ -21,6 +22,7 @@ namespace Gameplay {
         song_selection(t_song_selection),
         chart(*t_song_selection.song.get_chart(t_song_selection.difficulty)),
         marker(t_resources.shared.get_selected_marker()),
+        ln_marker(t_resources.shared.get_selected_ln_marker()),
         score(t_song_selection.song.get_chart(t_song_selection.difficulty)->notes)
     {
         for (auto&& note : chart.notes) {
@@ -57,6 +59,12 @@ namespace Gameplay {
         sf::Clock imguiClock;
         music->play();
         while ((not song_finished) and window.isOpen()) {
+            song_finished = music->getStatus() == sf::Music::Stopped;
+            ImGui::SFML::Update(window, imguiClock.restart());
+            auto music_time = music->getPlayingOffset();
+            update_visible_notes(music_time);
+
+            // Event Handling
             while (auto timed_event = events_queue.pop()) {
                 switch (timed_event->event.type) {
                 case sf::Event::KeyPressed:
@@ -97,10 +105,6 @@ namespace Gameplay {
                     break;
                 }
             }
-            song_finished = music->getStatus() == sf::Music::Stopped;
-            ImGui::SFML::Update(window, imguiClock.restart());
-            auto music_time = music->getPlayingOffset();
-            update_visible_notes(music_time);
             window.clear(sf::Color(7, 23, 53));
 
             // Draw song info
@@ -216,31 +220,17 @@ namespace Gameplay {
             // Draw Notes
             for (auto &&note_ref : visible_notes) {
                 const auto& note = note_ref.get();
-                std::optional<sf::Sprite> sprite;
-                if (note.tap_judgement) {
-                    sprite = marker.get_sprite(
-                        judgement_to_animation(note.tap_judgement->judgement),
-                        music_time-note.timing-note.tap_judgement->delta
-                    );
+                if (note.duration == sf::Time::Zero) {
+                    draw_tap_note(window, note, music_time);
                 } else {
-                    sprite = marker.get_sprite(
-                        Resources::MarkerAnimation::APPROACH,
-                        music_time-note.timing
-                    );
-                }
-                if (sprite) {
-                    Toolkit::set_size_from_local_bounds(*sprite, get_panel_size(), get_panel_size());
-                    auto pos = Input::button_to_coords(note.position);
-                    sprite->setPosition(
-                        get_ribbon_x()+get_panel_step()*pos.x,
-                        get_ribbon_y()+get_panel_step()*pos.y
-                    );
-                    window.draw(*sprite);
+                    draw_long_note(window, note, music_time);
                 }
             }
             shared.button_highlight.update();
             window.draw(shared.button_highlight);
-            window.draw(shared.black_frame);
+            if (display_black_bars) {
+                window.draw(shared.black_frame);
+            }
             if (debug) {
                 draw_debug();
             }
@@ -249,7 +239,133 @@ namespace Gameplay {
         }
     }
 
-    void Gameplay::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event, const sf::Time& music_time) {
+    void Screen::draw_tap_note(sf::RenderWindow& window, const Data::GradedNote& note, const sf::Time& music_time) {
+        std::optional<sf::Sprite> sprite;
+        if (note.tap_judgement) {
+            sprite = marker.get_sprite(
+                Data::judgement_to_animation(note.tap_judgement->judgement),
+                music_time-note.timing-note.tap_judgement->delta
+            );
+        } else {
+            sprite = marker.get_sprite(
+                Resources::MarkerAnimation::APPROACH,
+                music_time-note.timing
+            );
+        }
+        if (sprite) {
+            Toolkit::set_size_from_local_bounds(*sprite, get_panel_size(), get_panel_size());
+            auto pos = Input::button_to_coords(note.position);
+            sprite->setPosition(
+                get_ribbon_x()+get_panel_step()*pos.x,
+                get_ribbon_y()+get_panel_step()*pos.y
+            );
+            window.draw(*sprite);
+        }
+    }
+
+    void Screen::draw_long_note(sf::RenderWindow& window, const Data::GradedNote& note, const sf::Time& music_time) {
+        if (not note.long_release) {
+            // long note did not finish yet
+            // No need to display the background and tail if the first tap judgement at the beginning broke combo
+            if (
+                (not note.tap_judgement) or
+                (note.tap_judgement and not Data::judgement_breaks_combo(note.tap_judgement->judgement))
+            ) {
+                auto note_offset = music_time-note.timing;
+                auto note_coords = Input::button_to_coords(note.position);
+                sf::Vector2f note_position{
+                    get_ribbon_x() + (get_panel_step()*note_coords.x) + get_panel_size()/2.f,
+                    get_ribbon_y() + (get_panel_step()*note_coords.y) + get_panel_size()/2.f
+                };
+                float tail_angle = 90.f * note.get_tail_angle();
+                float scale = get_panel_size() / ln_marker.size;
+                Toolkit::AffineTransform<float> delta_to_normalized_tip_distance(
+                    0.f,
+                    note.duration.asSeconds(),
+                    static_cast<float>(note.get_tail_length()),
+                    0.f
+                );
+                float normalized_tail_length = 
+                    delta_to_normalized_tip_distance.clampedTransform(note_offset.asSeconds());
+                float tail_length;
+                auto frame = static_cast<int>(std::floor(note_offset.asSeconds()*ln_marker.fps));
+                if (frame < static_cast<int>(ln_marker.tip_enter_cycle.count)) {
+                    // During the tip animation : tail goes from tip to note edge
+                    tail_length = std::max(
+                        0.f,
+                        ln_marker.size * (normalized_tail_length*(get_panel_step()/get_panel_size()) - 1.0f)
+                    );
+                } else {
+                    // After the tip animation : tail goes from half of the triangle base to note edge
+                    tail_length = std::max(
+                        0.f,
+                        ln_marker.size * (normalized_tail_length*(get_panel_step()/get_panel_size()) - 0.5f)
+                    );
+                }
+                if (auto tail_sprite = ln_marker.get_tail_sprite(note_offset)) {
+                    Toolkit::set_origin_normalized(*tail_sprite, 0.5f, -0.5f);
+                    auto rect = tail_sprite->getTextureRect();
+                    rect.height = static_cast<int>(tail_length);
+                    tail_sprite->setTextureRect(rect);
+                    tail_sprite->setPosition(note_position);
+                    tail_sprite->rotate(tail_angle+180.f);
+                    tail_sprite->setScale(scale, scale);
+                    window.draw(*tail_sprite);
+                }
+                if (auto tip_sprite = ln_marker.get_tip_sprite(note_offset)) {
+                    Toolkit::set_origin_normalized(
+                        *tip_sprite,
+                        0.5f,
+                        0.5f + (get_panel_step()/get_panel_size())*normalized_tail_length
+                    );
+                    tip_sprite->setPosition(note_position);
+                    tip_sprite->setRotation(tail_angle);
+                    tip_sprite->setScale(scale, scale);
+                    window.draw(*tip_sprite);
+                }
+                if (auto background_sprite = ln_marker.get_background_sprite(note_offset)) {
+                    Toolkit::set_origin_normalized(*background_sprite, 0.5f, 0.5f);
+                    background_sprite->setPosition(note_position);
+                    background_sprite->setRotation(tail_angle);
+                    background_sprite->setScale(scale, scale);
+                    window.draw(*background_sprite);
+                }
+                if (auto outline_sprite = ln_marker.get_outline_sprite(note_offset)) {
+                    Toolkit::set_origin_normalized(*outline_sprite, 0.5f, 0.5f);
+                    outline_sprite->setPosition(note_position);
+                    outline_sprite->setRotation(tail_angle);
+                    outline_sprite->setScale(scale, scale);
+                    window.draw(*outline_sprite);                  
+                }
+                if (auto highlight_sprite = ln_marker.get_highlight_sprite(note_offset)) {
+                    Toolkit::set_origin_normalized(*highlight_sprite, 0.5f, 0.5f);
+                    highlight_sprite->setPosition(note_position);
+                    highlight_sprite->setRotation(tail_angle);
+                    highlight_sprite->setScale(scale, scale);
+                    window.draw(*highlight_sprite);
+                }
+            }
+            draw_tap_note(window, note, music_time);
+        } else {
+            // long note ended, only draw the ending marker
+            std::optional<sf::Sprite> sprite;
+            sprite = marker.get_sprite(
+                Data::judgement_to_animation(note.long_release->judgement),
+                music_time-note.timing-note.duration-note.long_release->delta
+            );
+            if (sprite) {
+                Toolkit::set_size_from_local_bounds(*sprite, get_panel_size(), get_panel_size());
+                auto pos = Input::button_to_coords(note.position);
+                sprite->setPosition(
+                    get_ribbon_x()+get_panel_step()*pos.x,
+                    get_ribbon_y()+get_panel_step()*pos.y
+                );
+                window.draw(*sprite);
+            }
+        }
+    }
+
+    void Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event, const sf::Time& music_time) {
         if (mouse_button_event.button != sf::Mouse::Left) {
             return;
         }
@@ -283,13 +399,15 @@ namespace Gameplay {
         auto button = preferences.key_mapping.key_to_button(raw_event.key);
         if (button) {
             handle_button_event({*button, raw_event.type}, music_time);
-        } else if (auto key = std::get_if<sf::Keyboard::Key>(&raw_event.key)) {
-            switch (*key) {
-            case sf::Keyboard::F12:
-                debug = not debug;
-                break;
-            default:
-                break;
+        } else if (raw_event.type == Input::EventType::Pressed) {
+            if (auto key = std::get_if<sf::Keyboard::Key>(&raw_event.key)) {
+                switch (*key) {
+                case sf::Keyboard::F12:
+                    debug = not debug;
+                    break;
+                default:
+                    break;
+                }
             }
         }
     }
@@ -298,52 +416,101 @@ namespace Gameplay {
         shared.button_highlight.handle_button_event(button_event);
         // Is the music even playing ?
         if (music->getStatus() == sf::SoundSource::Playing) {
-            update_visible_notes(music_time);
-            for (auto&& note_ref : visible_notes) {
-                auto& note = note_ref.get();
-                // is the note still visible ?
-                if (note.timing > music_time + sf::seconds(16.f/30.f)) {
-                    break;
-                }
-                // is it even the right button ?
-                if (note.position != button_event.button) {
-                    continue;
-                }
-                // has it already been graded ?
-                if (note.tap_judgement) {
-                    continue;
-                }
-                note = Data::GradedNote{note, music_time-note.timing};
-                auto& judgement = note.tap_judgement->judgement;
-                score.update(judgement);
-                switch (judgement) {
-                case Data::Judgement::Perfect:
-                case Data::Judgement::Great:
-                case Data::Judgement::Good:
-                    combo++;
-                    break;
-                default:
-                    combo = 0;
-                    break;
-                }
+            switch (button_event.type) {
+            case Input::EventType::Pressed:
+                handle_button_press(button_event.button, music_time);
+                break;
+            case Input::EventType::Released:
+                handle_button_release(button_event.button, music_time);
                 break;
             }
         }
     }
 
+    void Screen::handle_button_press(const Input::Button& button, const sf::Time& music_time) {
+        for (auto&& note_ref : visible_notes) {
+            auto& note = note_ref.get();
+            // is it even the right button ?
+            if (note.position != button) {
+                continue;
+            }
+            // has it already been graded ?
+            if (note.tap_judgement) {
+                continue;
+            }
+            note = Data::GradedNote{note, music_time-note.timing};
+            auto& judgement = note.tap_judgement->judgement;
+            score.update(judgement);
+            switch (judgement) {
+            case Data::Judgement::Perfect:
+            case Data::Judgement::Great:
+            case Data::Judgement::Good:
+                combo++;
+                break;
+            default:
+                combo = 0;
+                break;
+            }
+            break;
+        }
+    }
+
+    void Screen::handle_button_release(const Input::Button& button, const sf::Time& music_time) {
+        for (auto&& note_ref : visible_notes) {
+            auto& note = note_ref.get();
+            // is it a long note ?
+            if (note.duration > sf::Time::Zero) {
+                continue;
+            }
+            // is it even the right button ?
+            if (note.position != button) {
+                continue;
+            }
+            if (not note.tap_judgement) {
+                continue;
+            }
+            // has it already been graded for release ?
+            if (note.long_release) {
+                continue;
+            }
+            note.long_release = Data::TimedJudgement{music_time-note.timing-note.duration};
+            score.update(note.long_release->judgement);
+            if (Data::judgement_breaks_combo(note.long_release->judgement)) {
+                combo = 0;
+            } else {
+                combo++;
+            }
+            return;
+        }
+    }
+
     void Screen::update_visible_notes(const sf::Time& music_time) {
-        // Mark old notes as missed
-        std::for_each(visible_notes.begin(), visible_notes.end(),
-            [this, music_time](Data::GradedNote& note){
-                if (note.timing + note.duration < music_time - sf::seconds(16.f/30.f)) {
-                    if (not note.tap_judgement) {
-                        note.tap_judgement.emplace(sf::Time::Zero, Data::Judgement::Miss);
-                        this->score.update(Data::Judgement::Miss);
-                        this->combo = 0;
-                    }
+        // Mark old notes as missed and finished longs as released
+        for (auto &&note_ref : visible_notes) {
+            auto& note = note_ref.get();
+            if (
+                note.timing < music_time - sf::seconds(16.f/30.f) and
+                not note.tap_judgement
+            ) {
+                note.tap_judgement.emplace(sf::Time::Zero, Data::Judgement::Miss);
+                score.update(Data::Judgement::Miss);
+                combo = 0;
+            } else if (
+                note.duration > sf::Time::Zero and
+                note.timing + note.duration <= music_time and
+                note.tap_judgement and
+                not note.long_release
+            ) {
+                // We do not conscider the long note release for scoring
+                // if its associated beginning tap note broke combo
+                if (not Data::judgement_breaks_combo(note.tap_judgement->judgement)) {
+                    note.long_release.emplace(sf::Time::Zero, Data::Judgement::Perfect);
+                    score.update(Data::Judgement::Perfect);
+                    combo++;
                 }
             }
-        );
+        }
+        
         // Remove old notes
         visible_notes.erase(
             std::remove_if(visible_notes.begin(), visible_notes.end(),
@@ -375,20 +542,32 @@ namespace Gameplay {
 
     void Screen::draw_debug() {
         if (ImGui::Begin("Gameplay Debug")) {
-            ImGui::Text("Combo : %lu", combo);
-            if (ImGui::TreeNode("Score")) {
-                ImGui::Text("Raw           : %d", score.get_score());
-                ImGui::Text("Final         : %d", score.get_final_score());
-                ImGui::Text("Shutter value : %d", score.shutter);
-                if (ImGui::TreeNode("Judgement Counts")) {
-                    ImGui::Text("PERFECT : %lu", score.judgement_counts.at(Data::Judgement::Perfect));
-                    ImGui::Text("GREAT   : %lu", score.judgement_counts.at(Data::Judgement::Great));
-                    ImGui::Text("GOOD    : %lu", score.judgement_counts.at(Data::Judgement::Good));
-                    ImGui::Text("POOR    : %lu", score.judgement_counts.at(Data::Judgement::Poor));
-                    ImGui::Text("MISS    : %lu", score.judgement_counts.at(Data::Judgement::Miss));
+            if (ImGui::CollapsingHeader("Metrics")) {
+                ImGui::Text("Combo : %lu", combo);
+                if (ImGui::TreeNode("Score")) {
+                    ImGui::Text("Raw           : %d", score.get_score());
+                    ImGui::Text("Final         : %d", score.get_final_score());
+                    ImGui::Text("Shutter value : %d", score.shutter);
+                    if (ImGui::TreeNode("Judgement Counts")) {
+                        ImGui::Text("PERFECT : %lu", score.judgement_counts.at(Data::Judgement::Perfect));
+                        ImGui::Text("GREAT   : %lu", score.judgement_counts.at(Data::Judgement::Great));
+                        ImGui::Text("GOOD    : %lu", score.judgement_counts.at(Data::Judgement::Good));
+                        ImGui::Text("POOR    : %lu", score.judgement_counts.at(Data::Judgement::Poor));
+                        ImGui::Text("MISS    : %lu", score.judgement_counts.at(Data::Judgement::Miss));
+                        ImGui::TreePop();
+                    }
                     ImGui::TreePop();
                 }
-                ImGui::TreePop();
+            }
+            if (ImGui::CollapsingHeader("Graphics")) {
+                ImGui::Columns(2, "graphics toogles");
+                ImGui::TextDisabled("Key"); ImGui::NextColumn();
+                ImGui::TextDisabled("Value"); ImGui::NextColumn();
+                ImGui::Separator();
+                ImGui::TextUnformatted("black frame"); ImGui::NextColumn();
+                if (ImGui::Button(display_black_bars?"shown":"hidden")) {
+                    display_black_bars = not display_black_bars;
+                }
             }
         }
         ImGui::End();

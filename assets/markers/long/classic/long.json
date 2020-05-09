@@ -35,8 +35,8 @@
             "columns": 4,
             "rows": 4
         },
-        "begin cycle": {
-            "sprite_sheet": "tip_begin_cycle.png",
+        "enter cycle": {
+            "sprite_sheet": "tip_enter_cycle.png",
             "count": 8,
             "columns": 3,
             "rows": 3

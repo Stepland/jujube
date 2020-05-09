@@ -16,7 +16,9 @@ namespace Data {
         Miss,
     };
 
-    Resources::MarkerAnimation judgement_to_animation(const Judgement& j);
+    bool judgement_breaks_combo(Judgement j);
+
+    Resources::MarkerAnimation judgement_to_animation(Judgement j);
 
     Judgement delta_to_judgement(const sf::Time& delta);
 
@@ -24,8 +26,8 @@ namespace Data {
         TimedJudgement() : delta(sf::Time::Zero), judgement(Judgement::Miss) {};
         TimedJudgement(const sf::Time& d, const Judgement& j) : delta(d), judgement(j) {};
         explicit TimedJudgement(const sf::Time& t) : delta(t), judgement(delta_to_judgement(t)) {};
-        sf::Time delta;
-        Judgement judgement;
+        sf::Time delta = sf::Time::Zero;
+        Judgement judgement = Judgement::Miss;
     };
 
     struct GradedNote : Data::Note {

@@ -30,20 +30,25 @@ namespace Gameplay {
         void draw_debug() override;
         
         void render(sf::RenderWindow& window);
+        void draw_tap_note(sf::RenderWindow& window, const Data::GradedNote& note, const sf::Time& music_time);
+        void draw_long_note(sf::RenderWindow& window, const Data::GradedNote& note, const sf::Time& music_time);
 
         void handle_raw_event(const Input::RawEvent& raw_event, const sf::Time& music_time);
         void handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event, const sf::Time& music_time);
         void handle_button_event(const Input::ButtonEvent& button_event, const sf::Time& music_time);
+        void handle_button_press(const Input::Button& button, const sf::Time& music_time);
+        void handle_button_release(const Input::Button& button, const sf::Time& music_time);
 
         const Data::SongDifficulty& song_selection;
         const Data::Chart chart;
         const Resources::Marker& marker;
+        const Resources::LNMarker& ln_marker;
         std::unique_ptr<AbstractMusic> music;
 
         std::deque<Data::GradedNote> notes;
         std::deque<std::reference_wrapper<Data::GradedNote>> visible_notes;
-        // moves note_index forward to the first note that has to be conscidered for judging
-        // marks every note between the old and the new position as missed
+        // Performs passive grading actions (misses and long note releases)
+        // Then update the visible notes
         void update_visible_notes(const sf::Time& music_time);
 
         Data::ClassicScore score;
@@ -52,6 +57,8 @@ namespace Gameplay {
         std::atomic<bool> song_finished = false;
 
         TimedEventsQueue events_queue;
+
+        bool display_black_bars = true;
     };
     
     struct cmpAtomicNotes {

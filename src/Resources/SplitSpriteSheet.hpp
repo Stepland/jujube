@@ -10,8 +10,10 @@
 namespace fs = ghc::filesystem;
 
 namespace Resources {
-    struct SpriteSheet {
-        sf::Texture tex;
+    // SpriteSheet where individual sprites get their own texture
+    // (when you cant to tile an animated sprite for ex.)
+    struct SplitSpriteSheet {
+        std::vector<sf::Texture> textures;
         fs::path tex_path;
         std::size_t count;
         std::size_t columns;
@@ -24,8 +26,8 @@ namespace Resources {
             const Toolkit::DurationInFrames& max_duration
         );
 
-        std::optional<sf::Sprite> get_sprite(std::size_t frame, std::size_t size) const;
+        std::optional<sf::Sprite> get_sprite(std::size_t frame) const;
     };
 
-    void from_json(const nlohmann::json& j, SpriteSheet& s);
+    void from_json(const nlohmann::json& j, SplitSpriteSheet& s);
 }

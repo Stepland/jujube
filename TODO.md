@@ -26,6 +26,7 @@
     - Format
     - selection screen in Options
 - Global Offset
+- Fix the crash occuring sometimes when you select a song
 
 # v1.0.0
 ## Music Select Screen

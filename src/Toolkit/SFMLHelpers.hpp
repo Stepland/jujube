@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 namespace Toolkit {
     template<class T>
