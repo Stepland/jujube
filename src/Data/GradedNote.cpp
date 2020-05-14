@@ -35,13 +35,11 @@ namespace Data {
         if (delta_abs < sf::Time::Zero) {
             delta_abs = -delta_abs;
         }
-        // Numbers from http://544332133981.hatenablog.com/entry/bemani-rank_4
-        // which themselves are apparently from jubeat analyser's code.
         if (delta_abs < sf::milliseconds(42)) {
             return Judgement::Perfect;
-        } else if (delta_abs < sf::milliseconds(92)) {
+        } else if (delta_abs < sf::milliseconds(82)) {
             return Judgement::Great;
-        } else if (delta_abs < sf::milliseconds(166)) {
+        } else if (delta_abs < sf::milliseconds(162)) {
             return Judgement::Good;
         } else {
             return Judgement::Poor;
