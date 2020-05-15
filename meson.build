@@ -29,6 +29,8 @@ sources = [
     'src/Drawables/ButtonHighlight.cpp',
     'src/Drawables/DensityGraph.hpp',
     'src/Drawables/DensityGraph.cpp',
+    'src/Drawables/GradedDensityGraph.hpp',
+    'src/Drawables/GradedDensityGraph.cpp',
     'src/Input/Buttons.hpp',
     'src/Input/Buttons.cpp',
     'src/Input/KeyMapping.hpp',

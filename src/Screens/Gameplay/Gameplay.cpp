@@ -23,6 +23,7 @@ namespace Gameplay {
         chart(*t_song_selection.song.get_chart(t_song_selection.difficulty)),
         marker(t_resources.shared.get_selected_marker()),
         ln_marker(t_resources.shared.get_selected_ln_marker()),
+        graded_density_graph(t_resources.shared.density_graphs.blocking_get(t_song_selection), t_song_selection),
         score(t_song_selection.song.get_chart(t_song_selection.difficulty)->notes)
     {
         for (auto&& note : chart.notes) {
@@ -32,7 +33,7 @@ namespace Gameplay {
         if (music_path) {
             music = std::make_unique<PreciseMusic>(music_path->string());
         } else {
-            music = std::make_unique<Silence>(chart.get_duration_based_on_notes());
+            music = std::make_unique<Silence>(chart.get_last_event_timing());
         }
         ln_tail_layer.setSmooth(true);
         marker_layer.setSmooth(true);
@@ -131,6 +132,11 @@ namespace Gameplay {
                     window.draw(cover_sprite);
                 }
             } 
+            // Density Graph
+            Toolkit::set_origin_normalized(graded_density_graph, 0.5f, 1.f);
+            graded_density_graph.setScale(get_screen_width()/768.f, get_screen_width()/768.f);
+            graded_density_graph.setPosition(get_screen_width()*0.5f,423.f/768.f*get_screen_width());
+            window.draw(graded_density_graph);
 
 
             // Draw Combo

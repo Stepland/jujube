@@ -36,6 +36,16 @@ namespace Toolkit {
             }
         }
 
+        // Blocks until loaded
+        Value blocking_get(const Key& key) {
+            std::shared_lock lock{m_mapping_mutex};
+            load(key);
+            while (is_loading(key)) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
+            return m_mapping.at(key);
+        }
+
         void load(const Key& key) {
             if (has(key) or is_loading(key)) {
                 return;

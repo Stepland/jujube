@@ -13,6 +13,7 @@
 #include "../../Data/Note.hpp"
 #include "../../Data/Song.hpp"
 #include "../../Data/Score.hpp"
+#include "../../Drawables/GradedDensityGraph.hpp"
 #include "../../Resources/Marker.hpp"
 #include "../../Input/Buttons.hpp"
 #include "../../Input/Events.hpp"
@@ -46,6 +47,7 @@ namespace Gameplay {
         const Resources::Marker& marker;
         const Resources::LNMarker& ln_marker;
         std::unique_ptr<AbstractMusic> music;
+        Drawables::GradedDensityGraph graded_density_graph;
 
         std::deque<Data::GradedNote> notes;
         std::deque<std::reference_wrapper<Data::GradedNote>> visible_notes;

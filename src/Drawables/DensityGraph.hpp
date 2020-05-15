@@ -14,6 +14,7 @@ namespace Drawables {
     class DensityGraph : public sf::Drawable, public sf::Transformable {
     public:
         explicit DensityGraph(const std::array<unsigned int, 115>& t_densities);
+        std::array<unsigned int, 115> get_densites() const {return m_densities;};
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         std::array<unsigned int, 115> m_densities;

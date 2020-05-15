@@ -53,6 +53,7 @@
 - Shutter
     - compute
 - Song Info
+- Long Notes
 
 ## Misc
 - Handling Resolution changes

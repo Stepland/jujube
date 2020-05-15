@@ -52,20 +52,30 @@ namespace Drawables {
         if (not c.has_value()) {
             throw std::invalid_argument("Song "+song.title+" has no "+difficulty+" chart");
         }
-        if (c->notes.empty()) {
+        auto& notes = c->notes;
+        if (notes.empty()) {
             return compute_density_graph_from_chart(*c, sf::Time::Zero, sf::Time::Zero);
         }
+        auto first_timing_event = notes.begin()->timing;
+        auto note_with_last_timing_event = std::max_element(
+            notes.begin(),
+            notes.end(),
+            [](const Data::Note& a, const Data::Note& b) -> bool {
+                return a.timing+a.duration < b.timing+b.duration;
+            }
+        );
+        auto last_timing_event = note_with_last_timing_event->timing+note_with_last_timing_event->duration;
         if (not song.audio.has_value()) {
-            return compute_density_graph_from_chart(*c, c->notes.begin()->timing, c->notes.rbegin()->timing);
+            return compute_density_graph_from_chart(*c, first_timing_event, last_timing_event);
         }
         sf::Music m;
         if (not m.openFromFile(*song.full_audio_path())) {
-            return compute_density_graph_from_chart(*c, c->notes.begin()->timing, c->notes.rbegin()->timing);
+            return compute_density_graph_from_chart(*c, first_timing_event, last_timing_event);
         }
         return compute_density_graph_from_chart(
             *c,
-            sf::microseconds(std::min(0LL, c->notes.begin()->timing.asMicroseconds())),
-            sf::microseconds(std::max(c->notes.rbegin()->timing.asMicroseconds(), m.getDuration().asMicroseconds()))
+            sf::microseconds(std::min(0LL, first_timing_event.asMicroseconds())),
+            sf::microseconds(std::max(last_timing_event.asMicroseconds(), m.getDuration().asMicroseconds()))
         );
     }
 

@@ -11,7 +11,7 @@
 - Shutter
     - display
 - Density Graph
-- Long Notes
+    - White line
 
 ## Results Screen
 
