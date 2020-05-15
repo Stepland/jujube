@@ -7,25 +7,24 @@
 
 #include "../Data/Chart.hpp"
 #include "../Data/Song.hpp"
+#include "../Data/TimeBounds.hpp"
 #include "../Toolkit/Cache.hpp"
 #include "../Toolkit/SFMLHelpers.hpp"
 
 namespace Drawables {
     class DensityGraph : public sf::Drawable, public sf::Transformable {
     public:
-        explicit DensityGraph(const std::array<unsigned int, 115>& t_densities);
         std::array<unsigned int, 115> get_densites() const {return m_densities;};
+        static DensityGraph from_song_difficulty(const Data::SongDifficulty& sd);
+        static DensityGraph from_time_bounds(const Data::Chart& chart, const Data::TimeBounds& tb);
     private:
+        explicit DensityGraph(const std::array<unsigned int, 115>& t_densities);
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
         std::array<unsigned int, 115> m_densities;
         sf::VertexArray m_vertex_array;
     };
 
-    DensityGraph compute_density_graph_from_struct(const Data::SongDifficulty& sd);
-    DensityGraph compute_density_graph_from_song_difficulty(const Data::Song& song, const std::string& difficulty);
-    DensityGraph compute_density_graph_from_chart(const Data::Chart& chart, sf::Time start, sf::Time end);
-
-    using DensityGraphCache = Toolkit::Cache<Data::SongDifficulty, DensityGraph, &compute_density_graph_from_struct>;
+    using DensityGraphCache = Toolkit::Cache<Data::SongDifficulty, DensityGraph, &DensityGraph::from_song_difficulty>;
 }
 
 namespace std {

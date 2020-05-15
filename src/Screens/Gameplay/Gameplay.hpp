@@ -17,6 +17,7 @@
 #include "../../Resources/Marker.hpp"
 #include "../../Input/Buttons.hpp"
 #include "../../Input/Events.hpp"
+#include "../../Toolkit/AffineTransform.hpp"
 #include "../../Toolkit/Debuggable.hpp"
 #include "AbstractMusic.hpp"
 #include "Resources.hpp"
@@ -48,6 +49,9 @@ namespace Gameplay {
         const Resources::LNMarker& ln_marker;
         std::unique_ptr<AbstractMusic> music;
         Drawables::GradedDensityGraph graded_density_graph;
+        std::array<sf::Vertex, 4> cursor;
+        // maps music time to [0, 1]
+        Toolkit::AffineTransform<float> music_time_to_progression;
 
         std::deque<Data::GradedNote> notes;
         std::deque<std::reference_wrapper<Data::GradedNote>> visible_notes;
@@ -69,6 +73,8 @@ namespace Gameplay {
 
         bool display_black_bars = true;
     };
+
+    Toolkit::AffineTransform<float> get_music_time_to_progression_transform(const Data::SongDifficulty& song_selection);
     
     struct cmpAtomicNotes {
         bool operator()(const std::atomic<Data::GradedNote>& a, const std::atomic<Data::GradedNote>& b) {

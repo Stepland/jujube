@@ -97,6 +97,20 @@ namespace Data {
         return res;
     }
 
+    TimeBounds SongDifficulty::get_time_bounds() const {
+        auto chart = song.get_chart(difficulty);
+        if (not chart) {
+            throw std::invalid_argument("Song "+song.title+" has no '"+difficulty+"' chart");
+        }
+        TimeBounds time_bounds = {sf::Time::Zero, sf::seconds(1)};
+        time_bounds += chart->get_time_bounds_from_notes();
+        sf::Music m;
+        if (m.openFromFile(*song.full_audio_path())) {
+            time_bounds += {sf::Time::Zero, m.getDuration()};
+        }
+        return time_bounds;
+    }
+
     MemonSong::MemonSong(const fs::path& t_memon_path) :
         memon_path(t_memon_path)
     {

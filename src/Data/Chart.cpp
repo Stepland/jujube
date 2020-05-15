@@ -91,16 +91,20 @@ namespace Data {
     }
 
     TimeBounds Data::Chart::get_time_bounds_from_notes() const {
-        const auto& first_note = *notes.begin();
-        const auto& last_note = *std::max_element(
-            notes.begin(),
-            notes.end(),
-            [](const Data::Note& a, const Data::Note& b) -> bool {
-                return a.timing+a.duration < b.timing+b.duration;
-            }
-        );
-        auto first_timing_point = sf::microseconds(std::min(0LL, first_note.timing.asMicroseconds()));
-        auto last_timing_point = last_note.timing+last_note.duration;       
-        return {first_timing_point, last_timing_point}; 
+        if (notes.empty()) {
+            return TimeBounds{};
+        } else {
+            const auto& first_note = *notes.begin();
+            const auto& last_note = *std::max_element(
+                notes.begin(),
+                notes.end(),
+                [](const Data::Note& a, const Data::Note& b) -> bool {
+                    return a.timing+a.duration < b.timing+b.duration;
+                }
+            );
+            auto first_timing_point = sf::microseconds(std::min(0LL, first_note.timing.asMicroseconds()));
+            auto last_timing_point = last_note.timing+last_note.duration;       
+            return {first_timing_point, last_timing_point}; 
+        }
     }
 }

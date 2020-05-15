@@ -17,6 +17,17 @@
 #include "Silence.hpp"
 
 namespace Gameplay {
+
+    Toolkit::AffineTransform<float> get_music_time_to_progression_transform(const Data::SongDifficulty& song_selection) {
+        auto time_bounds = song_selection.get_time_bounds();
+        return Toolkit::AffineTransform<float>{
+            time_bounds.start.asSeconds(),
+            time_bounds.end.asSeconds(),
+            0.f,
+            1.f
+        };
+    }
+
     Screen::Screen(const Data::SongDifficulty& t_song_selection, ScreenResources& t_resources) :
         HoldsResources(t_resources),
         song_selection(t_song_selection),
@@ -24,6 +35,7 @@ namespace Gameplay {
         marker(t_resources.shared.get_selected_marker()),
         ln_marker(t_resources.shared.get_selected_ln_marker()),
         graded_density_graph(t_resources.shared.density_graphs.blocking_get(t_song_selection), t_song_selection),
+        music_time_to_progression(get_music_time_to_progression_transform(t_song_selection)),
         score(t_song_selection.song.get_chart(t_song_selection.difficulty)->notes)
     {
         for (auto&& note : chart.notes) {
@@ -69,6 +81,7 @@ namespace Gameplay {
             ImGui::SFML::Update(window, imguiClock.restart());
             auto music_time = music->getPlayingOffset();
             update_visible_notes(music_time);
+            graded_density_graph.update(music_time);
 
             // Event Handling
             while (auto timed_event = events_queue.pop()) {
@@ -131,12 +144,23 @@ namespace Gameplay {
                     );
                     window.draw(cover_sprite);
                 }
-            } 
+            }
+
+            // White line under the density graph
+            sf::RectangleShape line{{get_screen_width()*1.1f,2.f/768.f*get_screen_width()}};
+            Toolkit::set_origin_normalized(line, 0.5f, 0.5f);
+            line.setFillColor(sf::Color::White);
+            line.setPosition(get_screen_width()*0.5f,425.f/768.f*get_screen_width());
+            window.draw(line);
+
             // Density Graph
             Toolkit::set_origin_normalized(graded_density_graph, 0.5f, 1.f);
             graded_density_graph.setScale(get_screen_width()/768.f, get_screen_width()/768.f);
             graded_density_graph.setPosition(get_screen_width()*0.5f,423.f/768.f*get_screen_width());
             window.draw(graded_density_graph);
+
+            // Cursor on the density graph
+            
 
 
             // Draw Combo
@@ -461,6 +485,7 @@ namespace Gameplay {
             note = Data::GradedNote{note, music_time-note.timing};
             auto& judgement = note.tap_judgement->judgement;
             score.update(judgement);
+            graded_density_graph.update_grades(judgement, note.timing);
             if (Data::judgement_breaks_combo(judgement)) {
                 combo = 0;
             } else {
@@ -481,6 +506,7 @@ namespace Gameplay {
             if (note.position != button) {
                 continue;
             }
+            // has it been correctly hit ?
             if (not note.tap_judgement) {
                 continue;
             }
@@ -491,6 +517,7 @@ namespace Gameplay {
             auto timed_judgement = Data::TimedJudgement{music_time-note.timing-note.duration};
             note.long_release = timed_judgement;
             score.update(timed_judgement.judgement);
+            graded_density_graph.update_grades(timed_judgement.judgement, note.timing+note.duration);
             if (Data::judgement_breaks_combo(timed_judgement.judgement)) {
                 combo = 0;
             } else {
@@ -510,6 +537,7 @@ namespace Gameplay {
                 auto timed_judgement = Data::TimedJudgement{sf::Time::Zero, Data::Judgement::Miss};
                 note.tap_judgement = timed_judgement;
                 score.update(Data::Judgement::Miss);
+                graded_density_graph.update_grades(Data::Judgement::Miss, note.timing);
                 combo = 0;
             }
         }
@@ -528,6 +556,7 @@ namespace Gameplay {
                 auto timed_judgement = Data::TimedJudgement{sf::Time::Zero, Data::Judgement::Perfect};
                 note.long_release = timed_judgement;
                 score.update(timed_judgement.judgement);
+                graded_density_graph.update_grades(timed_judgement.judgement, note.timing + note.duration);
                 combo++;
             }
         }

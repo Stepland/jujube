@@ -8,13 +8,9 @@
 
 #include "../Input/Buttons.hpp"
 #include "Note.hpp"
+#include "TimeBounds.hpp"
 
 namespace Data {
-    struct TimeBounds {
-        sf::Time start;
-        sf::Time end;
-    };
-
     struct Chart {
         Chart(const stepland::memon& memon, const std::string& difficulty);
         int level;

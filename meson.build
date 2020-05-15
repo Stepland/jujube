@@ -23,6 +23,7 @@ sources = [
     'src/Data/Score.cpp',
     'src/Data/Song.hpp',
     'src/Data/Song.cpp',
+    'src/Data/TimeBounds.hpp',
     'src/Drawables/BlackFrame.hpp',
     'src/Drawables/BlackFrame.cpp',
     'src/Drawables/ButtonHighlight.hpp',

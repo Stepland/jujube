@@ -12,6 +12,7 @@
     - display
 - Density Graph
     - White line
+    - Cursor
 
 ## Results Screen
 

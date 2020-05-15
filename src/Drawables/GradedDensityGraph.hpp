@@ -22,7 +22,7 @@ namespace Drawables {
     };
 
     DensityLineGrade judgement_to_density_line_grade(Data::Judgement judge);
-    DensityLineGrade update(DensityLineGrade current, DensityLineGrade _new);
+    DensityLineGrade merge_grades(DensityLineGrade current, DensityLineGrade _new);
     sf::Color grade_to_color(DensityLineGrade grade);
 
     struct GradedDensity {
@@ -43,7 +43,7 @@ namespace Drawables {
     public:
         explicit GradedDensityGraph(const DensityGraph& density_graph, const Data::SongDifficulty& sd);
         // Set verticies colors for density columns that have already been played
-        void update_colors(const sf::Time& music_time);
+        void update(const sf::Time& music_time);
         // Update stored grades according to the recieved judgement
         void update_grades(const Data::Judgement& judge, const sf::Time& timing);
     private:

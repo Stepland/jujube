@@ -17,7 +17,7 @@ namespace Drawables {
         }
     }
     
-    DensityLineGrade update(DensityLineGrade current, DensityLineGrade _new) {
+    DensityLineGrade merge_grades(DensityLineGrade current, DensityLineGrade _new) {
         switch (current) {
         case DensityLineGrade::Perfect:
             return _new;
@@ -32,6 +32,8 @@ namespace Drawables {
             return current;
         case DensityLineGrade::NonGraded:
             return _new;
+        default:
+            throw std::runtime_error("wtf ?");
         }
     }
 
@@ -45,6 +47,8 @@ namespace Drawables {
             return sf::Color(99, 101, 133);
         case DensityLineGrade::NonGraded:
             return sf::Color::White;
+        default:
+            throw std::runtime_error("wtf ?");
         }
     }
 
@@ -152,7 +156,7 @@ namespace Drawables {
         target.draw(&m_vertex_array[0], m_vertex_array.size(), sf::Quads, states);
     }
 
-    void GradedDensityGraph::update_colors(const sf::Time& music_time) {
+    void GradedDensityGraph::update(const sf::Time& music_time) {
         const auto float_column = m_seconds_to_column.transform(music_time.asSeconds());
         const auto current_column = static_cast<std::size_t>(float_column);
         const auto current_column_it = std::next(m_densities.begin(), current_column);
@@ -176,7 +180,7 @@ namespace Drawables {
         const auto float_column = m_seconds_to_column.transform(timing.asSeconds());
         const auto column = static_cast<std::size_t>(float_column);
         auto& current_grade = m_densities.at(column).grade;
-        current_grade = update(current_grade, judgement_to_density_line_grade(judge));
+        current_grade = merge_grades(current_grade, judgement_to_density_line_grade(judge));
     }
 
 }
