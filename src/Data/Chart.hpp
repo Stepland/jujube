@@ -17,7 +17,7 @@ namespace Data {
         std::set<Note> notes;
         std::size_t resolution;
         // get the time at which the very last scorable event happens
-        // (i.e. including long note releases)
+        // (i.e. note tap or long note release)
         sf::Time get_last_event_timing() const;
         // get the time interval covered by the notes, including offset zero
         TimeBounds get_time_bounds_from_notes() const;

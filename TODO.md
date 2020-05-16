@@ -13,6 +13,8 @@
 - Density Graph
     - White line
     - Cursor
+    - Fix some columns not being hit
+- mouse clicks highlights don't fade away
 
 ## Results Screen
 

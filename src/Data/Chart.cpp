@@ -76,18 +76,7 @@ namespace Data {
     }
 
     sf::Time Chart::get_last_event_timing() const {
-        if (notes.empty()) {
-            return sf::Time::Zero;
-        } else {
-            const auto& last_note = *std::max_element(
-                notes.begin(),
-                notes.end(),
-                [](const Data::Note& a, const Data::Note& b) -> bool {
-                    return a.timing+a.duration < b.timing+b.duration;
-                }
-            );
-            return last_note.timing + last_note.duration;
-        }
+        return get_time_bounds_from_notes().end;
     }
 
     TimeBounds Data::Chart::get_time_bounds_from_notes() const {

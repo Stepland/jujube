@@ -36,7 +36,7 @@ namespace Drawables {
             );
             m_vertex_array.insert(m_vertex_array.end(), bar.begin(), bar.end());
         }
-        target.draw(m_vertex_array.data(), m_vertex_array.size(), sf::Quads);
+        target.draw(m_vertex_array.data(), m_vertex_array.size(), sf::Quads, states);
     }
 
     std::array<sf::Vertex, 4> make_solid_quad(const sf::FloatRect& rect, const sf::Color& color) {

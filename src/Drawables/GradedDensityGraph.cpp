@@ -2,10 +2,11 @@
 
 #include <algorithm>
 
+#include <imgui/imgui.h>
+#include <imgui-sfml/imgui-SFML.h>
 #include <SFML/System/Time.hpp>
 
 namespace Drawables {
-
     DensityLineGrade judgement_to_density_line_grade(Data::Judgement judge) {
         switch (judge) {
         case Data::Judgement::Perfect:
@@ -52,56 +53,11 @@ namespace Drawables {
         }
     }
 
-    Toolkit::AffineTransform<float> get_seconds_to_column_transform_from_notes(const Data::Chart& chart) {
-        auto time_bounds = chart.get_time_bounds_from_notes();
-        // only one timing point
-        if (time_bounds.start == time_bounds.end) {
-            // give one extra second
-            return Toolkit::AffineTransform<float>(
-                time_bounds.start.asSeconds(),
-                (time_bounds.start + sf::seconds(1)).asSeconds(),
-                0.f,
-                115.f
-            );
-        } else {
-            // at least two timing points
-            return Toolkit::AffineTransform<float>(
-                time_bounds.start.asSeconds(),
-                time_bounds.end.asSeconds(),
-                0.f,
-                115.f
-            );
-        }
-    }
-
     Toolkit::AffineTransform<float> get_seconds_to_column_transform(const Data::SongDifficulty& sd) {
-        auto chart = sd.song.get_chart(sd.difficulty);
-        if (not chart) {
-            throw std::invalid_argument("Song "+sd.song.title+" has no '"+sd.difficulty+"' chart");
-        }
-        // no notes, no need to return something useful
-        if (chart->notes.empty()) {
-            return Toolkit::AffineTransform<float>(0.f, 1.f, 0.f, 115.f);
-        }
-        // no audio
-        if (not sd.song.audio) {
-            return get_seconds_to_column_transform_from_notes(*chart);
-        }
-        sf::Music m;
-        // can't open audio
-        if (not m.openFromFile(*sd.song.full_audio_path())) {
-            return get_seconds_to_column_transform_from_notes(*chart);
-        }
-        // both notes and audio exist
-        auto time_bounds = chart->get_time_bounds_from_notes();
+        auto bounds = sd.get_time_bounds();
         return Toolkit::AffineTransform<float>(
-            time_bounds.start.asSeconds(),
-            sf::microseconds(
-                std::max(
-                    time_bounds.end.asMicroseconds(),
-                    m.getDuration().asMicroseconds()
-                )
-            ).asSeconds(),
+            bounds.start.asSeconds(),
+            bounds.end.asSeconds(),
             0.f,
             115.f
         );
@@ -148,19 +104,21 @@ namespace Drawables {
         for (size_t i = 0; i < index_of_first_vertex_of_each_column.size(); i++) {
             m_densities.at(i).first_vertex = std::next(it, index_of_first_vertex_of_each_column.at(i));
         }
-        first_non_played_density = m_densities.begin();
     }
 
     void GradedDensityGraph::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
         target.draw(&m_vertex_array[0], m_vertex_array.size(), sf::Quads, states);
+        if (debug) {
+            draw_debug();
+        }
     }
 
     void GradedDensityGraph::update(const sf::Time& music_time) {
         const auto float_column = m_seconds_to_column.transform(music_time.asSeconds());
         const auto current_column = static_cast<std::size_t>(float_column);
         const auto current_column_it = std::next(m_densities.begin(), current_column);
-        for (auto it = first_non_played_density; it != current_column_it; ++it) {
+        for (auto it = m_densities.begin(); it != current_column_it; ++it) {
             auto color = grade_to_color(it->grade);
             auto next = std::next(it);
             std::vector<sf::Vertex>::iterator next_vertex_it;
@@ -173,7 +131,6 @@ namespace Drawables {
                 vertex_it->color = color;
             }
         }
-        first_non_played_density = current_column_it;
     }
 
     void GradedDensityGraph::update_grades(const Data::Judgement& judge, const sf::Time& timing) {
@@ -183,11 +140,31 @@ namespace Drawables {
         current_grade = merge_grades(current_grade, judgement_to_density_line_grade(judge));
     }
 
-}
+    sf::FloatRect GradedDensityGraph::getLocalBounds() const {
+        return sf::FloatRect({0, 0}, {(115*5)-1, 39});
+    }
 
-namespace Toolkit {
-    template<>
-    void set_origin_normalized(Drawables::GradedDensityGraph& s, float x, float y) {
-        s.setOrigin(x*574.f, y*39.f);
+    sf::FloatRect GradedDensityGraph::getGlobalBounds() const {
+        return getTransform().transformRect(getLocalBounds());
+    }
+
+    void Drawables::GradedDensityGraph::draw_debug() const {
+        if (ImGui::Begin("GradedDensityGraph")) {
+            auto orig_x = ImGui::GetCursorPosX();
+            auto pos = ImGui::GetCursorPos();
+            for (size_t line = 0; line < m_densities.size(); line++) {
+                const auto& graded_density = m_densities.at(line);
+                auto color = grade_to_color(graded_density.grade);
+                for (size_t column = 0; column < graded_density.density; column++) {
+                    ImGui::SetCursorPos(pos);
+                    ImGui::DrawRectFilled({{0,0}, {4,4}}, color);
+                    pos.x += 5;
+                }
+                pos.x = orig_x;
+                pos.y += 5;
+            }
+            ImGui::Dummy({8*5, 115*5});
+        }
+        ImGui::End();
     }
 }

@@ -41,8 +41,10 @@ namespace Data {
             return Judgement::Great;
         } else if (delta_abs < sf::milliseconds(162)) {
             return Judgement::Good;
-        } else {
+        } else if (delta_abs < sf::milliseconds(533)) {
             return Judgement::Poor;
+        } else {
+            return Judgement::Miss;
         }
     }
 }

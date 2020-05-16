@@ -22,6 +22,7 @@
 #include "AbstractMusic.hpp"
 #include "Resources.hpp"
 #include "TimedEventsQueue.hpp"
+#include "Drawables/Cursor.hpp"
 
 namespace Gameplay {
     class Screen : public Toolkit::Debuggable, public HoldsResources {
@@ -49,7 +50,7 @@ namespace Gameplay {
         const Resources::LNMarker& ln_marker;
         std::unique_ptr<AbstractMusic> music;
         Drawables::GradedDensityGraph graded_density_graph;
-        std::array<sf::Vertex, 4> cursor;
+        Drawables::Cursor cursor;
         // maps music time to [0, 1]
         Toolkit::AffineTransform<float> music_time_to_progression;
 

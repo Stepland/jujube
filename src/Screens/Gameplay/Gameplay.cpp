@@ -154,13 +154,20 @@ namespace Gameplay {
             window.draw(line);
 
             // Density Graph
-            Toolkit::set_origin_normalized(graded_density_graph, 0.5f, 1.f);
+            Toolkit::set_local_origin_normalized(graded_density_graph, 0.5f, 1.f);
             graded_density_graph.setScale(get_screen_width()/768.f, get_screen_width()/768.f);
             graded_density_graph.setPosition(get_screen_width()*0.5f,423.f/768.f*get_screen_width());
             window.draw(graded_density_graph);
 
             // Cursor on the density graph
-            
+            Toolkit::set_local_origin_normalized(cursor, 1.f, 0.f);
+            auto bounds = graded_density_graph.getGlobalBounds();
+            cursor.setScale(bounds.height, bounds.height);
+            cursor.setPosition(
+                bounds.left+music_time_to_progression.transform(music_time.asSeconds())*bounds.width,
+                bounds.top
+            );
+            window.draw(cursor);
 
 
             // Draw Combo
@@ -448,6 +455,7 @@ namespace Gameplay {
                 switch (*key) {
                 case sf::Keyboard::F12:
                     debug = not debug;
+                    graded_density_graph.debug = not graded_density_graph.debug;
                     break;
                 default:
                     break;
@@ -487,6 +495,12 @@ namespace Gameplay {
             score.update(judgement);
             graded_density_graph.update_grades(judgement, note.timing);
             if (Data::judgement_breaks_combo(judgement)) {
+                // If we've broken combo at the begining of a long we also missed the end
+                if (note.duration > sf::Time::Zero) {
+                    note.long_release = Data::TimedJudgement{sf::Time::Zero, Data::Judgement::Miss};
+                    score.update(Data::Judgement::Miss);
+                    graded_density_graph.update_grades(Data::Judgement::Miss, note.timing+note.duration);
+                }
                 combo = 0;
             } else {
                 combo++;
@@ -538,6 +552,11 @@ namespace Gameplay {
                 note.tap_judgement = timed_judgement;
                 score.update(Data::Judgement::Miss);
                 graded_density_graph.update_grades(Data::Judgement::Miss, note.timing);
+                if (note.duration > sf::Time::Zero) {
+                    note.long_release = timed_judgement;
+                    score.update(Data::Judgement::Miss);
+                    graded_density_graph.update_grades(Data::Judgement::Miss, note.timing+note.duration);
+                }
                 combo = 0;
             }
         }
@@ -550,7 +569,7 @@ namespace Gameplay {
                 (note.duration > sf::Time::Zero)
                 and (note.timing + note.duration < music_time)
                 and note.tap_judgement.has_value()
-                and note.tap_judgement->judgement != Data::Judgement::Miss
+                and not Data::judgement_breaks_combo(note.tap_judgement->judgement)
                 and (not note.long_release.has_value())
             ) {
                 auto timed_judgement = Data::TimedJudgement{sf::Time::Zero, Data::Judgement::Perfect};

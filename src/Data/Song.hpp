@@ -55,11 +55,11 @@ namespace Data {
         const Data::Song& song;
         const std::string& difficulty;
 
-        // get the total play time for this chart :
-        // if there's no audio and no notes, one second starting at sf::Time::Zero
-        // else the start bounds is either zero or the first note if for some reason it happens before 0s
+        // Get the total play interval for this chart :
+        // if there's no audio and no notes, returns a one second inteval starting at sf::Time::Zero
+        // otherwise the start bound is either zero or the first note if for some reason it happens before 0s
         // and the end bound is either the end of the song of the last timing event if a note or the
-        // release of a long note happen after the audio ends
+        // release of a long note happens after the audio ends
         TimeBounds get_time_bounds() const;
         
         bool operator==(const SongDifficulty &other) const {

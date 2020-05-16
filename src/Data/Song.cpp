@@ -108,6 +108,7 @@ namespace Data {
         if (m.openFromFile(*song.full_audio_path())) {
             time_bounds += {sf::Time::Zero, m.getDuration()};
         }
+        time_bounds.end += sf::seconds(1);
         return time_bounds;
     }
 

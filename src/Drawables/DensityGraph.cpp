@@ -56,8 +56,14 @@ namespace Drawables {
             115.f
         };
         for (auto &&note : chart.notes) {
-            auto index = static_cast<unsigned int>(ticks_to_column.transform(note.timing.asSeconds()));
+            auto index = static_cast<std::size_t>(ticks_to_column.transform(note.timing.asSeconds()));
             d.at(index) += 1;
+            if (note.duration > sf::Time::Zero) {
+                auto long_note_end_index = static_cast<std::size_t>(
+                    ticks_to_column.transform((note.timing+note.duration).asSeconds())
+                );
+                d.at(long_note_end_index) += 1;
+            }
         }
         std::replace_if(
             d.begin(),
