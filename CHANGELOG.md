@@ -54,6 +54,11 @@
     - compute
 - Song Info
 - Long Notes
+- Density Graph
+    - White line
+    - Cursor
+    - Fix some columns not being hit
+- Proper mouse support
 
 ## Misc
 - Handling Resolution changes

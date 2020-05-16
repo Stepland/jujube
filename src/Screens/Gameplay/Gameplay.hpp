@@ -31,15 +31,20 @@ namespace Gameplay {
         void play_chart(sf::RenderWindow& window);
     private:
         void draw_debug() override;
-        
         void render(sf::RenderWindow& window);
         // Draw a normal note on marker_layer
         void draw_tap_note(const Data::GradedNote& note, const sf::Time& music_time);
         // Draw the long note tail on ln_tail_layer and its markers on marker_layer
         void draw_long_note(const Data::GradedNote& note, const sf::Time& music_time);
 
-        void handle_raw_event(const Input::RawEvent& raw_event, const sf::Time& music_time);
-        void handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event, const sf::Time& music_time);
+        void handle_raw_input_event(const Input::RawEvent& raw_event, const sf::Time& music_time);
+        
+        std::optional<Input::Button> button_from_mouse_pos(sf::Vector2i mouse_pos);
+        std::optional<Input::Button> last_button_clicked_by_mouse;
+        void handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_event, const sf::Time& music_time);
+        void handle_mouse_move(const sf::Event::MouseMoveEvent& mouse_move_event, const sf::Time& music_time);
+        void handle_mouse_release(const sf::Event::MouseButtonEvent& mouse_event, const sf::Time& music_time);
+        
         void handle_button_event(const Input::ButtonEvent& button_event, const sf::Time& music_time);
         void handle_button_press(const Input::Button& button, const sf::Time& music_time);
         void handle_button_release(const Input::Button& button, const sf::Time& music_time);
@@ -76,11 +81,5 @@ namespace Gameplay {
     };
 
     Toolkit::AffineTransform<float> get_music_time_to_progression_transform(const Data::SongDifficulty& song_selection);
-    
-    struct cmpAtomicNotes {
-        bool operator()(const std::atomic<Data::GradedNote>& a, const std::atomic<Data::GradedNote>& b) {
-            return a.load().timing < b.load().timing;
-        }
-    };
 }
 

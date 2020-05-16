@@ -87,19 +87,25 @@ namespace Gameplay {
             while (auto timed_event = events_queue.pop()) {
                 switch (timed_event->event.type) {
                 case sf::Event::KeyPressed:
-                    handle_raw_event({timed_event->event.key.code, Input::EventType::Pressed}, timed_event->time);
+                    handle_raw_input_event({timed_event->event.key.code, Input::EventType::Pressed}, timed_event->time);
                     break;
                 case sf::Event::KeyReleased:
-                    handle_raw_event({timed_event->event.key.code, Input::EventType::Released}, timed_event->time);
+                    handle_raw_input_event({timed_event->event.key.code, Input::EventType::Released}, timed_event->time);
                     break;
                 case sf::Event::JoystickButtonPressed:
-                    handle_raw_event({timed_event->event.joystickButton, Input::EventType::Pressed}, timed_event->time);
+                    handle_raw_input_event({timed_event->event.joystickButton, Input::EventType::Pressed}, timed_event->time);
                     break;
                 case sf::Event::JoystickButtonReleased:
-                    handle_raw_event({timed_event->event.joystickButton, Input::EventType::Released}, timed_event->time);
+                    handle_raw_input_event({timed_event->event.joystickButton, Input::EventType::Released}, timed_event->time);
                     break;
                 case sf::Event::MouseButtonPressed:
                     handle_mouse_click(timed_event->event.mouseButton, timed_event->time);
+                    break;
+                case sf::Event::MouseButtonReleased:
+                    handle_mouse_release(timed_event->event.mouseButton, timed_event->time);
+                    break;
+                case sf::Event::MouseMoved:
+                    handle_mouse_move(timed_event->event.mouseMove, timed_event->time);
                     break;
                 case sf::Event::Closed:
                     window.close();
@@ -416,12 +422,7 @@ namespace Gameplay {
         }
     }
 
-    void Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event, const sf::Time& music_time) {
-        if (mouse_button_event.button != sf::Mouse::Left) {
-            return;
-        }
-
-        sf::Vector2i mouse_position{mouse_button_event.x, mouse_button_event.y};
+    std::optional<Input::Button> Screen::button_from_mouse_pos(sf::Vector2i mouse_position) {
         sf::Vector2i ribbon_origin{
             static_cast<int>(get_ribbon_x()),
             static_cast<int>(get_ribbon_y())
@@ -429,7 +430,7 @@ namespace Gameplay {
         auto panels_area_size = static_cast<int>(get_panel_size() * 4.f + get_panel_spacing() * 3.f);
         sf::IntRect panels_area{ribbon_origin, sf::Vector2i{panels_area_size, panels_area_size}};
         if (not panels_area.contains(mouse_position)) {
-            return;
+            return {};
         }
 
         sf::Vector2i relative_mouse_pos = mouse_position - ribbon_origin;
@@ -438,15 +439,48 @@ namespace Gameplay {
             + 4 * (relative_mouse_pos.y / (panels_area_size/4))
         );
         if (clicked_panel_index < 0) {
+            return {};
+        }
+        return Input::index_to_button(static_cast<std::size_t>(clicked_panel_index));
+    }
+
+    void Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_event, const sf::Time& music_time) {
+        if (mouse_event.button != sf::Mouse::Button::Left) {
             return;
         }
-        auto button = Input::index_to_button(static_cast<std::size_t>(clicked_panel_index));
-        if (button) {
-            handle_button_event({*button, Input::EventType::Pressed}, music_time);
+        last_button_clicked_by_mouse = button_from_mouse_pos({mouse_event.x, mouse_event.y});
+        if (last_button_clicked_by_mouse) {
+            handle_button_event({*last_button_clicked_by_mouse, Input::EventType::Pressed}, music_time);
         }
     }
 
-    void Screen::handle_raw_event(const Input::RawEvent& raw_event, const sf::Time& music_time) {
+    void Screen::handle_mouse_move(const sf::Event::MouseMoveEvent& mouse_move_event, const sf::Time& music_time) {
+        if (not sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            return;
+        }
+        auto current_button = button_from_mouse_pos({mouse_move_event.x, mouse_move_event.y});
+        if (current_button != last_button_clicked_by_mouse) {
+            if (last_button_clicked_by_mouse) {
+                handle_button_event({*last_button_clicked_by_mouse, Input::EventType::Released}, music_time);
+            }
+            if (current_button) {
+                last_button_clicked_by_mouse = current_button;
+                handle_button_event({*last_button_clicked_by_mouse, Input::EventType::Pressed}, music_time);
+            }
+        }
+    }
+
+    void Screen::handle_mouse_release(const sf::Event::MouseButtonEvent& mouse_event, const sf::Time& music_time) {
+        if (mouse_event.button != sf::Mouse::Button::Left) {
+            return;
+        }
+        if (last_button_clicked_by_mouse) {
+            handle_button_event({*last_button_clicked_by_mouse, Input::EventType::Released}, music_time);
+            last_button_clicked_by_mouse.reset();
+        }
+    }
+
+    void Screen::handle_raw_input_event(const Input::RawEvent& raw_event, const sf::Time& music_time) {
         auto button = preferences.key_mapping.key_to_button(raw_event.key);
         if (button) {
             handle_button_event({*button, raw_event.type}, music_time);
