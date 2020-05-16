@@ -59,6 +59,7 @@
     - Cursor
     - Fix some columns not being hit
 - Proper mouse support
+- Basic Touch support
 
 ## Misc
 - Handling Resolution changes

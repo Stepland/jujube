@@ -39,11 +39,16 @@ namespace Gameplay {
 
         void handle_raw_input_event(const Input::RawEvent& raw_event, const sf::Time& music_time);
         
-        std::optional<Input::Button> button_from_mouse_pos(sf::Vector2i mouse_pos);
-        std::optional<Input::Button> last_button_clicked_by_mouse;
+        std::optional<Input::Button> button_from_position(sf::Vector2i position);
+        std::optional<Input::Button> last_mouse_clicked_button;
         void handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_event, const sf::Time& music_time);
         void handle_mouse_move(const sf::Event::MouseMoveEvent& mouse_move_event, const sf::Time& music_time);
         void handle_mouse_release(const sf::Event::MouseButtonEvent& mouse_event, const sf::Time& music_time);
+
+        std::unordered_map<unsigned int, std::optional<Input::Button>> last_touched_button;
+        void handle_touch_began(const sf::Event::TouchEvent& touch_event, const sf::Time& music_time);
+        void handle_touch_moved(const sf::Event::TouchEvent& touch_event, const sf::Time& music_time);
+        void handle_touch_ended(const sf::Event::TouchEvent& touch_event, const sf::Time& music_time);
         
         void handle_button_event(const Input::ButtonEvent& button_event, const sf::Time& music_time);
         void handle_button_press(const Input::Button& button, const sf::Time& music_time);

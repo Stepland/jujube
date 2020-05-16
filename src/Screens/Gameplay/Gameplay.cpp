@@ -107,6 +107,15 @@ namespace Gameplay {
                 case sf::Event::MouseMoved:
                     handle_mouse_move(timed_event->event.mouseMove, timed_event->time);
                     break;
+                case sf::Event::TouchBegan:
+                    handle_touch_began(timed_event->event.touch, timed_event->time);
+                    break;
+                case sf::Event::TouchMoved:
+                    handle_touch_moved(timed_event->event.touch, timed_event->time);
+                    break;
+                case sf::Event::TouchEnded:
+                    handle_touch_ended(timed_event->event.touch, timed_event->time);
+                    break;
                 case sf::Event::Closed:
                     window.close();
                     break;
@@ -422,7 +431,7 @@ namespace Gameplay {
         }
     }
 
-    std::optional<Input::Button> Screen::button_from_mouse_pos(sf::Vector2i mouse_position) {
+    std::optional<Input::Button> Screen::button_from_position(sf::Vector2i mouse_position) {
         sf::Vector2i ribbon_origin{
             static_cast<int>(get_ribbon_x()),
             static_cast<int>(get_ribbon_y())
@@ -448,9 +457,9 @@ namespace Gameplay {
         if (mouse_event.button != sf::Mouse::Button::Left) {
             return;
         }
-        last_button_clicked_by_mouse = button_from_mouse_pos({mouse_event.x, mouse_event.y});
-        if (last_button_clicked_by_mouse) {
-            handle_button_event({*last_button_clicked_by_mouse, Input::EventType::Pressed}, music_time);
+        last_mouse_clicked_button = button_from_position({mouse_event.x, mouse_event.y});
+        if (last_mouse_clicked_button) {
+            handle_button_event({*last_mouse_clicked_button, Input::EventType::Pressed}, music_time);
         }
     }
 
@@ -458,14 +467,14 @@ namespace Gameplay {
         if (not sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             return;
         }
-        auto current_button = button_from_mouse_pos({mouse_move_event.x, mouse_move_event.y});
-        if (current_button != last_button_clicked_by_mouse) {
-            if (last_button_clicked_by_mouse) {
-                handle_button_event({*last_button_clicked_by_mouse, Input::EventType::Released}, music_time);
+        auto current_button = button_from_position({mouse_move_event.x, mouse_move_event.y});
+        if (current_button != last_mouse_clicked_button) {
+            if (last_mouse_clicked_button) {
+                handle_button_event({*last_mouse_clicked_button, Input::EventType::Released}, music_time);
             }
             if (current_button) {
-                last_button_clicked_by_mouse = current_button;
-                handle_button_event({*last_button_clicked_by_mouse, Input::EventType::Pressed}, music_time);
+                last_mouse_clicked_button = current_button;
+                handle_button_event({*last_mouse_clicked_button, Input::EventType::Pressed}, music_time);
             }
         }
     }
@@ -474,9 +483,39 @@ namespace Gameplay {
         if (mouse_event.button != sf::Mouse::Button::Left) {
             return;
         }
-        if (last_button_clicked_by_mouse) {
-            handle_button_event({*last_button_clicked_by_mouse, Input::EventType::Released}, music_time);
-            last_button_clicked_by_mouse.reset();
+        if (last_mouse_clicked_button) {
+            handle_button_event({*last_mouse_clicked_button, Input::EventType::Released}, music_time);
+            last_mouse_clicked_button.reset();
+        }
+    }
+
+    void Screen::handle_touch_began(const sf::Event::TouchEvent& touch_event, const sf::Time& music_time) {
+        auto& last_button = last_touched_button[touch_event.finger];
+        last_button = button_from_position({touch_event.x, touch_event.y});
+        if (last_button) {
+            handle_button_event({*last_button, Input::EventType::Pressed}, music_time);
+        }
+    }
+
+    void Screen::handle_touch_moved(const sf::Event::TouchEvent& touch_event, const sf::Time& music_time) {
+        auto& last_button = last_touched_button[touch_event.finger];
+        auto current_button = button_from_position({touch_event.x, touch_event.y});
+        if (current_button != last_button) {
+            if (last_button) {
+                handle_button_event({*last_button, Input::EventType::Released}, music_time);
+            }
+            if (current_button) {
+                last_button = current_button;
+                handle_button_event({*last_button, Input::EventType::Pressed}, music_time);
+            }
+        }
+    }
+
+    void Screen::handle_touch_ended(const sf::Event::TouchEvent& touch_event, const sf::Time& music_time) {
+        auto& last_button = last_touched_button[touch_event.finger];
+        if (last_button) {
+            handle_button_event({*last_button, Input::EventType::Released}, music_time);
+            last_button.reset();
         }
     }
 

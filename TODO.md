@@ -6,6 +6,8 @@
 - Input Lag
 - Fullscreen handling
 - Delay Marker loading
+- Refactor Mouse input code
+- Backport Touch support from Gameplay code
 
 ## Gameplay Screen
 - Shutter
