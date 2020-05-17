@@ -39,10 +39,10 @@ namespace MusicSelect {
     public:
         ColoredMessagePanel(ScreenResources& t_resources, const sf::Color& color, const std::string& message) : Panel(t_resources), m_color(color), m_message(message) {};
         void click(Ribbon&, const Input::Button&) override {return;};
+        mutable sf::Color m_color;
+        mutable std::string m_message;
     private:
         void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-        const sf::Color m_color;
-        const std::string m_message;
     };
 
     class ColorPanel final : public Panel {

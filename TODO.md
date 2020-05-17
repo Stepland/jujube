@@ -2,7 +2,6 @@
 ## Misc
 - Logging system
 - Crash handling
-- Audio Lag
 - Input Lag
 - Fullscreen handling
 - Delay Marker loading

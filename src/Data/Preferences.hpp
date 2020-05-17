@@ -40,6 +40,7 @@ namespace Data {
     struct Options {
         std::string marker;
         std::string ln_marker;
+        sf::Time audio_offset;
     };
 
     void to_json(nlohmann::json& j, const Options& o);

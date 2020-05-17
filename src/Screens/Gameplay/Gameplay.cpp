@@ -56,7 +56,7 @@ namespace Gameplay {
         window.setActive(false);
         std::thread render_thread(&Screen::render, this, std::ref(window));
         while ((not song_finished) and window.isOpen()) {
-            auto music_time = music->getPlayingOffset();
+            auto music_time = music->getPlayingOffset() - preferences.options.audio_offset;
             sf::Event event;
             while (window.pollEvent(event)) {
                 ImGui::SFML::ProcessEvent(event);
@@ -79,7 +79,7 @@ namespace Gameplay {
         while ((not song_finished) and window.isOpen()) {
             song_finished = music->getStatus() == sf::Music::Stopped;
             ImGui::SFML::Update(window, imguiClock.restart());
-            auto music_time = music->getPlayingOffset();
+            auto music_time = music->getPlayingOffset() - preferences.options.audio_offset;
             update_visible_notes(music_time);
             graded_density_graph.update(music_time);
 

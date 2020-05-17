@@ -41,13 +41,15 @@ namespace Data {
     void to_json(nlohmann::json& j, const Options& o) {
         j = nlohmann::json{
             {"marker", o.marker},
-            {"ln_marker", o.ln_marker}
+            {"ln_marker", o.ln_marker},
+            {"audio_offset", o.audio_offset.asMilliseconds()}
         };
     }
 
     void from_json(const nlohmann::json& j, Options& o) {
         j.at("marker").get_to(o.marker);
         j.at("ln_marker").get_to(o.ln_marker);
+        o.audio_offset = sf::milliseconds(j.at("audio_offset").get<sf::Int32>());
     }    
     
     // RAII style class which loads preferences from the dedicated file when constructed and saves them when destructed

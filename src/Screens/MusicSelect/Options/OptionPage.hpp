@@ -13,6 +13,7 @@ namespace MusicSelect {
 
     class PanelLayout;
 
+    // Base Class for all option pages
     class OptionPage : public sf::Drawable, public sf::Transformable, public HoldsResources {
     public:
         OptionPage(ScreenResources& t_resources) : HoldsResources(t_resources) {update();};
@@ -57,6 +58,14 @@ namespace MusicSelect {
         MarkerSelect(ScreenResources& t_resources);
         ~MarkerSelect();
         const std::string name = "Marker Select";
+    private:
+        static PanelLayout create_layout(ScreenResources& t_resources);
+    };
+
+    class AudioOptionPage final : public RibbonPage {
+    public:
+        AudioOptionPage(ScreenResources& t_resources);
+        const std::string name = "Audio";
     private:
         static PanelLayout create_layout(ScreenResources& t_resources);
     };

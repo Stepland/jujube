@@ -7,6 +7,7 @@
 #include "../Ribbon.hpp"
 #include "../Panels/SubpagePanel.hpp"
 #include "../Panels/MarkerPanel.hpp"
+#include "AudioOffset.hpp"
 #include "InputRemap.hpp"
 
 namespace MusicSelect {
@@ -72,6 +73,8 @@ namespace MusicSelect {
         subpages.emplace_back(std::make_shared<SubpagePanel>(t_resources, std::move(marker_select), "markers"));
         auto input_page = std::make_shared<InputOptionPage>(t_resources);
         subpages.emplace_back(std::make_shared<SubpagePanel>(t_resources, std::move(input_page), "input"));
+        auto audio_page = std::make_shared<AudioOptionPage>(t_resources);
+        subpages.emplace_back(std::make_shared<SubpagePanel>(t_resources, std::move(audio_page), "audio"));
         return PanelLayout{subpages, t_resources};
     }
 
@@ -102,5 +105,23 @@ namespace MusicSelect {
             markers.emplace_back(std::make_shared<MarkerPanel>(t_resources, marker));
         }
         return PanelLayout{markers, t_resources};
+    }
+
+    AudioOptionPage::AudioOptionPage(ScreenResources& t_resources) : 
+        RibbonPage(AudioOptionPage::create_layout(t_resources), t_resources)
+    {
+    }
+
+    PanelLayout AudioOptionPage::create_layout(ScreenResources& t_resources) {
+        std::vector<std::shared_ptr<Panel>> subpages;
+        auto audio_offset = std::make_shared<AudioOffset>(t_resources);
+        subpages.emplace_back(
+            std::make_shared<SubpagePanel>(
+                t_resources,
+                std::move(audio_offset),
+                "audio\noffset"
+            )
+        );
+        return PanelLayout{subpages, t_resources};
     }
 }

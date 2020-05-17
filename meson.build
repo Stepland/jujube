@@ -57,6 +57,8 @@ sources = [
     'src/Screens/MusicSelect/Drawables/ControlPanels.cpp', 
     'src/Screens/MusicSelect/Options/OptionPage.hpp',
     'src/Screens/MusicSelect/Options/OptionPage.cpp',
+    'src/Screens/MusicSelect/Options/AudioOffset.hpp',
+    'src/Screens/MusicSelect/Options/AudioOffset.cpp',
     'src/Screens/MusicSelect/Options/InputRemap.hpp',
     'src/Screens/MusicSelect/Options/InputRemap.cpp',   
     'src/Screens/MusicSelect/Panels/MarkerPanel.hpp',
