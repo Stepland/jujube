@@ -6,7 +6,6 @@
 - Input Lag
 - Fullscreen handling
 - Delay Marker loading
-- Refactor Mouse input code
 - Backport Touch support from Gameplay code
 
 ## Gameplay Screen
@@ -51,6 +50,7 @@
 ## Misc
 - Make Drawables lazily react to resolution changes
 - update .memon spec and memoncpp to support BPM Changes
+- efficient precise input in gameplay
 
 ## FB9 Support
 
