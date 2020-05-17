@@ -1,10 +1,7 @@
 # v0.1.0 (MVP)
 ## Misc
-- Logging system
-- Crash handling
-- Input Lag
-- Fullscreen handling
-- Delay Marker loading
+
+## Music Select Screen
 - Backport Touch support from Gameplay code
 
 ## Gameplay Screen
@@ -17,6 +14,11 @@
 
 # v0.2.0
 ## Misc
+- Input Lag
+- Delay Marker loading
+- Logging system
+- Crash handling
+- Correct all preferences being overridden when one value is not found
 - "Value" class with delayed update for *n i c e* score display
 - LN Marker
     - Selection screen in Options
@@ -37,6 +39,7 @@
     - cd
 - Sound
     - Sound Effects
+
 ### Options menu
 - Volume Settings
 - Give marker selection the timing check feature when your re-click on the same panel

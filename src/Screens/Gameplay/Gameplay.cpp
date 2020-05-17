@@ -133,8 +133,8 @@ namespace Gameplay {
                     );
                     ln_tail_layer.create(timed_event->event.size.width, timed_event->event.size.height);
                     marker_layer.create(timed_event->event.size.width, timed_event->event.size.height);
-                    shared.preferences.screen.height = timed_event->event.size.height;
-                    shared.preferences.screen.width = timed_event->event.size.width;
+                    preferences.screen.video_mode.height = timed_event->event.size.height;
+                    preferences.screen.video_mode.width = timed_event->event.size.width;
                     shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
                     break;
                 default:

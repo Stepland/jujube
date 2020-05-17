@@ -40,7 +40,7 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
             ImGui::SFML::ProcessEvent(event);
             switch (event.type) {
             case sf::Event::KeyPressed:
-                handle_key_press(event.key);
+                handle_key_press(event.key, window);
                 break;
             case sf::Event::MouseButtonPressed:
                 handle_mouse_click(event.mouseButton);
@@ -49,18 +49,7 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
                 window.close();
                 break;
             case sf::Event::Resized:
-                // update the view to the new size of the window
-                window.setView(sf::View({0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)}));
-                shared.preferences.screen.height = event.size.height;
-                shared.preferences.screen.width = event.size.width;
-                ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
-                shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
-                panel_filter.setSize(sf::Vector2f{window.getSize()});
-                if (not resources.options_state.empty()) {
-                    resources.options_state.back().get().update();
-                }
-                options_button.setPosition(get_ribbon_x()+2.f*get_panel_step(), get_ribbon_y()+3.f*get_panel_step());
-                start_button.setPosition(get_ribbon_x()+3.f*get_panel_step(), get_ribbon_y()+3.f*get_panel_step());
+                update_view(window, sf::View({0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height)}));
                 break;
             default:
                 break;
@@ -87,7 +76,7 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
         window.draw(shared.button_highlight);
         window.draw(shared.black_frame);
         ribbon.draw_debug();
-        draw_debug();
+        draw_debug(window);
         ImGui::SFML::Render(window);
         window.display();
         resources.music_preview.update();
@@ -100,25 +89,29 @@ std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::Render
     }
 }
 
-void MusicSelect::Screen::draw_debug() {
+void MusicSelect::Screen::draw_debug(sf::RenderWindow& window) {
     if (debug) {
         if (ImGui::Begin("MusicSelect::Screen")) {
+            if (ImGui::CollapsingHeader("View")) {
+                static float rotation = 0.f;
+                if (ImGui::SliderFloat("rotation", &rotation, -180.f, 180.f, "%.0f deg")) {
+                    auto view = window.getView();
+                    view.setRotation(rotation);
+                    update_view(window, view);
+                }
+            }
             if (ImGui::CollapsingHeader("Preferences")) {
                 if (ImGui::TreeNode("screen")) {
-                    ImGui::TextUnformatted("width : "); ImGui::SameLine();
-                    ImGui::Text("%s", std::to_string(preferences.screen.width).c_str());
-                    ImGui::TextUnformatted("height : "); ImGui::SameLine();
-                    ImGui::Text("%s", std::to_string(preferences.screen.height).c_str());
-                    ImGui::TextUnformatted("fullscreen : "); ImGui::SameLine();
-                    ImGui::Text("%s", preferences.screen.fullscreen ? "true" : "false");
+                    ImGui::Text("width  : %s", std::to_string(preferences.screen.video_mode.width).c_str());
+                    ImGui::Text("height : %s", std::to_string(preferences.screen.video_mode.height).c_str());
+                    ImGui::Text("style  : %s", Data::display_style_to_string.at(preferences.screen.style).c_str());
                     ImGui::TreePop();
                 }
                 if (ImGui::TreeNode("layout")) {
                     ImGui::TreePop();
                 }
                 if (ImGui::TreeNode("options")) {
-                    ImGui::TextUnformatted("marker : "); ImGui::SameLine();
-                    ImGui::Text("%s", preferences.options.marker.c_str());
+                    ImGui::Text("marker : %s", preferences.options.marker.c_str());
                     ImGui::TreePop();
                 }
             }
@@ -136,7 +129,7 @@ void MusicSelect::Screen::draw_debug() {
     }
 }
 
-void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event) {
+void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event, sf::RenderWindow& window) {
     // Option Menu takes raw input for potential remapping of keys
     bool output_used = false;
     if (not resources.options_state.empty()) {
@@ -164,6 +157,8 @@ void MusicSelect::Screen::handle_key_press(const sf::Event::KeyEvent& key_event)
             ribbon.debug = not ribbon.debug;
             debug = not debug;
             break;
+        case sf::Keyboard::Enter:
+            cycle_display_styles(window);
         default:
             break;
         }
@@ -228,4 +223,47 @@ void MusicSelect::Screen::press_button(const Input::Button& button) {
             break;
         }
     }
+}
+
+void MusicSelect::Screen::cycle_display_styles(sf::RenderWindow& window) {
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    switch (preferences.screen.style) {
+    case Data::DisplayStyle::Windowed: {
+        auto fullscreen_mode = sf::VideoMode::getDesktopMode();
+        window.create(fullscreen_mode, "jujube", sf::Style::Fullscreen, settings);
+        preferences.screen.style = Data::DisplayStyle::Fullscreen;
+        preferences.screen.video_mode.width = window.getSize().x;
+        preferences.screen.video_mode.height = window.getSize().y;
+    } break;
+    case Data::DisplayStyle::Fullscreen: {
+        auto view = window.getView();
+        view.rotate(180.f);
+        preferences.screen.style = Data::DisplayStyle::FullscreenUpsideDown;
+        update_view(window, view);
+    } break;
+    case Data::DisplayStyle::FullscreenUpsideDown: {
+        window.create(sf::VideoMode(768, 1360), "jujube", sf::Style::Default, settings);
+        window.setView(window.getDefaultView());
+        preferences.screen.style = Data::DisplayStyle::Windowed;
+        preferences.screen.video_mode.width = window.getSize().x;
+        preferences.screen.video_mode.height = window.getSize().y;
+    } break;
+    default:
+        throw std::runtime_error("wtf ?");
+    }
+}
+
+void MusicSelect::Screen::Screen::update_view(sf::RenderWindow& window, sf::View view) {
+    window.setView(view);
+    preferences.screen.video_mode.height = view.getSize().y;
+    preferences.screen.video_mode.width = view.getSize().x;
+    ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
+    shared.button_highlight.setPosition(get_ribbon_x(), get_ribbon_y());
+    panel_filter.setSize(sf::Vector2f{window.getSize()});
+    if (not resources.options_state.empty()) {
+        resources.options_state.back().get().update();
+    }
+    options_button.setPosition(get_ribbon_x()+2.f*get_panel_step(), get_ribbon_y()+3.f*get_panel_step());
+    start_button.setPosition(get_ribbon_x()+3.f*get_panel_step(), get_ribbon_y()+3.f*get_panel_step());
 }

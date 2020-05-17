@@ -8,18 +8,40 @@
 
 #include "../Input/KeyMapping.hpp"
 
+namespace sf {
+    void to_json(nlohmann::json& j, const VideoMode& vm);
+    void from_json(const nlohmann::json& j, VideoMode& vm);
+}
+
 namespace Data {
-    // By convention all axis-independant lengths are expressed as a ratio of the screen WIDTH
-    // see panel_size and panel_spacing for example
-    struct Screen {
-        std::size_t width = 768;
-        std::size_t height = 1360;
-        bool fullscreen = false;
+    enum class DisplayStyle {
+        Windowed,
+        Fullscreen,
+        FullscreenUpsideDown
     };
 
-    void to_json(nlohmann::json& j, const Screen& s);
-    void from_json(const nlohmann::json& j, Screen& s);
+    const std::unordered_map<DisplayStyle, std::string> display_style_to_string = {
+        {DisplayStyle::Windowed, "Windowed"},
+        {DisplayStyle::Fullscreen, "Fullscreen"},
+        {DisplayStyle::FullscreenUpsideDown, "FullscreenUpsideDown"}
+    };
 
+    const std::unordered_map<std::string, DisplayStyle> string_to_display_style = {
+        {"Windowed", DisplayStyle::Windowed},
+        {"Fullscreen", DisplayStyle::Fullscreen},
+        {"FullscreenUpsideDown", DisplayStyle::FullscreenUpsideDown}
+    };
+
+    struct Screen {
+        DisplayStyle style = DisplayStyle::Windowed;
+        sf::VideoMode video_mode = {768, 1360, 32};
+    };
+
+    void to_json(nlohmann::json& j, const Screen& ds);
+    void from_json(const nlohmann::json& j, Screen& ds);
+
+    // By convention all axis-independant lengths are expressed as a ratio of the screen WIDTH
+    // see panel_size and panel_spacing for example
     struct Layout {
         float panel_size = 160.f / 768.f;
         float panel_spacing = (112.f / 3.f) / 768.f;
@@ -63,8 +85,8 @@ namespace Data {
 
     struct HoldsPreferences {
         HoldsPreferences(Preferences& t_preferences) : preferences(t_preferences) {};
-        float get_screen_width() const {return static_cast<float>(preferences.screen.width);};
-        float get_screen_height() const {return static_cast<float>(preferences.screen.height);};
+        float get_screen_width() const {return static_cast<float>(preferences.screen.video_mode.width);};
+        float get_screen_height() const {return static_cast<float>(preferences.screen.video_mode.height);};
         float get_panel_size() const {return preferences.layout.panel_size*get_screen_width();};
         float get_panel_spacing() const {return preferences.layout.panel_spacing*get_screen_width();};
         float get_panel_step() const {return preferences.layout.panel_step()*get_screen_width();};

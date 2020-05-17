@@ -79,3 +79,4 @@
 - Fix all executable-relative path issues
 - Bring back mouse support
 - Audio Lag setting in options
+- Basic Fullscreen handling

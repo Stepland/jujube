@@ -44,12 +44,9 @@ int main(int, char const **) {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     sf::RenderWindow window{
-        sf::VideoMode(
-            preferences.screen.width,
-            preferences.screen.height
-        ),
+        preferences.screen.video_mode,
         "jujube",
-        preferences.screen.fullscreen ? sf::Style::Fullscreen : sf::Style::Default,
+        preferences.screen.style == Data::DisplayStyle::Windowed ? sf::Style::Default : sf::Style::Fullscreen,
         settings
     };
     window.setFramerateLimit(60);

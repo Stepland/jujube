@@ -5,6 +5,7 @@
 #include <stack>
 
 #include <SFML/Window.hpp>
+#include <SFML/Window/VideoMode.hpp>
 
 #include "../../Data/Song.hpp"
 #include "../../Data/Chart.hpp"
@@ -28,7 +29,7 @@ namespace MusicSelect {
     public:
         Screen(const Data::SongList& t_song_list, ScreenResources& t_resources);
         std::optional<Data::SongDifficulty> select_chart(sf::RenderWindow& window);
-        void draw_debug() override;
+        void draw_debug(sf::RenderWindow& window);
     private:
         const Data::SongList song_list;
 
@@ -42,10 +43,14 @@ namespace MusicSelect {
         sf::RectangleShape panel_filter;
     
         // converts a key press into a button press
-        void handle_key_press(const sf::Event::KeyEvent& key_event);
+        void handle_key_press(const sf::Event::KeyEvent& key_event, sf::RenderWindow& window);
         // converts a mouse click into a button press
         void handle_mouse_click(const sf::Event::MouseButtonEvent& mouse_button_event);
         // chooses what happens for each button
         void press_button(const Input::Button& button);
+
+        void cycle_display_styles(sf::RenderWindow& window);
+
+        void update_view(sf::RenderWindow& window, sf::View view);
     };
 }

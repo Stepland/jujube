@@ -3,23 +3,36 @@
 #include <iostream>
 #include <fstream>
 
+namespace sf {
+    void to_json(nlohmann::json& j, const VideoMode& vm) {
+        j = nlohmann::json{
+            {"width", vm.width},
+            {"height", vm.height},
+            {"bits_per_pixel", vm.bitsPerPixel}
+        };
+    }
+
+    void from_json(const nlohmann::json& j, VideoMode& vm) {
+        j.at("width").get_to(vm.width);
+        j.at("height").get_to(vm.height);
+        j.at("bits_per_pixel").get_to(vm.bitsPerPixel);
+    }
+}
+
 namespace Data {
 
     void to_json(nlohmann::json& j, const Screen& s) {
         j = nlohmann::json{
-            {"width", s.width},
-            {"height", s.height},
-            {"fullscreen", s.fullscreen}
+            {"style", display_style_to_string.at(s.style)},
+            {"video_mode", s.video_mode}
         };
     }
 
     void from_json(const nlohmann::json& j, Screen& s) {
-        j.at("width").get_to(s.width);
-        j.at("height").get_to(s.height);
-        j.at("fullscreen").get_to(s.fullscreen);
+        s.style = string_to_display_style.at(j.at("style").get<std::string>());
+        j.at("video_mode").get_to(s.video_mode);
     }
-    
-    
+
     void to_json(nlohmann::json& j, const Layout& l) {
         j = nlohmann::json{
             {"panel_size", l.panel_size},
