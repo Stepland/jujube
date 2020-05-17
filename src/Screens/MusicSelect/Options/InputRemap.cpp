@@ -2,7 +2,6 @@
 
 #include <cmath>
 
-#include <magic_enum.hpp>
 #include <SFML/Graphics.hpp>
 
 #include "../../../Toolkit/HSL.hpp"

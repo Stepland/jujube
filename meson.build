@@ -6,6 +6,7 @@ project(
 )
 
 sources = [
+    'include/backward-cpp/backward.cpp',
     'include/imgui/imgui.cpp',
     'include/imgui/imgui_draw.cpp',
     'include/imgui/imgui_widgets.cpp',
@@ -112,12 +113,16 @@ foreach module : ['system', 'window', 'graphics', 'audio']
 endforeach
 
 dependencies += dependency('threads')
-dependencies += cc.find_library('m', required : false)
 dependencies += dependency('gl')
 dependencies += cc.find_library('atomic')
-dependencies += cc.find_library('X11')
 
-add_project_link_arguments(['-lstdc++'], language : 'cpp')
+if host_machine.system() == 'linux'
+    dependencies += cc.find_library('m')
+    dependencies += cc.find_library('X11')
+    dependencies += cc.find_library('dw')
+    add_project_arguments('-DBACKWARD_HAS_DW=1', language : 'cpp')
+    add_project_link_arguments('-lstdc++', language : 'cpp')
+endif
 
 inc = include_directories('include', 'include/imgui', 'include/imgui-sfml')
 

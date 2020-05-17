@@ -5,7 +5,6 @@
 #include <unordered_map>
 
 #include <nlohmann/json.hpp>
-#include <magic_enum.hpp>
 #include <SFML/Window.hpp>
 
 #include "Buttons.hpp"
