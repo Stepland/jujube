@@ -1,9 +1,4 @@
 # v0.1.0 (MVP)
-## Misc
-
-## Music Select Screen
-- Backport Touch support from Gameplay code
-
 ## Gameplay Screen
 - Shutter
     - display
@@ -14,10 +9,10 @@
 
 # v0.2.0
 ## Misc
-- Input Lag
-- Delay Marker loading
+- Input Lag Setting
+- Revamp Markers to speed loading on launch
 - Logging system
-- Crash handling
+- Generic Error-reporting / Crash handling
 - Correct all preferences being overridden when one value is not found
 - "Value" class with delayed update for *n i c e* score display
 - LN Marker
@@ -27,6 +22,9 @@
     - selection screen in Options
 - Global Offset
 - Fix the crash occuring sometimes when you select a song
+
+## Music Select Screen
+- Add Touch support
 
 # v1.0.0
 ## Music Select Screen
@@ -52,7 +50,7 @@
 ## Misc
 - Make Drawables lazily react to resolution changes
 - update .memon spec and memoncpp to support BPM Changes
-- efficient precise input in gameplay
+- Optimize input thread in gameplay
 
 ## FB9 Support
 

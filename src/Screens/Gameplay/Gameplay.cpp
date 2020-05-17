@@ -145,6 +145,15 @@ namespace Gameplay {
             ln_tail_layer.clear(sf::Color::Transparent);
             marker_layer.clear(sf::Color::Transparent);
 
+            // Don't display shutter for now : it's fucking ugly
+            // TODO: make fallback shutter not sinfully ugly
+            /*
+            shutter.update(score.get_shutter());
+            shutter.setScale(get_ribbon_size()/1080.f, get_ribbon_size()/1080.f);
+            shutter.setPosition(get_ribbon_x(), get_ribbon_y());
+            window.draw(shutter);
+            */
+
             // Draw song info
             // Cover is 40x40 @ (384,20)
             if (song_selection.song.cover) {

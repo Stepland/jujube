@@ -23,6 +23,7 @@
 #include "Resources.hpp"
 #include "TimedEventsQueue.hpp"
 #include "Drawables/Cursor.hpp"
+#include "Drawables/Shutter.hpp"
 
 namespace Gameplay {
     class Screen : public Toolkit::Debuggable, public HoldsResources {
@@ -61,6 +62,8 @@ namespace Gameplay {
         std::unique_ptr<AbstractMusic> music;
         Drawables::GradedDensityGraph graded_density_graph;
         Drawables::Cursor cursor;
+        Drawables::Shutter shutter;
+
         // maps music time to [0, 1]
         Toolkit::AffineTransform<float> music_time_to_progression;
 

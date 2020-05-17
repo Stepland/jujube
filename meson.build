@@ -81,6 +81,8 @@ sources = [
     'src/Screens/MusicSelect/SongInfo.cpp',
     'src/Screens/Gameplay/Drawables/Cursor.hpp',
     'src/Screens/Gameplay/Drawables/Cursor.cpp',
+    'src/Screens/Gameplay/Drawables/Shutter.hpp',
+    'src/Screens/Gameplay/Drawables/Shutter.cpp',
     'src/Screens/Gameplay/Gameplay.hpp',
     'src/Screens/Gameplay/Gameplay.cpp',
     'src/Screens/Gameplay/PreciseMusic.hpp',
