@@ -60,6 +60,11 @@
     - Fix some columns not being hit
 - Proper mouse support
 - Basic Touch support
+- Shutter
+    - display (disabled but working)
+
+## Results Screen
+- it's a thing ?
 
 ## Misc
 - Handling Resolution changes

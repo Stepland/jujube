@@ -27,6 +27,8 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list, ScreenResources& 
 }
 
 std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
+    chart_selected = false;
+    resources.selected_panel.reset();
     window.setKeyRepeatEnabled(true);
     sf::Clock imguiClock;
     ribbon.setPosition(get_ribbon_x(), get_ribbon_y());
@@ -195,7 +197,7 @@ void MusicSelect::Screen::handle_mouse_click(const sf::Event::MouseButtonEvent& 
     }
 }
 
-void MusicSelect::Screen::press_button(const Input::Button& button) {
+void MusicSelect::Screen::press_button(Input::Button button) {
     shared.button_highlight.button_pressed(button);
     auto button_index = Input::button_to_index(button);
     if (button_index < 14) {

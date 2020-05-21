@@ -6,6 +6,7 @@
 
 #include "Data/Song.hpp"
 #include "Data/Preferences.hpp"
+#include "Drawables/GradedDensityGraph.hpp"
 #include "Resources/Marker.hpp"
 #include "Resources/SharedResources.hpp"
 // #include "Data/Chart.hpp"
@@ -15,7 +16,7 @@
 #include "Screens/MusicSelect/MusicSelect.hpp"
 #include "Screens/Gameplay/Resources.hpp"
 #include "Screens/Gameplay/Gameplay.hpp"
-// #include "Screens/Result.hpp"
+#include "Screens/Results/Results.hpp"
 #if defined(__unix__) && defined(__linux__)
     #include <X11/Xlib.h>
 #endif
@@ -38,8 +39,11 @@ int main(int, char const **) {
     if (shared_resources.ln_markers.find(preferences.options.ln_marker) == shared_resources.ln_markers.end()) {
         preferences.options.ln_marker = shared_resources.ln_markers.begin()->first;
     }
-    MusicSelect::Screen music_select{song_list, music_select_resources};    
+    MusicSelect::Screen music_select{song_list, music_select_resources};
     
+    Gameplay::ScreenResources gameplay_resources{shared_resources};
+    Results::ScreenResources results_resources{shared_resources};
+
     // Create the window
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -51,31 +55,22 @@ int main(int, char const **) {
     };
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
-    auto chart = music_select.select_chart(window);
-    if (chart) {
-        std::cout << "Selected Chart : " << chart->song.title << " [" << chart->difficulty << "]" << '\n';
-    } else {
-        std::cout << "Exited MusicSelect::Screen without selecting a chart" << '\n';
-        return 0;
-    }
 
-    Gameplay::ScreenResources gameplay_resources{shared_resources};
-    Gameplay::Screen gameplay{*chart, gameplay_resources};
-    gameplay.play_chart(window);
+    while (window.isOpen()) {
+        auto chart = music_select.select_chart(window);
+        if (chart) {
+            std::cout << "Selected Chart : " << chart->song.title << " [" << chart->difficulty << "]" << '\n';
+        } else {
+            std::cout << "Exited MusicSelect::Screen without selecting a chart" << '\n';
+            break;
+        }
 
-    /*
-    while (true) {
+        Gameplay::Screen gameplay{*chart, gameplay_resources};
+        auto detailed_score = gameplay.play_chart(window);
         
-        Chart& selected_chart = music_select.select_chart(window);
-
-        Screen::Gameplay gameplay(selected_chart);
-        Score score = gameplay.play_chart(window);
-        
-        Screen::Result result_screen(score);
+        Results::Screen result_screen{detailed_score.gdg, *chart, detailed_score.score, results_resources};
         result_screen.display(window);
-    
     }
-    */
     ImGui::SFML::Shutdown();
     return 0;
 }

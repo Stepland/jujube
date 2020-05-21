@@ -32,6 +32,6 @@ namespace Drawables {
 
     void Cursor::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform *= getTransform();
-        target.draw(&m_vertex_array[0], m_vertex_array.size(), sf::Quads, states);
+        target.draw(m_vertex_array.data(), m_vertex_array.size(), sf::Quads, states);
     }
 }

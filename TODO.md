@@ -1,14 +1,11 @@
 # v0.1.0 (MVP)
-## Gameplay Screen
-- Shutter
-    - display
-
-## Results Screen
-
 ## Windows and macOS builds
 
 # v0.2.0
 ## Misc
+- THE THEME SYSTEM HOLY SHIT
+- Refactor Panels to use a command pattern
+- Refactor most things into drawables
 - Input Lag Setting
 - Revamp Markers to speed loading on launch
 - Logging system

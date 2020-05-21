@@ -40,7 +40,7 @@ namespace Drawables {
 
     class GradedDensityGraph : public sf::Drawable, public sf::Transformable, public Toolkit::Debuggable {
     public:
-        explicit GradedDensityGraph(const DensityGraph& density_graph, const Data::SongDifficulty& sd);
+        GradedDensityGraph(const DensityGraph& density_graph, const Data::SongDifficulty& sd);
         // Set verticies colors for density columns that have already been played
         void update(const sf::Time& music_time);
         // Update stored grades according to the recieved judgement

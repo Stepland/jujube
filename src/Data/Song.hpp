@@ -55,6 +55,8 @@ namespace Data {
         const Data::Song& song;
         const std::string& difficulty;
 
+        std::optional<Chart> get_chart() const {return song.get_chart(difficulty);};
+
         // Get the total play interval for this chart :
         // if there's no audio and no notes, returns a one second inteval starting at sf::Time::Zero
         // otherwise the start bound is either zero or the first note if for some reason it happens before 0s

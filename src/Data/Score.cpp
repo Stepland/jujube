@@ -5,21 +5,6 @@
 #include <SFML/System/Time.hpp>
 
 namespace Data {
-    int AbstractScore::get_final_score() const {
-        std::shared_lock lock{mutex};
-        return unsafe_get_final_score();
-    }
-
-    int AbstractScore::get_score() const {
-        std::shared_lock lock{mutex};
-        return unsafe_get_score();
-    }
-
-    void AbstractScore::update(Judgement j) {
-        std::unique_lock lock{mutex};
-        unsafe_update(j);
-    }
-
     std::size_t count_classic_scoring_events(const std::set<Note>& notes) {
         std::size_t count = 0;
         for (auto&& note : notes) {
@@ -48,15 +33,14 @@ namespace Data {
     }
 
     int ClassicScore::get_shutter() const {
-        std::shared_lock lock{mutex};
         return shutter;
     }
 
-    int ClassicScore::unsafe_get_final_score() const {
-        return unsafe_get_score() + shutter*100000/1024;
+    int ClassicScore::get_final_score() const {
+        return get_score() + shutter*100000/1024;
     }
 
-    int ClassicScore::unsafe_get_score() const {
+    int ClassicScore::get_score() const {
         return
             (
                 90000 *
@@ -71,7 +55,30 @@ namespace Data {
         ;
     }
 
-    void ClassicScore::unsafe_update(Judgement j) {
+    Rating ClassicScore::get_rating() const {
+        auto score = get_final_score();
+        if (score < 500000) {
+            return Rating::E;
+        } else if (score < 700000) {
+            return Rating::D;
+        } else if (score < 800000) {
+            return Rating::C;
+        } else if (score < 850000) {
+            return Rating::B;
+        } else if (score < 900000) {
+            return Rating::A;
+        } else if (score < 950000) {
+            return Rating::S;
+        } else if (score < 980000) {
+            return Rating::SS;
+        } else if (score < 1000000) {
+            return Rating::SSS;
+        } else {
+            return Rating::EXC;
+        }
+    }
+
+    void ClassicScore::update(Judgement j) {
         judgement_counts[j] += 1;
         int shutter_delta = 0;
         switch (j) {

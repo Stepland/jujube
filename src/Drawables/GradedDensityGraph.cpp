@@ -118,7 +118,7 @@ namespace Drawables {
         const auto float_column = m_seconds_to_column.transform(music_time.asSeconds());
         const auto current_column = static_cast<std::size_t>(float_column);
         const auto current_column_it = std::next(m_densities.begin(), current_column);
-        for (auto it = m_densities.begin(); it != current_column_it; ++it) {
+        for (auto it = m_densities.begin(); it != current_column_it and it != m_densities.end(); ++it) {
             auto color = grade_to_color(it->grade);
             auto next = std::next(it);
             std::vector<sf::Vertex>::iterator next_vertex_it;

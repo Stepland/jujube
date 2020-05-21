@@ -51,7 +51,7 @@ namespace Gameplay {
         marker_layer.setSmooth(true);
     }
 
-    void Screen::play_chart(sf::RenderWindow& window) {
+    DetailedScore Screen::play_chart(sf::RenderWindow& window) {
         window.setKeyRepeatEnabled(false);
         window.setActive(false);
         std::thread render_thread(&Screen::render, this, std::ref(window));
@@ -67,6 +67,7 @@ namespace Gameplay {
         if (render_thread.joinable()) {
             render_thread.join();
         }
+        return {graded_density_graph, score};
     }
     
     void Screen::render(sf::RenderWindow& window) {

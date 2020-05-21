@@ -2,6 +2,7 @@
 
 #include <set>
 #include <shared_mutex>
+#include <string>
 #include <variant>
 #include <unordered_map>
 
@@ -14,22 +15,42 @@ namespace Gameplay {
 }
 
 namespace Data {
-    // Thread-safe abstract interface for scoring systems
+    enum class Rating {
+        EXC,
+        SSS,
+        SS,
+        S,
+        A,
+        B,
+        C,
+        D,
+        E
+    };
+
+    const std::unordered_map<Rating, std::string> rating_to_string = {
+        {Rating::EXC, "EXC"},
+        {Rating::SSS, "SSS"},
+        {Rating::SS, "SS"},
+        {Rating::S, "S"},
+        {Rating::A, "A"},
+        {Rating::B, "B"},
+        {Rating::C, "C"},
+        {Rating::D, "D"},
+        {Rating::E, "E"}
+    };
+
+    // Abstract interface for scoring systems
     class AbstractScore {
     public:
         virtual ~AbstractScore() = default;
         // Return final score (normal score + shutter bonus)
-        int get_final_score() const;
+        virtual int get_final_score() const = 0;
         // Get current score (i.e. without shutter bonus)
-        int get_score() const;
+        virtual int get_score() const = 0;
+        // Return the current rating
+        virtual Rating get_rating() const = 0;
         // Update score according to the recieved judgement
-        void update(Judgement j);
-    protected:
-        // non thread-safe version of the public interface
-        virtual int unsafe_get_final_score() const = 0;
-        virtual int unsafe_get_score() const = 0;
-        virtual void unsafe_update(Judgement j) = 0;
-        mutable std::shared_mutex mutex;
+        virtual void update(Judgement j) = 0;
     };
 
     std::size_t count_classic_scoring_events(const std::set<Note>& notes);
@@ -39,11 +60,11 @@ namespace Data {
     public:
         ClassicScore(const std::set<Note>& notes);
         int get_shutter() const;
+        int get_final_score() const override;
+        int get_score() const override;
+        Rating get_rating() const override;
+        void update(Judgement j) override;
     private:
-        int unsafe_get_final_score() const override;
-        int unsafe_get_score() const override;
-        void unsafe_update(Judgement j) override;
-
         int shutter = 0;
         int shutter_incerment_2x;
         int shutter_incerment_1x;

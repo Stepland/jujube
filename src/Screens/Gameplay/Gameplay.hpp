@@ -4,6 +4,7 @@
 #include <deque>
 #include <functional>
 #include <memory>
+#include <tuple>
 #include <unordered_map>
 
 #include <SFML/Graphics.hpp>
@@ -26,10 +27,15 @@
 #include "Drawables/Shutter.hpp"
 
 namespace Gameplay {
+    struct DetailedScore {
+        Drawables::GradedDensityGraph& gdg;
+        Data::AbstractScore& score;
+    };
+
     class Screen : public Toolkit::Debuggable, public HoldsResources {
     public:
         explicit Screen(const Data::SongDifficulty& song_selection, ScreenResources& t_resources);
-        void play_chart(sf::RenderWindow& window);
+        DetailedScore play_chart(sf::RenderWindow& window);
     private:
         void draw_debug() override;
         void render(sf::RenderWindow& window);
