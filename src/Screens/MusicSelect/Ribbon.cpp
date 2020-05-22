@@ -175,7 +175,7 @@ namespace MusicSelect {
         if (debug) {
             if (ImGui::Begin("Ribbon Debug")) {
                 ImGui::Text("float position : %f", float_position);
-                ImGui::Text("zeroth column : %lu", column_zero);
+                ImGui::Text("zeroth column : %zu", column_zero);
             }
             ImGui::End();
         }

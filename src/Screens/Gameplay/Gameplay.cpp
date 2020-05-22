@@ -701,17 +701,17 @@ namespace Gameplay {
     void Screen::draw_debug() {
         if (ImGui::Begin("Gameplay Debug")) {
             if (ImGui::CollapsingHeader("Metrics")) {
-                ImGui::Text("Combo : %lu", combo);
+                ImGui::Text("Combo : %zu", combo);
                 if (ImGui::TreeNode("Score")) {
                     ImGui::Text("Raw           : %d", score.get_score());
                     ImGui::Text("Final         : %d", score.get_final_score());
                     ImGui::Text("Shutter value : %d", score.shutter);
                     if (ImGui::TreeNode("Judgement Counts")) {
-                        ImGui::Text("PERFECT : %lu", score.judgement_counts.at(Data::Judgement::Perfect));
-                        ImGui::Text("GREAT   : %lu", score.judgement_counts.at(Data::Judgement::Great));
-                        ImGui::Text("GOOD    : %lu", score.judgement_counts.at(Data::Judgement::Good));
-                        ImGui::Text("POOR    : %lu", score.judgement_counts.at(Data::Judgement::Poor));
-                        ImGui::Text("MISS    : %lu", score.judgement_counts.at(Data::Judgement::Miss));
+                        ImGui::Text("PERFECT : %zu", score.judgement_counts.at(Data::Judgement::Perfect));
+                        ImGui::Text("GREAT   : %zu", score.judgement_counts.at(Data::Judgement::Great));
+                        ImGui::Text("GOOD    : %zu", score.judgement_counts.at(Data::Judgement::Good));
+                        ImGui::Text("POOR    : %zu", score.judgement_counts.at(Data::Judgement::Poor));
+                        ImGui::Text("MISS    : %zu", score.judgement_counts.at(Data::Judgement::Miss));
                         ImGui::TreePop();
                     }
                     ImGui::TreePop();
