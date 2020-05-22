@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <sstream>
+#include <stdexcept>
 
 namespace fs = ghc::filesystem;
 

@@ -1,6 +1,7 @@
 #include "SpriteSheet.hpp"
 
 #include <sstream>
+#include <stdexcept>
 
 namespace Resources {
     void from_json(const nlohmann::json& j, SpriteSheet& s) {

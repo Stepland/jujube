@@ -1,6 +1,7 @@
 #include "SplitSpriteSheet.hpp"
 
 #include <sstream>
+#include <stdexcept>
 
 #include <SFML/Graphics/RenderTexture.hpp>
 

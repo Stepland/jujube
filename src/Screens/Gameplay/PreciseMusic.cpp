@@ -1,6 +1,7 @@
 #include "PreciseMusic.hpp"
 
 #include <chrono>
+#include <stdexcept>
 
 namespace Gameplay {
     _PreciseMusic::_PreciseMusic(const std::string& path) {

@@ -1,5 +1,7 @@
 #include "Chart.hpp"
 
+#include <stdexcept>
+
 #include "../Toolkit/AffineTransform.hpp"
 
 namespace Data {

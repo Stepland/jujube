@@ -1,5 +1,7 @@
 #include "TextureCache.hpp"
 
+#include <stdexcept>
+
 namespace Textures {
     AutoloadedTexture load_texture_from_path(const fs::path& path) {
         auto texture = std::make_shared<sf::Texture>();

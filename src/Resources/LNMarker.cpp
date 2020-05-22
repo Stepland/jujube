@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
 namespace Resources {
     LNMarker::LNMarker(const fs::path& t_folder) :
@@ -134,6 +135,7 @@ namespace Resources {
             throw std::runtime_error("No long note markers found, jujube needs at least one to operate");
         }
     }
+    
     void LNMarkers::load_from_folder(const fs::path& lnmarkers_folder) {
         if (fs::exists(lnmarkers_folder)) {
             for (auto& p : fs::directory_iterator(lnmarkers_folder)) {

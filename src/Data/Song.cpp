@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <list>
+#include <stdexcept>
 
 #include <memon/memon.hpp>
 

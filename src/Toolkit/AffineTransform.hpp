@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 namespace Toolkit {
     template<typename T>
     class AffineTransform {
