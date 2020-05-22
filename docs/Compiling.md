@@ -42,10 +42,10 @@ Installing MSYS2 is extremly straightforward and detailed [on their website](htt
 Once you're done `pacman -Syu`ing and `pacman -Su`ing your system you can install the required packages for jujube :
 
 ```bash
-$ pacman -S mingw-w64-x86_64-sfml
+$ pacman -S meson mingw-w64-x86_64-toolchain mingw-w64-x86_64-meson mingw-w64-x86_64-sfml mingw-w64-x86_64-cairo
 ```
 
-then you can just use the same build commands as the Linux section but from the MSYS2 terminal
+then you can just use the same build commands as the Linux section but from the `MSYS2 MinGW 64-bit` terminal
 
 ## MacOS
 ### clang-9 from brew's llvm package
