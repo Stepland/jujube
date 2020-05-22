@@ -19,7 +19,7 @@ FILENAMES = {
     MarkerAnimation.POOR : [f'h1{i:02}.png' for i in range(16)],
     MarkerAnimation.GOOD : [f'h2{i:02}.png' for i in range(16)],
     MarkerAnimation.GREAT : [f'h3{i:02}.png' for i in range(16)],
-    MarkerAnimation.PEEARLYRFECT : [f'h4{i:02}.png' for i in range(16)],
+    MarkerAnimation.PERFECT : [f'h4{i:02}.png' for i in range(16)],
 }
 
 METADATA = {
