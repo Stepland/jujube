@@ -28,6 +28,9 @@ MusicSelect::Screen::Screen(const Data::SongList& t_song_list, ScreenResources& 
 
 std::optional<Data::SongDifficulty> MusicSelect::Screen::select_chart(sf::RenderWindow& window) {
     chart_selected = false;
+    if (resources.selected_panel) {
+        resources.selected_panel->obj.unselect();
+    }
     resources.selected_panel.reset();
     window.setKeyRepeatEnabled(true);
     sf::Clock imguiClock;
