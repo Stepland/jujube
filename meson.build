@@ -6,7 +6,6 @@ project(
 )
 
 sources = [
-    'include/backward-cpp/backward.cpp',
     'include/imgui/imgui.cpp',
     'include/imgui/imgui_draw.cpp',
     'include/imgui/imgui_widgets.cpp',
@@ -126,6 +125,7 @@ if host_machine.system() == 'linux'
     dependencies += cc.find_library('m')
     dependencies += cc.find_library('X11')
     dependencies += cc.find_library('dw')
+    sources += ['include/backward-cpp/backward.cpp']
     add_project_arguments('-DBACKWARD_HAS_DW=1', language : 'cpp')
     add_project_link_arguments('-lstdc++', language : 'cpp')
 endif
