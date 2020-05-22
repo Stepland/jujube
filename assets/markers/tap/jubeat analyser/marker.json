@@ -1,0 +1,41 @@
+{
+    "name": "jubeat analyser",
+    "size": 150,
+    "fps": 30,
+    "approach": {
+        "sprite_sheet": "approach.png",
+        "count": 16,
+        "columns": 4,
+        "rows": 4
+    },
+    "miss": {
+        "sprite_sheet": "miss.png",
+        "count": 9,
+        "columns": 3,
+        "rows": 3
+    },
+    "poor": {
+        "sprite_sheet": "poor.png",
+        "count": 9,
+        "columns": 5,
+        "rows": 2
+    },
+    "good": {
+        "sprite_sheet": "good.png",
+        "count": 9,
+        "columns": 5,
+        "rows": 2
+    },
+    "great": {
+        "sprite_sheet": "great.png",
+        "count": 9,
+        "columns": 5,
+        "rows": 2
+    },
+    "perfect": {
+        "sprite_sheet": "perfect.png",
+        "count": 9,
+        "columns": 5,
+        "rows": 2
+    }
+}
