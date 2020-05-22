@@ -2,6 +2,7 @@ from PIL import Image
 from path import Path
 from enum import Enum
 from itertools import chain
+from collections import defaultdict
 import copy
 import json
 
@@ -34,10 +35,19 @@ METADATA = {
 
 def convert_folder(src: Path, dst: Path):
     dst.mkdir_p()
-    sprite_sizes = set(Image.open(src/path).size for path in chain(*FILENAMES.values()))
-    assert(len(sprite_sizes) == 1)
-    sprite_size = sprite_sizes.pop()
-    assert(sprite_size[0] == sprite_size[1])
+    sprite_sizes = defaultdict(list)
+    for path in chain(*FILENAMES.values()):
+        sprite_sizes[Image.open(src/path).size].append(path)
+    if len(sprite_sizes) != 1:
+        print(f"Error : mixed sprite sizes")
+        for size, files in sprite_sizes.items():
+            print(f"{size} : ")
+            for file in files:
+                print(f"\t- {file}")
+        exit(1)
+    sprite_size = sprite_sizes.keys()[0]
+    if sprite_size[0] != sprite_size[1]:
+        print(f"Error : Non-square sprite size {sprite_size}")
     size = sprite_size[0]
     marker_json = {
         "name": src.name,
