@@ -17,11 +17,11 @@ import subprocess
 import sys
 
 def cygpath(file):
-	return subprocess.check_output(["cygpath", "-m", file]).strip()
+	return subprocess.check_output(["cygpath", "-m", file]).decode().strip()
 
 # ldd does not work well on Windows 10 and is not supported on mingw32
 def ldd(files):
-	ldd_output = subprocess.check_output(["ntldd", "-R"] + files)
+	ldd_output = subprocess.check_output(["ntldd", "-R"] + files).decode()
 	# sanitize output
 	ldd_output = ldd_output.strip()
 	ldd_output = ldd_output.replace('\\', '/')
