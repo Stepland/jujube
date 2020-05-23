@@ -2,7 +2,7 @@ project(
     'jujube',
     ['cpp', 'c'],
     default_options : ['cpp_std=c++17'],
-    version : '0.1.0-alpha'
+    version : '0.1.0'
 )
 
 sources = [

@@ -1,6 +1,3 @@
-# v0.1.0 (MVP)
-## Windows and macOS builds
-
 # v0.2.0
 ## Misc
 - THE THEME SYSTEM HOLY SHIT
