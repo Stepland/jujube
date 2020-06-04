@@ -112,7 +112,7 @@ namespace Results {
             window.draw(rating_text);
 
             // Draw Judgement Breakdown
-            auto judgement_counts = new int[5];
+            std::array<int, 5> judgement_counts;
             judgement_counts[0] = score.get_judgement_counts(Data::Judgement::Perfect);
             judgement_counts[1] = score.get_judgement_counts(Data::Judgement::Great);
             judgement_counts[2] = score.get_judgement_counts(Data::Judgement::Good);
