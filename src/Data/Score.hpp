@@ -51,6 +51,8 @@ namespace Data {
         virtual Rating get_rating() const = 0;
         // Update score according to the recieved judgement
         virtual void update(Judgement j) = 0;
+        // Get judgments
+        virtual int get_judgement_counts(Judgement j) const = 0;
     };
 
     std::size_t count_classic_scoring_events(const std::set<Note>& notes);
@@ -64,6 +66,7 @@ namespace Data {
         int get_score() const override;
         Rating get_rating() const override;
         void update(Judgement j) override;
+        int get_judgement_counts(Judgement j) const;
     private:
         int shutter = 0;
         int shutter_incerment_2x;
@@ -71,7 +74,6 @@ namespace Data {
         int shutter_decrement_4x;
         const std::size_t tap_event_count;
         std::unordered_map<Judgement, std::size_t> judgement_counts;
-
         friend class Gameplay::Screen;
     };
 }

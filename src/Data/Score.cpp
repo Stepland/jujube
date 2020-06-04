@@ -36,6 +36,10 @@ namespace Data {
         return shutter;
     }
 
+    int ClassicScore::get_judgement_counts(Judgement j) const {
+        return judgement_counts.at(j);
+    }
+
     int ClassicScore::get_final_score() const {
         return get_score() + shutter*100000/1024;
     }
