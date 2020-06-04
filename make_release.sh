@@ -10,4 +10,4 @@ rm -rf jujube@exe meson* build.ninja .ninja* compile_commands.json test
 
 cd ..
 zip jujube.zip -r build
-mv -t ../ jujube.zip
+mv -t build jujube.zip
