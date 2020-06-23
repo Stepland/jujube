@@ -97,6 +97,8 @@ namespace Data {
         case Judgement::Miss:
             shutter_delta = shutter_decrement_4x;
             break;
+        default:
+            break;
         }
         shutter = std::clamp(shutter+shutter_delta, 0, 1024);
     }

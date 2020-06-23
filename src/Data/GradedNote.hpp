@@ -14,6 +14,8 @@ namespace Data {
         Good,
         Poor,
         Miss,
+        Early,
+        Late
     };
 
     bool judgement_breaks_combo(Judgement j);
@@ -26,6 +28,7 @@ namespace Data {
         TimedJudgement() : delta(sf::Time::Zero), judgement(Judgement::Miss) {};
         TimedJudgement(const sf::Time& d, const Judgement& j) : delta(d), judgement(j) {};
         explicit TimedJudgement(const sf::Time& t) : delta(t), judgement(delta_to_judgement(t)) {};
+        //explicit TimedJudgement(const sf::Time& t) : delta(t), judgement(delta_to_judgement(t)) {};
         sf::Time delta = sf::Time::Zero;
         Judgement judgement = Judgement::Miss;
     };

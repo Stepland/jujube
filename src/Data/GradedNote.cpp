@@ -35,11 +35,11 @@ namespace Data {
         if (delta_abs < sf::Time::Zero) {
             delta_abs = -delta_abs;
         }
-        if (delta_abs < sf::milliseconds(42)) {
+        if (delta_abs < sf::milliseconds(40)) {
             return Judgement::Perfect;
-        } else if (delta_abs < sf::milliseconds(82)) {
+        } else if (delta_abs < sf::milliseconds(80)) {
             return Judgement::Great;
-        } else if (delta_abs < sf::milliseconds(162)) {
+        } else if (delta_abs < sf::milliseconds(160)) {
             return Judgement::Good;
         } else if (delta_abs < sf::milliseconds(533)) {
             return Judgement::Poor;
