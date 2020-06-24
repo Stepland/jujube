@@ -596,7 +596,7 @@ namespace Gameplay {
             return;
         }
     }
-    // TODO: FIX RELEASE TIMING CODE
+
     void Screen::handle_button_release(const Input::Button& button, const sf::Time& music_time) {
         for (auto&& note_ref : visible_notes) {
             auto& note = note_ref.get();
@@ -616,7 +616,9 @@ namespace Gameplay {
             if (note.long_release) {
                 continue;
             }
-            auto timed_judgement = Data::TimedJudgement{music_time-note.timing-note.duration};
+            auto timed_judgement = Data::TimedJudgement{music_time-note.timing, 
+                                                        music_time-note.timing-note.duration, 
+                                                        note.duration, note.get_tail_length()};
             note.long_release = timed_judgement;
             score.update(timed_judgement.judgement);
             graded_density_graph.update_grades(timed_judgement.judgement, note.timing+note.duration);

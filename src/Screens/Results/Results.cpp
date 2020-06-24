@@ -118,8 +118,8 @@ namespace Results {
             judgement_counts[2] = score.get_judgement_counts(Data::Judgement::Good);
             judgement_counts[3] = score.get_judgement_counts(Data::Judgement::Poor);
             judgement_counts[4] = score.get_judgement_counts(Data::Judgement::Miss);
-            judgement_counts[5] = score.get_judgement_counts(Data::Judgement::Late);
-            judgement_counts[6] = score.get_judgement_counts(Data::Judgement::Early);
+            judgement_counts[5] = score.get_judgement_counts(Data::Judgement::Early);
+            judgement_counts[6] = score.get_judgement_counts(Data::Judgement::Late);
 
             sf::Text judgements;
             judgements.setFont(shared.fallback_font.black);
@@ -129,8 +129,8 @@ namespace Results {
                                                 "\nGood: " + std::to_string(judgement_counts[2]) + 
                                                 "\nPoor: " + std::to_string(judgement_counts[3]) + 
                                                 "\nMiss: " + std::to_string(judgement_counts[4]) +
-                                                "\nLate: " + std::to_string(judgement_counts[5]) +
-                                                "\nEarly: "+ std::to_string(judgement_counts[6]);
+                                                "\nEarly: " + std::to_string(judgement_counts[5]) +
+                                                "\nLate: "+ std::to_string(judgement_counts[6]);
             judgements.setString(judgement_to_string);
             judgements.setCharacterSize(static_cast<unsigned int>(0.1f*get_panel_size()));
             Toolkit::set_local_origin_normalized(judgements, 0.5f, 0.5f);
