@@ -13,9 +13,7 @@ namespace Data {
         Great,
         Good,
         Poor,
-        Miss,
-        Early,
-        Late
+        Miss
     };
 
     bool judgement_breaks_combo(Judgement j);

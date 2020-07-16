@@ -576,11 +576,6 @@ namespace Gameplay {
             note = Data::GradedNote{note, music_time-note.timing};
             auto& judgement = note.tap_judgement->judgement;
             score.update(judgement);
-            // Late/early
-            if((music_time-note.timing > sf::milliseconds(0)) && note.tap_judgement->judgement != Data::Judgement::Perfect)
-                score.update(Data::Judgement::Late);
-            if((music_time-note.timing < sf::milliseconds(0)) && note.tap_judgement->judgement != Data::Judgement::Perfect)
-                score.update(Data::Judgement::Early);
             graded_density_graph.update_grades(judgement, note.timing);
             if (Data::judgement_breaks_combo(judgement)) {
                 // If we've broken combo at the begining of a long we also missed the end
