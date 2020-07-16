@@ -48,7 +48,7 @@ namespace Data {
         }
     }
     // implement the strange way in which jubeat judges hold note releases 
-    Judgement release_to_judgement(const sf::Time& duration_held, const sf::Time note_duration, const int tail_length) {
+    Judgement release_to_judgement(const sf::Time& duration_held, const sf::Time& note_duration, const int tail_length) {
         int error_margin = 60; 
         // take the length of the note in ticks on a 300 hz clock and divide by length of tail in pixels
         // logic taken from reversing the game's timing code
@@ -56,12 +56,12 @@ namespace Data {
         int adjusted_note_duration = (int) (note_duration.asMilliseconds() * milliseconds_to_300hz) - 
                                     (error_margin * (double) ((note_duration.asMilliseconds() 
                                     * milliseconds_to_300hz) / (tail_length*195)));
-        if( (duration_held.asMilliseconds() * milliseconds_to_300hz) >= adjusted_note_duration) // done
+        if((duration_held.asMilliseconds() * milliseconds_to_300hz) >= adjusted_note_duration) // done
             return Judgement::Perfect;
         int percentage_held = (duration_held.asMilliseconds() * milliseconds_to_300hz / adjusted_note_duration) * 100;
-        if (percentage_held < 100 || percentage_held >= 81)
+        if (percentage_held < 100 and percentage_held >= 81)
             return Judgement::Great;
-        else if (percentage_held < 80 || percentage_held >= 51)
+        else if (percentage_held < 80 and percentage_held >= 51)
             return Judgement::Good;
         else 
             return Judgement::Poor;
