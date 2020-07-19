@@ -111,6 +111,32 @@ namespace Results {
             );
             window.draw(rating_text);
 
+            // Draw Judgement Breakdown
+            std::array<int, 5> judgement_counts;
+            judgement_counts[0] = score.get_judgement_counts(Data::Judgement::Perfect);
+            judgement_counts[1] = score.get_judgement_counts(Data::Judgement::Great);
+            judgement_counts[2] = score.get_judgement_counts(Data::Judgement::Good);
+            judgement_counts[3] = score.get_judgement_counts(Data::Judgement::Poor);
+            judgement_counts[4] = score.get_judgement_counts(Data::Judgement::Miss);
+
+            sf::Text judgements;
+            judgements.setFont(shared.fallback_font.black);
+            judgements.setFillColor(sf::Color(29, 98, 226));
+            std::string judgement_to_string =   "Perfect: " + std::to_string(judgement_counts[0]) + 
+                                                "\nGreat: " + std::to_string(judgement_counts[1]) + 
+                                                "\nGood: " + std::to_string(judgement_counts[2]) + 
+                                                "\nPoor: " + std::to_string(judgement_counts[3]) + 
+                                                "\nMiss: " + std::to_string(judgement_counts[4]);
+            judgements.setString(judgement_to_string);
+            judgements.setCharacterSize(static_cast<unsigned int>(0.1f*get_panel_size()));
+            Toolkit::set_local_origin_normalized(judgements, 0.5f, 0.5f);
+            judgements.setPosition(
+                get_ribbon_x()+0.f*get_panel_step()+0.5*get_panel_size(),
+                get_ribbon_y()+2.f*get_panel_step()+0.5*get_panel_size()
+            );
+            window.draw(judgements);
+
+
             // Draw song info
             auto song_title = song_selection.song.title;
             if (not song_title.empty()) {
