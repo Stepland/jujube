@@ -49,6 +49,7 @@ namespace Data {
     }
     // implement the strange way in which jubeat judges hold note releases 
     Judgement release_to_judgement(const sf::Time& duration_held, const sf::Time& note_duration, const int tail_length) {
+        // if we implement hard mode we'll need a cleaner implementation of this since this would be 30. works for now though
         int error_margin = 60; 
         // take the length of the note in ticks on a 300 hz clock and divide by length of tail in pixels
         // logic taken from reversing the game's timing code
