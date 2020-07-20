@@ -27,10 +27,15 @@ namespace Data {
         TimedJudgement() : delta(sf::Time::Zero), judgement(Judgement::Miss) {};
         TimedJudgement(const sf::Time& d, const Judgement& j) : delta(d), judgement(j) {};
         explicit TimedJudgement(const sf::Time& t) : delta(t), judgement(delta_to_judgement(t)) {};
-        explicit TimedJudgement(const sf::Time& duration_held,
-                                const sf::Time& t, 
-                                const sf::Time& duration,
-                                const int tail_length) : delta(t), judgement(release_to_judgement(duration_held, duration, tail_length)) {};
+        explicit TimedJudgement(
+            const sf::Time& duration_held,
+            const sf::Time& t,
+            const sf::Time& duration,
+            const int tail_length
+        ) :
+            delta(t),
+            judgement(release_to_judgement(duration_held, duration, tail_length))
+        {};
         sf::Time delta = sf::Time::Zero;
         Judgement judgement = Judgement::Miss;
     };
