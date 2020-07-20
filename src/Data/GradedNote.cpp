@@ -54,17 +54,26 @@ namespace Data {
         // take the length of the note in ticks on a 300 hz clock and divide by length of tail in pixels
         // logic taken from reversing the game's timing code
         double milliseconds_to_300hz = 0.3;
-        int adjusted_note_duration = (int) (note_duration.asMilliseconds() * milliseconds_to_300hz) - 
-                                    (error_margin * (double) ((note_duration.asMilliseconds() 
-                                    * milliseconds_to_300hz) / (tail_length*195)));
-        if((duration_held.asMilliseconds() * milliseconds_to_300hz) >= adjusted_note_duration) // done
+        auto note_duration_300hz = static_cast<double>(note_duration.asMilliseconds()) * milliseconds_to_300hz;
+        auto adjusted_note_duration = static_cast<int>(
+            note_duration_300hz * (1 - (static_cast<double>(error_margin) / (tail_length*195)))
+        );
+
+        // held for longer than duration : done
+        if((duration_held.asMilliseconds() * milliseconds_to_300hz) >= adjusted_note_duration) {
             return Judgement::Perfect;
-        int percentage_held = (duration_held.asMilliseconds() * milliseconds_to_300hz / adjusted_note_duration) * 100;
-        if (percentage_held < 100 and percentage_held >= 81)
+        }
+
+        auto percentage_held = static_cast<int>(
+            duration_held.asMilliseconds() * milliseconds_to_300hz / adjusted_note_duration * 100
+        );
+
+        if (percentage_held < 100 and percentage_held >= 81) {
             return Judgement::Great;
-        else if (percentage_held < 80 and percentage_held >= 51)
+        } else if (percentage_held < 80 and percentage_held >= 51) {
             return Judgement::Good;
-        else 
+        } else {
             return Judgement::Poor;
+        }
     }
 }
