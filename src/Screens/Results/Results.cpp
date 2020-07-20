@@ -112,6 +112,7 @@ namespace Results {
             window.draw(rating_text);
 
             // Draw Judgement Breakdown
+            sf::Text judgements;
             judgements.setFont(shared.fallback_font.black);
             judgements.setFillColor(sf::Color(29, 98, 226));
             std::string judgement_to_string = (
