@@ -19,6 +19,7 @@ Regardless of the target platform the build steps are pretty much the same :
     $ ninja
     ```
     (Replacing the `{...}`s with what you chose)
+0. Copy `jujube` executable from the build folder into project is root folder.
 
 and voila !
 
