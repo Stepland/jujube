@@ -35,16 +35,45 @@ namespace Data {
         if (delta_abs < sf::Time::Zero) {
             delta_abs = -delta_abs;
         }
-        if (delta_abs < sf::milliseconds(42)) {
+        if (delta_abs < sf::milliseconds(40)) {
             return Judgement::Perfect;
-        } else if (delta_abs < sf::milliseconds(82)) {
+        } else if (delta_abs < sf::milliseconds(80)) {
             return Judgement::Great;
-        } else if (delta_abs < sf::milliseconds(162)) {
+        } else if (delta_abs < sf::milliseconds(160)) {
             return Judgement::Good;
         } else if (delta_abs < sf::milliseconds(533)) {
             return Judgement::Poor;
         } else {
             return Judgement::Miss;
+        }
+    }
+    // implement the strange way in which jubeat judges hold note releases 
+    Judgement release_to_judgement(const sf::Time& duration_held, const sf::Time& note_duration, const int tail_length) {
+        // if we implement hard mode we'll need a cleaner implementation of this since this would be 30. works for now though
+        int error_margin = 60; 
+        // take the length of the note in ticks on a 300 hz clock and divide by length of tail in pixels
+        // logic taken from reversing the game's timing code
+        double milliseconds_to_300hz = 0.3;
+        auto note_duration_300hz = static_cast<double>(note_duration.asMilliseconds()) * milliseconds_to_300hz;
+        auto adjusted_note_duration = static_cast<int>(
+            note_duration_300hz * (1 - (static_cast<double>(error_margin) / (tail_length*195)))
+        );
+
+        // held for longer than duration : done
+        if((duration_held.asMilliseconds() * milliseconds_to_300hz) >= adjusted_note_duration) {
+            return Judgement::Perfect;
+        }
+
+        auto percentage_held = static_cast<int>(
+            duration_held.asMilliseconds() * milliseconds_to_300hz / adjusted_note_duration * 100
+        );
+
+        if (percentage_held < 100 and percentage_held >= 81) {
+            return Judgement::Great;
+        } else if (percentage_held < 80 and percentage_held >= 51) {
+            return Judgement::Good;
+        } else {
+            return Judgement::Poor;
         }
     }
 }

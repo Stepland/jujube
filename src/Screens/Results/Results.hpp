@@ -25,7 +25,7 @@ namespace Results {
     private:
         Drawables::GradedDensityGraph graded_density_graph;
         const Data::SongDifficulty& song_selection;
-        const Data::Chart& chart;
+        const Data::Chart chart;
         const Data::AbstractScore& score;
         bool should_exit = false;
 

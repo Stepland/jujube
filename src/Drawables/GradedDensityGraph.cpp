@@ -12,6 +12,7 @@ namespace Drawables {
         case Data::Judgement::Perfect:
             return DensityLineGrade::Perfect;
         case Data::Judgement::Great:
+        case Data::Judgement::Good:
             return DensityLineGrade::Great;
         default:
             return DensityLineGrade::ComboBreak;

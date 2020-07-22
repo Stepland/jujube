@@ -36,6 +36,10 @@ namespace Data {
         return shutter;
     }
 
+    int ClassicScore::get_judgement_counts(Judgement j) const {
+        return judgement_counts.at(j);
+    }
+
     int ClassicScore::get_final_score() const {
         return get_score() + shutter*100000/1024;
     }
@@ -92,6 +96,8 @@ namespace Data {
         case Judgement::Poor:
         case Judgement::Miss:
             shutter_delta = shutter_decrement_4x;
+            break;
+        default:
             break;
         }
         shutter = std::clamp(shutter+shutter_delta, 0, 1024);

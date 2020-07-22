@@ -25,6 +25,7 @@ namespace Results {
         sf::Clock imgui_clock;
         auto final_score = score.get_final_score();
         auto final_rating = score.get_rating();
+
         while ((not should_exit) and window.isOpen()) {
             sf::Event event;
             while (window.pollEvent(event)) {
@@ -53,6 +54,23 @@ namespace Results {
             }
             ImGui::SFML::Update(window, imgui_clock.restart());
             window.clear(sf::Color(7, 23, 53));
+
+            
+            // Draw song info
+            // Cover is 40x40 @ (384,20)
+            if (song_selection.song.cover) {
+                auto cover = shared.covers.get(*song_selection.song.full_cover_path());
+                if (cover) {
+                    sf::Sprite cover_sprite{*cover->texture};
+                    auto cover_size = 40.f/768.f*get_screen_width();
+                    Toolkit::set_size_from_local_bounds(cover_sprite, cover_size, cover_size);
+                    cover_sprite.setPosition(
+                        384.f/768.f*get_screen_width(),
+                        20.f/768.f*get_screen_width()
+                    );
+                    window.draw(cover_sprite);
+                }
+            }
 
             // White line under the density graph
             sf::RectangleShape line{{get_screen_width()*1.1f,2.f/768.f*get_screen_width()}};
@@ -92,6 +110,27 @@ namespace Results {
                 get_ribbon_y()+2.f*get_panel_step()+0.5*get_panel_size()
             );
             window.draw(rating_text);
+
+            // Draw Judgement Breakdown
+            sf::Text judgements;
+            judgements.setFont(shared.fallback_font.black);
+            judgements.setFillColor(sf::Color(29, 98, 226));
+            std::string judgement_to_string = (
+                "Perfect: " + std::to_string(score.get_judgement_counts(Data::Judgement::Perfect)) + "\n" +
+                "Great: " + std::to_string(score.get_judgement_counts(Data::Judgement::Great)) + "\n" +
+                "Good: " + std::to_string(score.get_judgement_counts(Data::Judgement::Good)) + "\n" +
+                "Poor: " + std::to_string(score.get_judgement_counts(Data::Judgement::Poor)) + "\n" +
+                "Miss: " + std::to_string(score.get_judgement_counts(Data::Judgement::Miss))
+            );
+            judgements.setString(judgement_to_string);
+            judgements.setCharacterSize(static_cast<unsigned int>(0.1f*get_panel_size()));
+            Toolkit::set_local_origin_normalized(judgements, 0.5f, 0.5f);
+            judgements.setPosition(
+                get_ribbon_x()+0.f*get_panel_step()+0.5*get_panel_size(),
+                get_ribbon_y()+2.f*get_panel_step()+0.5*get_panel_size()
+            );
+            window.draw(judgements);
+
 
             // Draw song info
             auto song_title = song_selection.song.title;
